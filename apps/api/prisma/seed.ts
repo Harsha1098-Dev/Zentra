@@ -1,12 +1,13 @@
 import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
+import { DEFAULT_ROLE_PERMISSIONS, PermissionCode, RoleCode } from '@zentra/shared-types';
 
 const prisma = new PrismaClient();
 
-const BASE_PERMISSIONS = [
+const BASE_PERMISSIONS: { code: string; name: string; description: string }[] = [
   { code: 'auth.manage', name: 'Manage Authentication', description: 'Full access to authentication settings' },
   { code: 'organization.read', name: 'Read Organization', description: 'View organization details' },
   { code: 'organization.update', name: 'Update Organization', description: 'Update organization settings' },
+  { code: 'organization.logo.manage', name: 'Manage Organization Logo', description: 'Upload and delete company logo' },
   { code: 'user.read', name: 'Read Users', description: 'View users in the organization' },
   { code: 'user.invite', name: 'Invite Users', description: 'Invite users to the organization' },
   { code: 'user.manage', name: 'Manage Users', description: 'Manage user status and memberships' },
@@ -15,53 +16,63 @@ const BASE_PERMISSIONS = [
   { code: 'permission.read', name: 'Read Permissions', description: 'View system permissions' },
   { code: 'audit.read', name: 'Read Audit Logs', description: 'View audit logs for the organization' },
   { code: 'product.read', name: 'Read Products', description: 'View product subscriptions and entitlements' },
+
+  // Organization Setup Permissions
+  { code: 'location.read', name: 'Read Locations', description: 'View company locations' },
+  { code: 'location.create', name: 'Create Location', description: 'Create new company location' },
+  { code: 'location.update', name: 'Update Location', description: 'Update location details' },
+  { code: 'location.deactivate', name: 'Deactivate Location', description: 'Activate or deactivate company locations' },
+
+  { code: 'department.read', name: 'Read Departments', description: 'View departments and hierarchy' },
+  { code: 'department.create', name: 'Create Department', description: 'Create company departments' },
+  { code: 'department.update', name: 'Update Department', description: 'Update department details and parent' },
+  { code: 'department.deactivate', name: 'Deactivate Department', description: 'Activate or deactivate departments' },
+
+  { code: 'designation.read', name: 'Read Designations', description: 'View job titles and designations' },
+  { code: 'designation.create', name: 'Create Designation', description: 'Create company designations' },
+  { code: 'designation.update', name: 'Update Designation', description: 'Update designation details' },
+  { code: 'designation.deactivate', name: 'Deactivate Designation', description: 'Activate or deactivate designations' },
+
+  { code: 'grade.read', name: 'Read Grades', description: 'View employee grades and salary bands' },
+  { code: 'grade.create', name: 'Create Grade', description: 'Create company grade' },
+  { code: 'grade.update', name: 'Update Grade', description: 'Update grade level and details' },
+  { code: 'grade.deactivate', name: 'Deactivate Grade', description: 'Activate or deactivate grades' },
+
+  { code: 'workweek.read', name: 'Read Workweek', description: 'View workweek schedules' },
+  { code: 'workweek.update', name: 'Update Workweek', description: 'Configure working days and shift hours' },
+
+  { code: 'holiday.read', name: 'Read Holidays', description: 'View holiday calendars' },
+  { code: 'holiday.create', name: 'Create Holiday', description: 'Add new holiday to calendar' },
+  { code: 'holiday.update', name: 'Update Holiday', description: 'Edit holiday details' },
+  { code: 'holiday.delete', name: 'Delete Holiday', description: 'Remove holiday from calendar' },
+
+  { code: 'organization_chart.read', name: 'Read Organization Chart', description: 'View organization chart structure' },
 ];
 
 const BASE_ROLES = [
   {
-    code: 'SUPER_ADMIN',
+    code: RoleCode.SUPER_ADMIN,
     name: 'Super Admin',
     description: 'Full administrative access across the entire organization',
-    permissions: [
-      'auth.manage',
-      'organization.read',
-      'organization.update',
-      'user.read',
-      'user.invite',
-      'user.manage',
-      'role.read',
-      'role.manage',
-      'permission.read',
-      'audit.read',
-      'product.read',
-    ],
+    permissions: DEFAULT_ROLE_PERMISSIONS[RoleCode.SUPER_ADMIN],
   },
   {
-    code: 'HR_ADMIN',
+    code: RoleCode.HR_ADMIN,
     name: 'HR Admin',
-    description: 'Human resources administrator with team and invitation management',
-    permissions: [
-      'organization.read',
-      'user.read',
-      'user.invite',
-      'user.manage',
-      'role.read',
-      'permission.read',
-      'audit.read',
-      'product.read',
-    ],
+    description: 'Human resources administrator with team and organization setup management',
+    permissions: DEFAULT_ROLE_PERMISSIONS[RoleCode.HR_ADMIN],
   },
   {
-    code: 'MANAGER',
+    code: RoleCode.MANAGER,
     name: 'Manager',
-    description: 'Team manager with view permissions',
-    permissions: ['organization.read', 'user.read', 'product.read'],
+    description: 'Team manager with view permissions to org chart and departments',
+    permissions: DEFAULT_ROLE_PERMISSIONS[RoleCode.MANAGER],
   },
   {
-    code: 'EMPLOYEE',
+    code: RoleCode.EMPLOYEE,
     name: 'Employee',
-    description: 'Standard employee with access to organization self-service',
-    permissions: ['organization.read', 'product.read'],
+    description: 'Standard employee with self-service and read-only org chart access',
+    permissions: DEFAULT_ROLE_PERMISSIONS[RoleCode.EMPLOYEE],
   },
 ];
 
@@ -84,7 +95,6 @@ export async function seedDatabase(client: PrismaClient = prisma) {
 
   console.log('Seeding base system roles...');
   for (const roleDef of BASE_ROLES) {
-    // Upsert base global system role (organizationId is null)
     let role = await client.role.findFirst({
       where: {
         code: roleDef.code,

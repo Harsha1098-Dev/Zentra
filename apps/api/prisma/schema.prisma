@@ -25,6 +25,7 @@ model User {
   emailVerificationTokens EmailVerificationToken[]
   passwordResetTokens     PasswordResetToken[]
   sentInvitations         Invitation[]             @relation("UserSentInvitations")
+  headedDepartments       Department[]             @relation("DepartmentHead")
 
   @@index([email])
   @@map("users")
@@ -39,12 +40,19 @@ model Organization {
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  memberships OrganizationMembership[]
-  products    OrganizationProduct[]
-  roles       Role[]
-  userRoles   UserRole[]
-  auditLogs   AuditLog[]
-  invitations Invitation[]
+  memberships    OrganizationMembership[]
+  products       OrganizationProduct[]
+  roles          Role[]
+  userRoles      UserRole[]
+  auditLogs      AuditLog[]
+  invitations    Invitation[]
+  profile        CompanyProfile?
+  locations      Location[]
+  departments    Department[]
+  grades         Grade[]
+  designations   Designation[]
+  workweekConfig WorkweekConfig?
+  holidays       Holiday[]
 
   @@index([slug])
   @@map("organizations")
@@ -245,4 +253,182 @@ model Invitation {
   @@index([tokenHash])
   @@index([status])
   @@map("invitations")
+}
+
+// ==========================================
+// ORGANIZATION SETUP MODELS
+// ==========================================
+
+model CompanyProfile {
+  id                  String   @id @default(uuid())
+  organizationId      String   @unique @map("organization_id")
+  legalName           String?  @map("legal_name")
+  logoUrl             String?  @map("logo_url")
+  website             String?
+  industry            String?
+  companySize         String?  @map("company_size")
+  registrationNumber  String?  @map("registration_number")
+  taxIdNumber         String?  @map("tax_id_number")
+  country             String?
+  state               String?
+  city                String?
+  address             String?
+  timezone            String?
+  defaultCurrency     String?  @map("default_currency")
+  primaryContactName  String?  @map("primary_contact_name")
+  primaryContactEmail String?  @map("primary_contact_email")
+  primaryContactPhone String?  @map("primary_contact_phone")
+  description         String?
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("company_profiles")
+}
+
+model Location {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  name           String
+  code           String
+  country        String
+  state          String?
+  city           String
+  address        String
+  postalCode     String?   @map("postal_code")
+  timezone       String
+  phone          String?
+  email          String?
+  isHeadquarters Boolean   @default(false) @map("is_headquarters")
+  status         String    @default("ACTIVE") // ACTIVE, INACTIVE
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  holidays     Holiday[]
+
+  @@unique([organizationId, name])
+  @@unique([organizationId, code])
+  @@index([organizationId])
+  @@index([status])
+  @@map("locations")
+}
+
+model Department {
+  id                   String    @id @default(uuid())
+  organizationId       String    @map("organization_id")
+  name                 String
+  code                 String
+  parentDepartmentId   String?   @map("parent_department_id")
+  departmentHeadUserId String?   @map("department_head_user_id")
+  description          String?
+  status               String    @default("ACTIVE") // ACTIVE, INACTIVE
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  deletedAt            DateTime? @map("deleted_at")
+
+  organization       Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  parentDepartment   Department?   @relation("DepartmentHierarchy", fields: [parentDepartmentId], references: [id], onDelete: SetNull)
+  childDepartments   Department[]  @relation("DepartmentHierarchy")
+  departmentHeadUser User?         @relation("DepartmentHead", fields: [departmentHeadUserId], references: [id], onDelete: SetNull)
+  designations       Designation[]
+
+  @@unique([organizationId, name])
+  @@unique([organizationId, code])
+  @@index([organizationId])
+  @@index([parentDepartmentId])
+  @@index([status])
+  @@map("departments")
+}
+
+model Grade {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  name           String
+  code           String
+  level          Int
+  description    String?
+  status         String    @default("ACTIVE") // ACTIVE, INACTIVE
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  designations Designation[]
+
+  @@unique([organizationId, name])
+  @@unique([organizationId, code])
+  @@unique([organizationId, level])
+  @@index([organizationId])
+  @@index([status])
+  @@map("grades")
+}
+
+model Designation {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  name           String
+  code           String
+  gradeId        String?   @map("grade_id")
+  departmentId   String?   @map("department_id")
+  description    String?
+  status         String    @default("ACTIVE") // ACTIVE, INACTIVE
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  grade        Grade?       @relation(fields: [gradeId], references: [id], onDelete: SetNull)
+  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  @@unique([organizationId, name])
+  @@unique([organizationId, code])
+  @@index([organizationId])
+  @@index([gradeId])
+  @@index([departmentId])
+  @@index([status])
+  @@map("designations")
+}
+
+model WorkweekConfig {
+  id                   String   @id @default(uuid())
+  organizationId       String   @unique @map("organization_id")
+  weeklyWorkingDays    Json     @map("weekly_working_days") // String array ["MONDAY", "TUESDAY", ...]
+  weekendDays          Json     @map("weekend_days") // String array ["SATURDAY", "SUNDAY"]
+  dailyStartTime       String   @default("09:00") @map("daily_start_time")
+  dailyEndTime         String   @default("18:00") @map("daily_end_time")
+  breakDurationMinutes Int      @default(60) @map("break_duration_minutes")
+  timezone             String   @default("UTC")
+  effectiveFrom        DateTime @default(now()) @map("effective_from")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("workweek_configs")
+}
+
+model Holiday {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  name           String
+  date           DateTime
+  type           String   @default("PUBLIC") // PUBLIC, OPTIONAL, RESTRICTED
+  locationId     String?  @map("location_id")
+  description    String?
+  isRecurring    Boolean  @default(false) @map("is_recurring")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  location     Location?    @relation(fields: [locationId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([date])
+  @@index([locationId])
+  @@map("holidays")
 }

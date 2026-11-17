@@ -21,6 +21,7 @@ import {
   Layers,
   ArrowRight,
   AlertCircle,
+  Sliders,
 } from 'lucide-react';
 import { PermissionCode, RoleCode } from '@zentra/shared-types';
 
@@ -221,6 +222,14 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center space-x-4">
+            <Link
+              href="/settings/organization"
+              className="hidden md:inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#E0E7FF] text-[#1E3A8A] hover:bg-indigo-100 rounded-lg text-xs font-semibold border border-indigo-200 transition-colors"
+            >
+              <Sliders className="w-3.5 h-3.5" />
+              <span>Organization Setup</span>
+            </Link>
+
             {/* User Profile & Role Badge */}
             <div className="flex items-center space-x-3 text-right">
               <div className="hidden sm:block">
@@ -374,7 +383,13 @@ export default function DashboardPage() {
 
                 <div className="mt-6 pt-4 border-t border-[#E2E8F0] flex items-center justify-between text-xs text-[#64748B]">
                   <span>Entitlement: <strong>Enabled by Company Registration</strong></span>
-                  <span className="text-[#059669] font-semibold">Active</span>
+                  <Link
+                    href="/settings/organization"
+                    className="text-[#1E3A8A] font-semibold hover:underline inline-flex items-center space-x-1"
+                  >
+                    <span>Organization Setup</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
                 </div>
               </div>
 
@@ -400,6 +415,26 @@ export default function DashboardPage() {
                   <span className="text-slate-500 font-medium">Entitlement Required</span>
                 </div>
               </div>
+            </div>
+
+            {/* Organization Setup Banner */}
+            <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-xl p-6 text-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-white/20 text-white mb-2">
+                  REQUIRED SETUP
+                </span>
+                <h3 className="text-lg font-bold">Company Structure & Organization Setup</h3>
+                <p className="text-xs text-blue-100 mt-1 max-w-xl">
+                  Configure your company profile, headquarters and office locations, department trees, job designations, seniority grades, workweek timings, and holiday calendars before onboarding employees.
+                </p>
+              </div>
+              <Link
+                href="/settings/organization"
+                className="inline-flex items-center space-x-2 px-5 py-2.5 bg-white text-[#1E3A8A] hover:bg-blue-50 font-semibold text-xs rounded-lg transition-colors shadow flex-shrink-0"
+              >
+                <Sliders className="w-4 h-4" />
+                <span>Open Organization Setup</span>
+              </Link>
             </div>
 
             {/* Restricted Module Warning for lower roles */}

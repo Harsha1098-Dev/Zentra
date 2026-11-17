@@ -250,3 +250,62 @@ Switches the active organization context and issues an organization-scoped JWT.
 *(Public)*
 
 Returns database and redis health status.
+
+
+---
+
+## 5. Organization Setup Endpoints (Zentra People)
+
+All endpoints below require authentication with an active organization membership context. `organization_id` is derived from the JWT session and never accepted from client query/body.
+
+### Company Profile
+- `GET /organizations/current/profile` - Get company profile details. (Requires `organization.read`)
+- `PATCH /organizations/current/profile` - Update company profile information, contact, and identifiers. (Requires `organization.update`)
+- `POST /organizations/current/profile/logo` - Upload company logo (PNG/JPG/WebP/SVG, max 5MB, multipart `file`). (Requires `organization.logo.manage`)
+- `DELETE /organizations/current/profile/logo` - Remove current company logo. (Requires `organization.logo.manage`)
+
+### Locations
+- `GET /locations?status=ACTIVE&search=...` - List locations for active organization. (Requires `location.read`)
+- `POST /locations` - Create a new location (supports `isHeadquarters`). (Requires `location.create`)
+- `GET /locations/:id` - Get location by UUID. (Requires `location.read`)
+- `PATCH /locations/:id` - Update location details. (Requires `location.update`)
+- `PATCH /locations/:id/activate` - Re-activate a deactivated location. (Requires `location.activate`)
+- `PATCH /locations/:id/deactivate` - Soft deactivate a location. (Requires `location.deactivate`)
+
+### Departments
+- `GET /departments?status=ACTIVE&search=...` - List departments with parent name. (Requires `department.read`)
+- `POST /departments` - Create a department with optional parent department. (Requires `department.create`)
+- `GET /departments/:id` - Get department details. (Requires `department.read`)
+- `PATCH /departments/:id` - Update department (includes circular hierarchy prevention). (Requires `department.update`)
+- `PATCH /departments/:id/activate` - Re-activate a department. (Requires `department.activate`)
+- `PATCH /departments/:id/deactivate` - Soft deactivate department (prohibited if child units exist). (Requires `department.deactivate`)
+- `GET /departments/tree` - Get full hierarchical recursive department tree structure. (Requires `department.read`)
+
+### Job Designations
+- `GET /designations?status=ACTIVE&departmentId=...` - List designations with linked dept & grade. (Requires `designation.read`)
+- `POST /designations` - Create a new designation. (Requires `designation.create`)
+- `GET /designations/:id` - Get designation details. (Requires `designation.read`)
+- `PATCH /designations/:id` - Update designation. (Requires `designation.update`)
+- `PATCH /designations/:id/activate` - Re-activate designation. (Requires `designation.activate`)
+- `PATCH /designations/:id/deactivate` - Soft deactivate designation. (Requires `designation.deactivate`)
+
+### Employee Grades & Bands
+- `GET /grades?status=ACTIVE` - List employee grades sorted by level ascending. (Requires `grade.read`)
+- `POST /grades` - Create a grade band with positive integer level rank. (Requires `grade.create`)
+- `GET /grades/:id` - Get grade details. (Requires `grade.read`)
+- `PATCH /grades/:id` - Update grade details. (Requires `grade.update`)
+- `PATCH /grades/:id/activate` - Re-activate grade. (Requires `grade.activate`)
+- `PATCH /grades/:id/deactivate` - Soft deactivate grade. (Requires `grade.deactivate`)
+
+### Workweek Configuration
+- `GET /workweek` - Get organization workweek configuration and daily shift hours. (Requires `workweek.read`)
+- `PATCH /workweek` - Update working days, shift start/end hours, unpaid break, and timezone. (Requires `workweek.update`)
+
+### Holidays
+- `GET /holidays?year=2026&locationId=...` - List holidays for a given year or location. (Requires `holiday.read`)
+- `POST /holidays` - Create a holiday (Public, Optional, Restricted, annual recurring). (Requires `holiday.create`)
+- `PATCH /holidays/:id` - Update holiday. (Requires `holiday.update`)
+- `DELETE /holidays/:id` - Delete holiday. (Requires `holiday.delete`)
+
+### Organization Chart
+- `GET /organization-chart` - Aggregated public structure returning company profile, location hubs, recursive department tree, designations, and grade hierarchy. (Requires `organization_chart.read`)

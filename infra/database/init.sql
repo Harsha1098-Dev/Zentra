@@ -194,3 +194,154 @@ CREATE INDEX IF NOT EXISTS "idx_invitations_org_id" ON "invitations"("organizati
 CREATE INDEX IF NOT EXISTS "idx_invitations_email" ON "invitations"("email");
 CREATE INDEX IF NOT EXISTS "idx_invitations_hash" ON "invitations"("token_hash");
 CREATE INDEX IF NOT EXISTS "idx_invitations_status" ON "invitations"("status");
+
+-- 14. Company Profiles table
+CREATE TABLE IF NOT EXISTS "company_profiles" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL UNIQUE REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "legal_name" VARCHAR(150),
+    "logo_url" TEXT,
+    "website" VARCHAR(255),
+    "industry" VARCHAR(100),
+    "company_size" VARCHAR(50),
+    "registration_number" VARCHAR(100),
+    "tax_id_number" VARCHAR(100),
+    "country" VARCHAR(100),
+    "state" VARCHAR(100),
+    "city" VARCHAR(100),
+    "address" VARCHAR(255),
+    "timezone" VARCHAR(50),
+    "default_currency" VARCHAR(10),
+    "primary_contact_name" VARCHAR(100),
+    "primary_contact_email" VARCHAR(255),
+    "primary_contact_phone" VARCHAR(30),
+    "description" TEXT,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS "idx_company_profiles_org_id" ON "company_profiles"("organization_id");
+
+-- 15. Locations table
+CREATE TABLE IF NOT EXISTS "locations" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "name" VARCHAR(100) NOT NULL,
+    "code" VARCHAR(50) NOT NULL,
+    "country" VARCHAR(100) NOT NULL,
+    "state" VARCHAR(100),
+    "city" VARCHAR(100) NOT NULL,
+    "address" VARCHAR(255) NOT NULL,
+    "postal_code" VARCHAR(20),
+    "timezone" VARCHAR(50) NOT NULL,
+    "phone" VARCHAR(30),
+    "email" VARCHAR(255),
+    "is_headquarters" BOOLEAN NOT NULL DEFAULT FALSE,
+    "status" VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMPTZ,
+    CONSTRAINT "uq_locations_org_name" UNIQUE ("organization_id", "name"),
+    CONSTRAINT "uq_locations_org_code" UNIQUE ("organization_id", "code")
+);
+
+CREATE INDEX IF NOT EXISTS "idx_locations_org_id" ON "locations"("organization_id");
+CREATE INDEX IF NOT EXISTS "idx_locations_status" ON "locations"("status");
+
+-- 16. Departments table
+CREATE TABLE IF NOT EXISTS "departments" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "name" VARCHAR(100) NOT NULL,
+    "code" VARCHAR(50) NOT NULL,
+    "parent_department_id" UUID REFERENCES "departments"("id") ON DELETE SET NULL,
+    "department_head_user_id" UUID REFERENCES "users"("id") ON DELETE SET NULL,
+    "description" TEXT,
+    "status" VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMPTZ,
+    CONSTRAINT "uq_departments_org_name" UNIQUE ("organization_id", "name"),
+    CONSTRAINT "uq_departments_org_code" UNIQUE ("organization_id", "code")
+);
+
+CREATE INDEX IF NOT EXISTS "idx_departments_org_id" ON "departments"("organization_id");
+CREATE INDEX IF NOT EXISTS "idx_departments_parent_id" ON "departments"("parent_department_id");
+CREATE INDEX IF NOT EXISTS "idx_departments_status" ON "departments"("status");
+
+-- 17. Grades table
+CREATE TABLE IF NOT EXISTS "grades" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "name" VARCHAR(100) NOT NULL,
+    "code" VARCHAR(50) NOT NULL,
+    "level" INTEGER NOT NULL,
+    "description" TEXT,
+    "status" VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMPTZ,
+    CONSTRAINT "uq_grades_org_name" UNIQUE ("organization_id", "name"),
+    CONSTRAINT "uq_grades_org_code" UNIQUE ("organization_id", "code"),
+    CONSTRAINT "uq_grades_org_level" UNIQUE ("organization_id", "level")
+);
+
+CREATE INDEX IF NOT EXISTS "idx_grades_org_id" ON "grades"("organization_id");
+CREATE INDEX IF NOT EXISTS "idx_grades_status" ON "grades"("status");
+
+-- 18. Designations table
+CREATE TABLE IF NOT EXISTS "designations" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "name" VARCHAR(100) NOT NULL,
+    "code" VARCHAR(50) NOT NULL,
+    "grade_id" UUID REFERENCES "grades"("id") ON DELETE SET NULL,
+    "department_id" UUID REFERENCES "departments"("id") ON DELETE SET NULL,
+    "description" TEXT,
+    "status" VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMPTZ,
+    CONSTRAINT "uq_designations_org_name" UNIQUE ("organization_id", "name"),
+    CONSTRAINT "uq_designations_org_code" UNIQUE ("organization_id", "code")
+);
+
+CREATE INDEX IF NOT EXISTS "idx_designations_org_id" ON "designations"("organization_id");
+CREATE INDEX IF NOT EXISTS "idx_designations_grade_id" ON "designations"("grade_id");
+CREATE INDEX IF NOT EXISTS "idx_designations_dept_id" ON "designations"("department_id");
+CREATE INDEX IF NOT EXISTS "idx_designations_status" ON "designations"("status");
+
+-- 19. Workweek Configs table
+CREATE TABLE IF NOT EXISTS "workweek_configs" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL UNIQUE REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "weekly_working_days" JSONB NOT NULL,
+    "weekend_days" JSONB NOT NULL,
+    "daily_start_time" VARCHAR(10) NOT NULL DEFAULT '09:00',
+    "daily_end_time" VARCHAR(10) NOT NULL DEFAULT '18:00',
+    "break_duration_minutes" INTEGER NOT NULL DEFAULT 60,
+    "timezone" VARCHAR(50) NOT NULL DEFAULT 'UTC',
+    "effective_from" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS "idx_workweek_configs_org_id" ON "workweek_configs"("organization_id");
+
+-- 20. Holidays table
+CREATE TABLE IF NOT EXISTS "holidays" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "name" VARCHAR(100) NOT NULL,
+    "date" TIMESTAMPTZ NOT NULL,
+    "type" VARCHAR(50) NOT NULL DEFAULT 'PUBLIC',
+    "location_id" UUID REFERENCES "locations"("id") ON DELETE CASCADE,
+    "description" TEXT,
+    "is_recurring" BOOLEAN NOT NULL DEFAULT FALSE,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS "idx_holidays_org_id" ON "holidays"("organization_id");
+CREATE INDEX IF NOT EXISTS "idx_holidays_date" ON "holidays"("date");
+CREATE INDEX IF NOT EXISTS "idx_holidays_location_id" ON "holidays"("location_id");

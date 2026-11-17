@@ -136,3 +136,93 @@ Pending and accepted employee invitations.
 - `refresh_tokens`: Stores hashed refresh tokens with expiration and revocation timestamps.
 - `email_verification_tokens`: Stores hashed email tokens.
 - `password_reset_tokens`: Stores hashed password reset tokens.
+
+
+---
+
+### 12. Organization Setup Models (Zentra People)
+
+#### `company_profiles`
+Single company profile per organization.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`, Unique)
+- `name`, `legal_name`, `logo_url`, `website`, `industry`, `company_size`
+- `registration_number`, `tax_id_number`
+- `country`, `state`, `city`, `address`, `timezone`, `default_currency`
+- `primary_contact_name`, `primary_contact_email`, `primary_contact_phone`, `description`
+- `created_at`, `updated_at`
+
+#### `locations`
+Headquarters and regional branch offices.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `name` (VARCHAR(150))
+- `code` (VARCHAR(50))
+- `country`, `state`, `city`, `address`, `postal_code`, `timezone`, `phone`, `email`
+- `is_headquarters` (BOOLEAN, Default: false)
+- `status` (`RecordStatus`: 'ACTIVE', 'INACTIVE')
+- `created_at`, `updated_at`, `deleted_at`
+- **Constraints:** UNIQUE(`organization_id`, `name`), UNIQUE(`organization_id`, `code`)
+
+#### `departments`
+Hierarchical tree structure with unlimited depth.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `name` (VARCHAR(150))
+- `code` (VARCHAR(50))
+- `parent_department_id` (UUID, Self-referential Foreign Key -> `departments.id`, Nullable)
+- `department_head_user_id` (UUID, Foreign Key -> `users.id`, Nullable)
+- `description` (TEXT)
+- `status` (`RecordStatus`: 'ACTIVE', 'INACTIVE')
+- `created_at`, `updated_at`, `deleted_at`
+- **Constraints:** UNIQUE(`organization_id`, `name`), UNIQUE(`organization_id`, `code`)
+
+#### `grades`
+Seniority and compensation hierarchy bands.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `name` (VARCHAR(100))
+- `code` (VARCHAR(50))
+- `level` (INTEGER, Positive)
+- `description` (TEXT)
+- `status` (`RecordStatus`: 'ACTIVE', 'INACTIVE')
+- `created_at`, `updated_at`, `deleted_at`
+- **Constraints:** UNIQUE(`organization_id`, `name`), UNIQUE(`organization_id`, `code`), UNIQUE(`organization_id`, `level`)
+
+#### `designations`
+Job titles mapped optionally to departments and grades.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `name` (VARCHAR(150))
+- `code` (VARCHAR(50))
+- `grade_id` (UUID, Foreign Key -> `grades.id`, Nullable)
+- `department_id` (UUID, Foreign Key -> `departments.id`, Nullable)
+- `description` (TEXT)
+- `status` (`RecordStatus`: 'ACTIVE', 'INACTIVE')
+- `created_at`, `updated_at`, `deleted_at`
+- **Constraints:** UNIQUE(`organization_id`, `name`), UNIQUE(`organization_id`, `code`)
+
+#### `workweek_configs`
+Working days and daily shift hours.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`, Unique)
+- `weekly_working_days` (TEXT[] array of `DayOfWeek`)
+- `weekend_days` (TEXT[] array of `DayOfWeek`)
+- `daily_start_time` (VARCHAR(5), e.g. "09:00")
+- `daily_end_time` (VARCHAR(5), e.g. "18:00")
+- `break_duration_minutes` (INTEGER, Default: 60)
+- `timezone` (VARCHAR(50), Default: 'UTC')
+- `effective_from` (TIMESTAMPTZ)
+- `created_at`, `updated_at`
+
+#### `holidays`
+Company and regional calendar holidays.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `name` (VARCHAR(150))
+- `date` (DATE)
+- `type` (`HolidayType`: 'PUBLIC', 'OPTIONAL', 'RESTRICTED')
+- `location_id` (UUID, Foreign Key -> `locations.id`, Nullable for global holidays)
+- `description` (TEXT)
+- `is_recurring` (BOOLEAN, Default: false)
+- `created_at`, `updated_at`, `deleted_at`
