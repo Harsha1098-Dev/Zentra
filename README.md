@@ -18,7 +18,8 @@ Zentra is an enterprise-grade multi-tenant HRMS and Payroll SaaS platform design
 - **Monorepo**: pnpm workspaces
 - **Frontend**: Next.js 15, TypeScript, Tailwind CSS, Lucide Icons
 - **Backend**: NestJS, TypeScript, Passport JWT, Zod
-- **Database & Cache**: PostgreSQL 16, Prisma ORM, Redis 7
+- **Database & Cache**: Neon Serverless PostgreSQL (Dual pooled & direct connections, RLS), Prisma ORM, Redis 7
+- **CI / CD**: GitHub Actions (Lint, Typecheck, Unit Tests, Build, Neon Preview Branching)
 - **Infra**: Docker Compose
 - **Testing**: Jest, ts-jest
 
@@ -52,7 +53,13 @@ zentra/
 ├── docs/
 │   ├── architecture.md         # Comprehensive architectural guide
 │   ├── api.md                  # REST API specification
-│   └── database.md             # Entity-Relationship diagram & schema docs
+│   ├── database.md             # Entity-Relationship diagram & schema docs
+│   └── setup.md                # Development, Neon, and CI/CD setup guide
+├── .github/
+│   └── workflows/
+│       ├── ci.yml              # Monorepo CI verification pipeline
+│       └── neon-branch.yml     # Automated Neon PR preview branch lifecycle
+├── CONTRIBUTING.md             # Git branching, commit conventions, and PR flow
 ├── .env.example                # Template environment variables
 ├── docker-compose.yml          # Local multi-container development environment
 ├── package.json                # Root workspace configuration

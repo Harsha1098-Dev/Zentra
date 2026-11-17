@@ -1,0 +1,62 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-test:
+    name: Lint, Test & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 11.9.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate Prisma schema
+        run: pnpm --filter @zentra/api exec prisma validate
+
+      - name: Generate Prisma Client
+        run: pnpm --filter @zentra/api run db:generate
+
+      - name: Run ESLint
+        run: pnpm lint
+
+      - name: Typecheck monorepo
+        run: pnpm --recursive run build
+
+      - name: Run Backend Unit Tests
+        run: pnpm --filter @zentra/api run test -- --maxWorkers=2
+        env:
+          NODE_ENV: test
+          JWT_ACCESS_SECRET: test_jwt_access_super_secret_key_32_chars_min
+          JWT_REFRESH_SECRET: test_jwt_refresh_super_secret_key_32_chars_min
+
+      - name: Build Web Application
+        run: pnpm --filter @zentra/web run build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:4000/api/v1

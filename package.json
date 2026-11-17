@@ -14,8 +14,11 @@
     "lint": "pnpm --recursive run lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "db:migrate": "pnpm --filter @zentra/api run db:migrate",
+    "db:deploy": "pnpm --filter @zentra/api run db:deploy",
+    "db:studio": "pnpm --filter @zentra/api run db:studio",
     "db:generate": "pnpm --filter @zentra/api run db:generate",
     "db:seed": "pnpm --filter @zentra/api run db:seed",
+    "typecheck": "pnpm --recursive run build",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f"

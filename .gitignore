@@ -2,18 +2,17 @@
 node_modules
 .pnpm-store
 
-# Environment variables
+# Environment variables & secrets
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
 # Build outputs
 dist
 build
 .next
 out
+coverage
 
 # Prisma
 /apps/api/prisma/*.db
@@ -25,10 +24,13 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 *.log
+logs
 
-# OS / Editor
+# OS files
 .DS_Store
 Thumbs.db
+
+# IDE files
 .idea
 .vscode
 *.suo
