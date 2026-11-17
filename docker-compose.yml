@@ -1,10 +1,18 @@
 version: '3.8'
 
+# ====================================================================
+# Zentra SaaS Platform - Docker Compose
+# Neon PostgreSQL is the primary database for production and development.
+# The local 'postgres' service below is for OPTIONAL offline development only.
+# ====================================================================
+
 services:
+  # Optional local PostgreSQL (for offline development only)
   postgres:
     image: postgres:16-alpine
     container_name: zentra-postgres
     restart: unless-stopped
+    profiles: ["offline"]
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_secure_pass}
@@ -49,7 +57,8 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 4000
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres_secure_pass}@postgres:5432/${POSTGRES_DB:-zentra_db}?schema=public
+      DATABASE_URL: ${DATABASE_URL:-postgresql://neondb_owner:npg_GCQO7c6dTfDb@ep-silent-art-bdvrk9iw-pooler.c-8.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require}
+      DIRECT_DATABASE_URL: ${DIRECT_DATABASE_URL:-postgresql://neondb_owner:npg_GCQO7c6dTfDb@ep-silent-art-bdvrk9iw.c-8.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require}
       REDIS_URL: redis://redis:6379
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-zentra_jwt_access_super_secret_key_change_in_production_min_32_chars}
       JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN:-15m}
@@ -57,10 +66,10 @@ services:
       JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
     depends_on:
-      postgres:
-        condition: service_healthy
       redis:
         condition: service_healthy
+    networks:
+      - zentra-network
     networks:
       - zentra-network
 

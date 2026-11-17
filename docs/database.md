@@ -1,8 +1,62 @@
 # Zentra Database Architecture & Schema
 
-Zentra uses PostgreSQL with Prisma ORM. All primary keys are UUIDs (`gen_random_uuid()`). Every tenant-owned table strictly includes `organization_id`.
+Zentra uses Neon Serverless PostgreSQL with Prisma ORM. All primary keys are UUIDs (`gen_random_uuid()`). Every tenant-owned table strictly includes `organization_id` and is guarded by PostgreSQL Row-Level Security (RLS).
 
-## Entity-Relationship Diagram
+---
+
+## 1. Neon PostgreSQL Infrastructure & Dual Connections
+
+Zentra connects to Neon PostgreSQL through two distinct database connection URLs configured in `prisma/schema.prisma`:
+
+```prisma
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+```
+
+### Connection Endpoints
+1. **`DATABASE_URL` (Pooled Connection)**:
+   - Contains `-pooler` in the hostname (e.g., `ep-silent-art-bdvrk9iw-pooler.c-8.us-east-2.aws.neon.tech`).
+   - Uses PgBouncer in transaction pooling mode.
+   - Used by the NestJS application runtime for scalable concurrent query handling.
+2. **`DIRECT_DATABASE_URL` (Direct Connection)**:
+   - Connects directly to the compute node without `-pooler` (e.g., `ep-silent-art-bdvrk9iw.c-8.us-east-2.aws.neon.tech`).
+   - Used exclusively by Prisma Migrate (`prisma migrate dev`, `prisma migrate deploy`), Prisma Studio, and schema introspection.
+
+### Neon Branching Workflow
+- **Development & Staging Branches**: Before deploying schema changes to production, engineers create isolated Neon branches (copy-on-write database clones) to test schema migrations (`prisma migrate dev`) and verify data integrity with zero impact on production data.
+- **Production Branch**: Once validated on a feature branch, migrations are applied to the primary production branch via `prisma migrate deploy`.
+- **Local Development**: Docker Compose includes an optional PostgreSQL service configured with profile `offline` for local offline development only; the primary development database is Neon.
+
+---
+
+## 2. Row-Level Security (RLS) & Multi-Tenant Isolation
+
+Zentra employs a defense-in-depth isolation model combining application-level filtering with PostgreSQL engine-level Row-Level Security:
+
+1. **PostgreSQL RLS Policies**:
+   - `ENABLE ROW LEVEL SECURITY` and `FORCE ROW LEVEL SECURITY` are enabled on all 18 tenant-owned tables.
+   - `tenant_isolation_policy` enforces:
+     ```sql
+     organization_id = NULLIF(current_setting('app.current_organization_id', true), '')
+     ```
+   - For `roles`, the policy allows global system roles where `organization_id IS NULL`.
+   - Without `app.current_organization_id` set in the session, queries return 0 rows and mutations are blocked.
+2. **Limited Database Role (`zentra_app`)**:
+   - A dedicated non-superuser role (`rolsuper = false`, `rolbypassrls = false`) executes application workloads and cannot bypass RLS under any circumstances.
+3. **Session Tenant Context Propagation**:
+   - `TenantContext` utilizes Node.js `AsyncLocalStorage` to maintain tenant state across asynchronous execution contexts.
+   - `TenantContextInterceptor` intercepts authenticated requests, reads `req.user.organizationId`, and executes:
+     ```sql
+     SELECT set_config('app.current_organization_id', organization_id, true);
+     ```
+   - The transaction-local setting (`is_local = true`) guarantees that connection pool reuse never leaks tenant variables across requests.
+
+---
+
+## 3. Entity-Relationship Diagram
 
 ```mermaid
 erDiagram

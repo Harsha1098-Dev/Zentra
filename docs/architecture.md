@@ -64,6 +64,18 @@ Zentra is a multi-tenant SaaS HRMS and Payroll platform designed as a scalable m
   - `created_at`
 - **Zero-Secret Logging**: Passwords, hashes, tokens, refresh tokens, and credentials are automatically sanitized to `[REDACTED]` prior to persistence.
 
+### 6. Neon Serverless PostgreSQL & Row-Level Security (RLS)
+- **Primary Database**: Neon PostgreSQL serves both production and development environments.
+- **Dual Connections**:
+  - `DATABASE_URL`: Connection pooler (`-pooler` hostname) for application runtime.
+  - `DIRECT_DATABASE_URL`: Direct connection compute endpoint for Prisma migrations and schema introspection.
+- **PostgreSQL Row-Level Security**:
+  - All tenant-owned tables enforce RLS (`FORCE ROW LEVEL SECURITY`).
+  - Isolated database role `zentra_app` executes application queries without `BYPASSRLS`.
+  - `app.current_organization_id` is set per request; without active tenant context, access to tenant data is completely prevented at the PostgreSQL engine level.
+- **Neon Branching**: Development, testing, and migration verification are isolated on Neon database branches before deploying to production.
+
+
 ---
 
 ## Modular Monolith Structure (NestJS)
