@@ -60,4 +60,33 @@ export class ApiClient {
 
     return data as T;
   }
+
+  static async downloadFile(endpoint: string, defaultFileName: string): Promise<void> {
+    const token = this.getAccessToken();
+    const headers: Record<string, string> = {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+    const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+    const res = await fetch(url, { credentials: 'omit', headers });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: 'Download failed' }));
+      throw new Error(err.message || 'Download failed');
+    }
+    const blob = await res.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    // Extract filename from header if available
+    const disposition = res.headers.get('content-disposition');
+    let fileName = defaultFileName;
+    if (disposition && disposition.includes('filename=')) {
+      const match = disposition.match(/filename="?([^";]+)"?/);
+      if (match && match[1]) fileName = match[1];
+    }
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(downloadUrl);
+  }
 }

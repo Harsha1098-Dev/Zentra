@@ -26,6 +26,7 @@ model User {
   passwordResetTokens     PasswordResetToken[]
   sentInvitations         Invitation[]             @relation("UserSentInvitations")
   headedDepartments       Department[]             @relation("DepartmentHead")
+  employees               Employee[]
 
   @@index([email])
   @@map("users")
@@ -53,6 +54,11 @@ model Organization {
   designations   Designation[]
   workweekConfig WorkweekConfig?
   holidays       Holiday[]
+  employees               Employee[]
+  employmentHistories     EmploymentHistory[]
+  employeeCodeSequence    EmployeeCodeSequence?
+  employeeImportJobs      EmployeeImportJob[]
+  employeeExportJobs      EmployeeExportJob[]
 
   @@index([slug])
   @@map("organizations")
@@ -308,7 +314,9 @@ model Location {
   deletedAt      DateTime? @map("deleted_at")
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  holidays     Holiday[]
+  holidays            Holiday[]
+  employees           Employee[]
+  employmentHistories EmploymentHistory[]
 
   @@unique([organizationId, name])
   @@unique([organizationId, code])
@@ -333,8 +341,10 @@ model Department {
   organization       Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   parentDepartment   Department?   @relation("DepartmentHierarchy", fields: [parentDepartmentId], references: [id], onDelete: SetNull)
   childDepartments   Department[]  @relation("DepartmentHierarchy")
-  departmentHeadUser User?         @relation("DepartmentHead", fields: [departmentHeadUserId], references: [id], onDelete: SetNull)
-  designations       Designation[]
+  departmentHeadUser  User?               @relation("DepartmentHead", fields: [departmentHeadUserId], references: [id], onDelete: SetNull)
+  designations        Designation[]
+  employees           Employee[]
+  employmentHistories EmploymentHistory[]
 
   @@unique([organizationId, name])
   @@unique([organizationId, code])
@@ -356,8 +366,10 @@ model Grade {
   updatedAt      DateTime  @updatedAt @map("updated_at")
   deletedAt      DateTime? @map("deleted_at")
 
-  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  designations Designation[]
+  organization        Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  designations        Designation[]
+  employees           Employee[]
+  employmentHistories EmploymentHistory[]
 
   @@unique([organizationId, name])
   @@unique([organizationId, code])
@@ -382,7 +394,9 @@ model Designation {
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   grade        Grade?       @relation(fields: [gradeId], references: [id], onDelete: SetNull)
-  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  department          Department?         @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  employees           Employee[]
+  employmentHistories EmploymentHistory[]
 
   @@unique([organizationId, name])
   @@unique([organizationId, code])
@@ -431,4 +445,159 @@ model Holiday {
   @@index([date])
   @@index([locationId])
   @@map("holidays")
+}
+
+
+// ==========================================
+// EMPLOYEE MANAGEMENT MODELS
+// ==========================================
+
+model Employee {
+  id                    String    @id @default(uuid())
+  organizationId        String    @map("organization_id")
+  userId                String?   @map("user_id")
+  employeeCode          String    @map("employee_code")
+  firstName             String    @map("first_name")
+  middleName            String?   @map("middle_name")
+  lastName              String    @map("last_name")
+  workEmail             String    @map("work_email")
+  personalEmail         String?   @map("personal_email")
+  phone                 String
+  dateOfBirth           DateTime? @map("date_of_birth")
+  gender                String?   // MALE, FEMALE, NON_BINARY, OTHER, PREFER_NOT_TO_SAY
+  maritalStatus         String?   @map("marital_status") // SINGLE, MARRIED, DIVORCED, WIDOWED
+  bloodGroup            String?   @map("blood_group") // A_POSITIVE, B_POSITIVE, O_POSITIVE, etc.
+  nationality           String?
+  currentAddress        String?   @map("current_address")
+  permanentAddress      String?   @map("permanent_address")
+  city                  String?
+  state                 String?
+  country               String?
+  postalCode            String?   @map("postal_code")
+  emergencyContactName  String?   @map("emergency_contact_name")
+  emergencyContactPhone String?   @map("emergency_contact_phone")
+  emergencyContactRel   String?   @map("emergency_contact_relationship")
+  profilePhotoUrl       String?   @map("profile_photo_url")
+  dateOfJoining         DateTime  @map("date_of_joining")
+  probationEndDate      DateTime? @map("probation_end_date")
+  employmentType        String    @default("FULL_TIME") @map("employment_type") // FULL_TIME, PART_TIME, CONTRACT, INTERN, TEMPORARY
+  status                String    @default("ACTIVE") // INVITED, ACTIVE, ON_PROBATION, ON_NOTICE_PERIOD, ON_LONG_LEAVE, SUSPENDED, INACTIVE, RESIGNED, TERMINATED, EXITED
+  locationId            String    @map("location_id")
+  departmentId          String    @map("department_id")
+  designationId         String    @map("designation_id")
+  gradeId               String?   @map("grade_id")
+  reportingManagerId    String?   @map("reporting_manager_id")
+  workLocationId        String?   @map("work_location_id")
+  dateOfExit            DateTime? @map("date_of_exit")
+  exitReason            String?   @map("exit_reason")
+  customFields          Json?     @default("{}") @map("custom_fields")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  deletedAt             DateTime? @map("deleted_at")
+
+  organization      Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user              User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  location          Location            @relation(fields: [locationId], references: [id])
+  department        Department          @relation(fields: [departmentId], references: [id])
+  designation       Designation         @relation(fields: [designationId], references: [id])
+  grade             Grade?              @relation(fields: [gradeId], references: [id], onDelete: SetNull)
+  reportingManager  Employee?           @relation("ManagerReportees", fields: [reportingManagerId], references: [id], onDelete: SetNull)
+  reportees         Employee[]          @relation("ManagerReportees")
+  employmentHistory EmploymentHistory[]
+
+  @@unique([organizationId, employeeCode])
+  @@unique([organizationId, workEmail])
+  @@index([organizationId])
+  @@index([employeeCode])
+  @@index([workEmail])
+  @@index([status])
+  @@index([departmentId])
+  @@index([locationId])
+  @@index([designationId])
+  @@index([reportingManagerId])
+  @@map("employees")
+}
+
+model EmploymentHistory {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  employeeId         String    @map("employee_id")
+  eventType          String    @map("event_type") // JOINED, TRANSFERRED, PROMOTED, DESIGNATION_CHANGED, etc.
+  effectiveFrom      DateTime  @map("effective_from")
+  effectiveTo        DateTime? @map("effective_to")
+  locationId         String?   @map("location_id")
+  departmentId       String?   @map("department_id")
+  designationId      String?   @map("designation_id")
+  gradeId            String?   @map("grade_id")
+  reportingManagerId String?   @map("reporting_manager_id")
+  employmentType     String?   @map("employment_type")
+  employeeStatus     String?   @map("employee_status")
+  remarks            String?
+  previousValues     Json?     @map("previous_values")
+  newValues          Json?     @map("new_values")
+  changedByUserId    String?   @map("changed_by_user_id")
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  location     Location?    @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  designation  Designation? @relation(fields: [designationId], references: [id], onDelete: SetNull)
+  grade        Grade?       @relation(fields: [gradeId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([eventType])
+  @@index([effectiveFrom])
+  @@map("employment_histories")
+}
+
+model EmployeeCodeSequence {
+  id             String   @id @default(uuid())
+  organizationId String   @unique @map("organization_id")
+  prefix         String   @default("ZEN-")
+  nextNumber     Int      @default(1) @map("next_number")
+  padding        Int      @default(4)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("employee_code_sequences")
+}
+
+model EmployeeImportJob {
+  id              String   @id @default(uuid())
+  organizationId  String   @map("organization_id")
+  status          String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  fileName        String   @map("file_name")
+  totalRows       Int      @default(0) @map("total_rows")
+  processedRows   Int      @default(0) @map("processed_rows")
+  successfulRows  Int      @default(0) @map("successful_rows")
+  failedRows      Int      @default(0) @map("failed_rows")
+  errors          Json?    @default("[]")
+  createdByUserId String   @map("created_by_user_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("employee_import_jobs")
+}
+
+model EmployeeExportJob {
+  id              String   @id @default(uuid())
+  organizationId  String   @map("organization_id")
+  status          String   @default("COMPLETED") // PENDING, COMPLETED, FAILED
+  fileName        String   @map("file_name")
+  fileContent     String   @map("file_content")
+  totalRecords    Int      @default(0) @map("total_records")
+  createdByUserId String   @map("created_by_user_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("employee_export_jobs")
 }

@@ -226,3 +226,87 @@ Company and regional calendar holidays.
 - `description` (TEXT)
 - `is_recurring` (BOOLEAN, Default: false)
 - `created_at`, `updated_at`, `deleted_at`
+
+---
+
+## 3. Employee Management Models
+
+#### `employees`
+Central employee master record for Zentra People.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `user_id` (UUID, Foreign Key -> `users.id`, Nullable for employees without portal accounts)
+- `employee_code` (VARCHAR(50), Unique within organization)
+- `first_name` (VARCHAR(100)), `middle_name` (VARCHAR(100)), `last_name` (VARCHAR(100))
+- `work_email` (VARCHAR(255), Unique within organization)
+- `personal_email` (VARCHAR(255))
+- `phone` (VARCHAR(50))
+- `date_of_birth` (DATE)
+- `gender` (`Gender`: 'MALE', 'FEMALE', 'NON_BINARY', 'OTHER', 'PREFER_NOT_TO_SAY')
+- `marital_status` (`MaritalStatus`: 'SINGLE', 'MARRIED', 'DIVORCED', 'WIDOWED')
+- `blood_group` (`BloodGroup`: 'A_POSITIVE', 'A_NEGATIVE', 'B_POSITIVE', 'B_NEGATIVE', 'AB_POSITIVE', 'AB_NEGATIVE', 'O_POSITIVE', 'O_NEGATIVE')
+- `nationality` (VARCHAR(100))
+- Residential addresses: `current_address_line1`, `current_address_line2`, `current_city`, `current_state`, `current_country`, `current_postal_code`, `permanent_address_line1`, `permanent_address_line2`, `permanent_city`, `permanent_state`, `permanent_country`, `permanent_postal_code`
+- Emergency contacts: `emergency_contact_name`, `emergency_contact_phone`, `emergency_contact_relation`
+- `profile_photo_url` (TEXT)
+- `date_of_joining` (DATE)
+- `probation_end_date` (DATE)
+- `employment_type` (`EmploymentType`: 'FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERN', 'CONSULTANT', 'TEMPORARY')
+- `status` (`EmployeeStatus`: 'INVITED', 'ACTIVE', 'ON_PROBATION', 'ON_NOTICE_PERIOD', 'ON_LONG_LEAVE', 'SUSPENDED', 'INACTIVE', 'RESIGNED', 'TERMINATED', 'EXITED')
+- `location_id` (UUID, Foreign Key -> `locations.id`)
+- `department_id` (UUID, Foreign Key -> `departments.id`)
+- `designation_id` (UUID, Foreign Key -> `designations.id`)
+- `grade_id` (UUID, Foreign Key -> `grades.id`, Nullable)
+- `reporting_manager_id` (UUID, Self Foreign Key -> `employees.id`, Nullable)
+- `work_location_id` (UUID, Foreign Key -> `locations.id`, Nullable)
+- `date_of_exit` (DATE), `exit_reason` (TEXT)
+- `custom_fields` (JSONB)
+- `created_at`, `updated_at`, `deleted_at`
+- **Constraints:** UNIQUE(`organization_id`, `employee_code`), UNIQUE(`organization_id`, `work_email`), UNIQUE(`organization_id`, `user_id`)
+
+#### `employment_histories`
+Immutable audit log of all employee state changes and lifecycle events.
+- `id` (UUID, Primary Key)
+- `employee_id` (UUID, Foreign Key -> `employees.id`)
+- `event_type` (`EmploymentEventType`: 'JOINED', 'TRANSFERRED', 'PROMOTED', 'DESIGNATION_CHANGED', 'REPORTING_MANAGER_CHANGED', 'LOCATION_CHANGED', 'EMPLOYMENT_TYPE_CHANGED', 'STATUS_CHANGED', 'PROBATION_COMPLETED', 'PROBATION_EXTENDED', 'RESIGNED', 'TERMINATED', 'REINSTATED', 'EXITED')
+- `effective_from` (TIMESTAMPTZ)
+- `effective_to` (TIMESTAMPTZ, Nullable)
+- `location_id`, `department_id`, `designation_id`, `grade_id`, `reporting_manager_id`
+- `employment_type` (`EmploymentType`)
+- `employee_status` (`EmployeeStatus`)
+- `remarks` (TEXT)
+- `changed_by_user_id` (UUID, Foreign Key -> `users.id`)
+- `created_at` (TIMESTAMPTZ)
+
+#### `employee_code_sequences`
+Atomic counter sequence generator for organization employee code prefixes.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `prefix` (VARCHAR(20))
+- `next_number` (INTEGER, Default: 1)
+- `padding` (INTEGER, Default: 4)
+- `created_at`, `updated_at`
+- **Constraints:** UNIQUE(`organization_id`, `prefix`)
+
+#### `employee_import_jobs`
+Asynchronous batch CSV employee import tracker.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `file_name` (VARCHAR(255))
+- `total_rows` (INTEGER), `processed_rows` (INTEGER), `succeeded_rows` (INTEGER), `failed_rows` (INTEGER)
+- `status` (`ImportStatus`: 'PENDING', 'PROCESSING', 'COMPLETED', 'PARTIAL_SUCCESS', 'FAILED')
+- `row_errors` (JSONB)
+- `created_by_user_id` (UUID, Foreign Key -> `users.id`)
+- `created_at`, `updated_at`
+
+#### `employee_export_jobs`
+Audited CSV employee export record.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `file_name` (VARCHAR(255))
+- `filter_criteria` (JSONB)
+- `total_rows` (INTEGER)
+- `status` (VARCHAR(50))
+- `created_by_user_id` (UUID, Foreign Key -> `users.id`)
+- `created_at` (TIMESTAMPTZ)
+

@@ -61,6 +61,70 @@ export enum DayOfWeek {
   SUNDAY = 'SUNDAY',
 }
 
+export enum EmploymentType {
+  FULL_TIME = 'FULL_TIME',
+  PART_TIME = 'PART_TIME',
+  CONTRACT = 'CONTRACT',
+  INTERN = 'INTERN',
+  TEMPORARY = 'TEMPORARY',
+}
+
+export enum EmployeeStatus {
+  INVITED = 'INVITED',
+  ACTIVE = 'ACTIVE',
+  ON_PROBATION = 'ON_PROBATION',
+  ON_NOTICE_PERIOD = 'ON_NOTICE_PERIOD',
+  ON_LONG_LEAVE = 'ON_LONG_LEAVE',
+  SUSPENDED = 'SUSPENDED',
+  INACTIVE = 'INACTIVE',
+  RESIGNED = 'RESIGNED',
+  TERMINATED = 'TERMINATED',
+  EXITED = 'EXITED',
+}
+
+export enum EmploymentEventType {
+  JOINED = 'JOINED',
+  TRANSFERRED = 'TRANSFERRED',
+  PROMOTED = 'PROMOTED',
+  DESIGNATION_CHANGED = 'DESIGNATION_CHANGED',
+  REPORTING_MANAGER_CHANGED = 'REPORTING_MANAGER_CHANGED',
+  LOCATION_CHANGED = 'LOCATION_CHANGED',
+  EMPLOYMENT_TYPE_CHANGED = 'EMPLOYMENT_TYPE_CHANGED',
+  STATUS_CHANGED = 'STATUS_CHANGED',
+  PROBATION_COMPLETED = 'PROBATION_COMPLETED',
+  PROBATION_EXTENDED = 'PROBATION_EXTENDED',
+  RESIGNED = 'RESIGNED',
+  TERMINATED = 'TERMINATED',
+  REINSTATED = 'REINSTATED',
+  EXITED = 'EXITED',
+}
+
+export enum Gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  NON_BINARY = 'NON_BINARY',
+  OTHER = 'OTHER',
+  PREFER_NOT_TO_SAY = 'PREFER_NOT_TO_SAY',
+}
+
+export enum MaritalStatus {
+  SINGLE = 'SINGLE',
+  MARRIED = 'MARRIED',
+  DIVORCED = 'DIVORCED',
+  WIDOWED = 'WIDOWED',
+}
+
+export enum BloodGroup {
+  A_POSITIVE = 'A_POSITIVE',
+  A_NEGATIVE = 'A_NEGATIVE',
+  B_POSITIVE = 'B_POSITIVE',
+  B_NEGATIVE = 'B_NEGATIVE',
+  AB_POSITIVE = 'AB_POSITIVE',
+  AB_NEGATIVE = 'AB_NEGATIVE',
+  O_POSITIVE = 'O_POSITIVE',
+  O_NEGATIVE = 'O_NEGATIVE',
+}
+
 export enum PermissionCode {
   AUTH_MANAGE = 'auth.manage',
   ORGANIZATION_READ = 'organization.read',
@@ -105,6 +169,23 @@ export enum PermissionCode {
   HOLIDAY_DELETE = 'holiday.delete',
 
   ORGANIZATION_CHART_READ = 'organization_chart.read',
+
+  // Employee Management Permissions
+  EMPLOYEE_READ = 'employee.read',
+  EMPLOYEE_READ_BASIC = 'employee.read_basic',
+  EMPLOYEE_CREATE = 'employee.create',
+  EMPLOYEE_UPDATE = 'employee.update',
+  EMPLOYEE_DELETE = 'employee.delete',
+  EMPLOYEE_STATUS_MANAGE = 'employee.status.manage',
+  EMPLOYEE_REPORTING_MANAGER_MANAGE = 'employee.reporting_manager.manage',
+  EMPLOYEE_DEPARTMENT_MANAGE = 'employee.department.manage',
+  EMPLOYEE_DESIGNATION_MANAGE = 'employee.designation.manage',
+  EMPLOYEE_LOCATION_MANAGE = 'employee.location.manage',
+  EMPLOYEE_EMPLOYMENT_TYPE_MANAGE = 'employee.employment_type.manage',
+  EMPLOYEE_IMPORT = 'employee.import',
+  EMPLOYEE_EXPORT = 'employee.export',
+  EMPLOYEE_TIMELINE_READ = 'employee.timeline.read',
+  EMPLOYEE_EMPLOYMENT_HISTORY_READ = 'employee.employment_history.read',
 }
 
 export enum InvitationStatus {
@@ -158,6 +239,21 @@ export enum AuditAction {
   HOLIDAY_CREATE = 'HOLIDAY_CREATE',
   HOLIDAY_UPDATE = 'HOLIDAY_UPDATE',
   HOLIDAY_DELETE = 'HOLIDAY_DELETE',
+
+  // Employee Audit Actions
+  EMPLOYEE_CREATE = 'EMPLOYEE_CREATE',
+  EMPLOYEE_UPDATE = 'EMPLOYEE_UPDATE',
+  EMPLOYEE_INVITE = 'EMPLOYEE_INVITE',
+  EMPLOYEE_STATUS_CHANGE = 'EMPLOYEE_STATUS_CHANGE',
+  EMPLOYEE_REPORTING_MANAGER_CHANGE = 'EMPLOYEE_REPORTING_MANAGER_CHANGE',
+  EMPLOYEE_DEPARTMENT_CHANGE = 'EMPLOYEE_DEPARTMENT_CHANGE',
+  EMPLOYEE_DESIGNATION_CHANGE = 'EMPLOYEE_DESIGNATION_CHANGE',
+  EMPLOYEE_LOCATION_CHANGE = 'EMPLOYEE_LOCATION_CHANGE',
+  EMPLOYEE_EMPLOYMENT_TYPE_CHANGE = 'EMPLOYEE_EMPLOYMENT_TYPE_CHANGE',
+  EMPLOYEE_IMPORT = 'EMPLOYEE_IMPORT',
+  EMPLOYEE_EXPORT = 'EMPLOYEE_EXPORT',
+  EMPLOYEE_DEACTIVATE = 'EMPLOYEE_DEACTIVATE',
+  EMPLOYEE_DELETE = 'EMPLOYEE_DELETE',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -197,6 +293,22 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.HOLIDAY_UPDATE,
     PermissionCode.HOLIDAY_DELETE,
     PermissionCode.ORGANIZATION_CHART_READ,
+    // Employee Permissions for HR_ADMIN
+    PermissionCode.EMPLOYEE_READ,
+    PermissionCode.EMPLOYEE_READ_BASIC,
+    PermissionCode.EMPLOYEE_CREATE,
+    PermissionCode.EMPLOYEE_UPDATE,
+    PermissionCode.EMPLOYEE_DELETE,
+    PermissionCode.EMPLOYEE_STATUS_MANAGE,
+    PermissionCode.EMPLOYEE_REPORTING_MANAGER_MANAGE,
+    PermissionCode.EMPLOYEE_DEPARTMENT_MANAGE,
+    PermissionCode.EMPLOYEE_DESIGNATION_MANAGE,
+    PermissionCode.EMPLOYEE_LOCATION_MANAGE,
+    PermissionCode.EMPLOYEE_EMPLOYMENT_TYPE_MANAGE,
+    PermissionCode.EMPLOYEE_IMPORT,
+    PermissionCode.EMPLOYEE_EXPORT,
+    PermissionCode.EMPLOYEE_TIMELINE_READ,
+    PermissionCode.EMPLOYEE_EMPLOYMENT_HISTORY_READ,
   ],
   [RoleCode.MANAGER]: [
     PermissionCode.ORGANIZATION_READ,
@@ -204,12 +316,15 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.PRODUCT_READ,
     PermissionCode.DEPARTMENT_READ,
     PermissionCode.ORGANIZATION_CHART_READ,
+    PermissionCode.EMPLOYEE_READ_BASIC,
+    PermissionCode.EMPLOYEE_TIMELINE_READ,
   ],
   [RoleCode.EMPLOYEE]: [
     PermissionCode.ORGANIZATION_READ,
     PermissionCode.PRODUCT_READ,
     PermissionCode.DEPARTMENT_READ,
     PermissionCode.ORGANIZATION_CHART_READ,
+    PermissionCode.EMPLOYEE_READ_BASIC,
   ],
 };
 
@@ -435,6 +550,143 @@ export const UpdateHolidaySchema = CreateHolidaySchema.partial();
 export type UpdateHolidayInput = z.infer<typeof UpdateHolidaySchema>;
 
 // ==========================================
+// EMPLOYEE ZOD SCHEMAS & TYPES
+// ==========================================
+
+export const CreateEmployeeSchema = z.object({
+  firstName: z.string().trim().min(1, 'First name is required').max(100),
+  middleName: z.string().trim().max(100).optional().nullable(),
+  lastName: z.string().trim().min(1, 'Last name is required').max(100),
+  workEmail: z.string().trim().toLowerCase().email('Invalid work email address'),
+  personalEmail: z.string().trim().toLowerCase().email('Invalid personal email').or(z.literal('')).optional().nullable(),
+  phone: z.string().trim().min(1, 'Phone number is required').max(50),
+  dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date of birth must be YYYY-MM-DD').optional().nullable(),
+  gender: z.nativeEnum(Gender).optional().nullable(),
+  maritalStatus: z.nativeEnum(MaritalStatus).optional().nullable(),
+  bloodGroup: z.nativeEnum(BloodGroup).optional().nullable(),
+  nationality: z.string().trim().max(100).optional().nullable(),
+  currentAddress: z.string().trim().max(500).optional().nullable(),
+  permanentAddress: z.string().trim().max(500).optional().nullable(),
+  city: z.string().trim().max(100).optional().nullable(),
+  state: z.string().trim().max(100).optional().nullable(),
+  country: z.string().trim().max(100).optional().nullable(),
+  postalCode: z.string().trim().max(20).optional().nullable(),
+  emergencyContactName: z.string().trim().max(150).optional().nullable(),
+  emergencyContactPhone: z.string().trim().max(50).optional().nullable(),
+  emergencyContactRel: z.string().trim().max(100).optional().nullable(),
+  profilePhotoUrl: z.string().trim().optional().nullable(),
+  employeeCode: z.string().trim().max(50).toUpperCase().optional().nullable(),
+  dateOfJoining: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date of joining must be in YYYY-MM-DD format'),
+  probationEndDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Probation end date must be in YYYY-MM-DD format').optional().nullable(),
+  employmentType: z.nativeEnum(EmploymentType).default(EmploymentType.FULL_TIME),
+  status: z.nativeEnum(EmployeeStatus).optional(),
+  locationId: z.string().uuid('Invalid location UUID'),
+  departmentId: z.string().uuid('Invalid department UUID'),
+  designationId: z.string().uuid('Invalid designation UUID'),
+  gradeId: z.string().uuid('Invalid grade UUID').optional().nullable(),
+  reportingManagerId: z.string().uuid('Invalid reporting manager UUID').optional().nullable(),
+  workLocationId: z.string().uuid('Invalid work location UUID').optional().nullable(),
+  customFields: z.record(z.any()).optional().nullable(),
+  sendInvitation: z.boolean().optional().default(false),
+}).refine((data) => {
+  if (data.probationEndDate && data.dateOfJoining) {
+    return data.probationEndDate >= data.dateOfJoining;
+  }
+  return true;
+}, {
+  message: 'Probation end date must be on or after date of joining',
+  path: ['probationEndDate'],
+});
+export type CreateEmployeeInput = z.infer<typeof CreateEmployeeSchema>;
+
+export const UpdateEmployeeSchema = z.object({
+  firstName: z.string().trim().min(1, 'First name is required').max(100).optional(),
+  middleName: z.string().trim().max(100).optional().nullable(),
+  lastName: z.string().trim().min(1, 'Last name is required').max(100).optional(),
+  personalEmail: z.string().trim().toLowerCase().email('Invalid personal email').or(z.literal('')).optional().nullable(),
+  phone: z.string().trim().min(1, 'Phone number is required').max(50).optional(),
+  dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date of birth must be YYYY-MM-DD').optional().nullable(),
+  gender: z.nativeEnum(Gender).optional().nullable(),
+  maritalStatus: z.nativeEnum(MaritalStatus).optional().nullable(),
+  bloodGroup: z.nativeEnum(BloodGroup).optional().nullable(),
+  nationality: z.string().trim().max(100).optional().nullable(),
+  currentAddress: z.string().trim().max(500).optional().nullable(),
+  permanentAddress: z.string().trim().max(500).optional().nullable(),
+  city: z.string().trim().max(100).optional().nullable(),
+  state: z.string().trim().max(100).optional().nullable(),
+  country: z.string().trim().max(100).optional().nullable(),
+  postalCode: z.string().trim().max(20).optional().nullable(),
+  emergencyContactName: z.string().trim().max(150).optional().nullable(),
+  emergencyContactPhone: z.string().trim().max(50).optional().nullable(),
+  emergencyContactRel: z.string().trim().max(100).optional().nullable(),
+  profilePhotoUrl: z.string().trim().optional().nullable(),
+  gradeId: z.string().uuid('Invalid grade UUID').optional().nullable(),
+  workLocationId: z.string().uuid('Invalid work location UUID').optional().nullable(),
+  customFields: z.record(z.any()).optional().nullable(),
+  probationEndDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Probation end date must be in YYYY-MM-DD format').optional().nullable(),
+});
+export type UpdateEmployeeInput = z.infer<typeof UpdateEmployeeSchema>;
+
+export const ChangeEmployeeStatusSchema = z.object({
+  status: z.nativeEnum(EmployeeStatus),
+  effectiveDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Effective date must be YYYY-MM-DD format'),
+  remarks: z.string().trim().max(500).optional().nullable(),
+  exitReason: z.string().trim().max(500).optional().nullable(),
+});
+export type ChangeEmployeeStatusInput = z.infer<typeof ChangeEmployeeStatusSchema>;
+
+export const ChangeReportingManagerSchema = z.object({
+  reportingManagerId: z.string().uuid('Invalid manager UUID').optional().nullable(),
+  effectiveDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Effective date must be YYYY-MM-DD format'),
+  remarks: z.string().trim().max(500).optional().nullable(),
+});
+export type ChangeReportingManagerInput = z.infer<typeof ChangeReportingManagerSchema>;
+
+export const ChangeDepartmentSchema = z.object({
+  departmentId: z.string().uuid('Invalid department UUID'),
+  effectiveDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Effective date must be YYYY-MM-DD format'),
+  remarks: z.string().trim().max(500).optional().nullable(),
+});
+export type ChangeDepartmentInput = z.infer<typeof ChangeDepartmentSchema>;
+
+export const ChangeDesignationSchema = z.object({
+  designationId: z.string().uuid('Invalid designation UUID'),
+  effectiveDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Effective date must be YYYY-MM-DD format'),
+  remarks: z.string().trim().max(500).optional().nullable(),
+});
+export type ChangeDesignationInput = z.infer<typeof ChangeDesignationSchema>;
+
+export const ChangeLocationSchema = z.object({
+  locationId: z.string().uuid('Invalid location UUID'),
+  effectiveDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Effective date must be YYYY-MM-DD format'),
+  remarks: z.string().trim().max(500).optional().nullable(),
+});
+export type ChangeLocationInput = z.infer<typeof ChangeLocationSchema>;
+
+export const ChangeEmploymentTypeSchema = z.object({
+  employmentType: z.nativeEnum(EmploymentType),
+  effectiveDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Effective date must be YYYY-MM-DD format'),
+  remarks: z.string().trim().max(500).optional().nullable(),
+});
+export type ChangeEmploymentTypeInput = z.infer<typeof ChangeEmploymentTypeSchema>;
+
+export const EmployeeQueryFilterSchema = z.object({
+  search: z.string().optional(),
+  departmentId: z.string().optional(),
+  locationId: z.string().optional(),
+  designationId: z.string().optional(),
+  gradeId: z.string().optional(),
+  employmentType: z.string().optional(),
+  status: z.string().optional(),
+  reportingManagerId: z.string().optional(),
+  sortBy: z.enum(['name', 'dateOfJoining', 'employeeCode', 'createdAt']).optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
+  page: z.coerce.number().int().positive().optional(),
+  limit: z.coerce.number().int().positive().max(100).optional(),
+});
+export type EmployeeQueryFilterInput = z.infer<typeof EmployeeQueryFilterSchema>;
+
+// ==========================================
 // DATA TRANSFER OBJECT INTERFACES
 // ==========================================
 
@@ -621,6 +873,142 @@ export interface OrganizationChartDto {
   departmentsTree: DepartmentTreeNodeDto[];
   designations: DesignationDto[];
   grades: GradeDto[];
+}
+
+export interface EmployeeBasicDto {
+  id: string;
+  organizationId: string;
+  employeeCode: string;
+  firstName: string;
+  middleName?: string | null;
+  lastName: string;
+  fullName: string;
+  workEmail: string;
+  phone: string;
+  profilePhotoUrl?: string | null;
+  departmentId: string;
+  departmentName: string;
+  designationId: string;
+  designationName: string;
+  locationId: string;
+  locationName: string;
+  status: EmployeeStatus;
+  employmentType: EmploymentType;
+  dateOfJoining: string;
+  reportingManagerId?: string | null;
+  reportingManagerName?: string | null;
+}
+
+export interface EmployeeDto extends EmployeeBasicDto {
+  userId?: string | null;
+  personalEmail?: string | null;
+  dateOfBirth?: string | null;
+  gender?: Gender | null;
+  maritalStatus?: MaritalStatus | null;
+  bloodGroup?: BloodGroup | null;
+  nationality?: string | null;
+  currentAddress?: string | null;
+  permanentAddress?: string | null;
+  city?: string | null;
+  state?: string | null;
+  country?: string | null;
+  postalCode?: string | null;
+  emergencyContactName?: string | null;
+  emergencyContactPhone?: string | null;
+  emergencyContactRel?: string | null;
+  probationEndDate?: string | null;
+  gradeId?: string | null;
+  gradeName?: string | null;
+  gradeLevel?: number | null;
+  workLocationId?: string | null;
+  dateOfExit?: string | null;
+  exitReason?: string | null;
+  customFields?: Record<string, unknown> | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeProfileDto {
+  employee: EmployeeDto;
+  directReporteesCount: number;
+  departmentHead?: { id: string; name: string } | null;
+  reportingHierarchy: { id: string; name: string; employeeCode: string; designation: string }[];
+}
+
+export interface EmploymentHistoryDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  eventType: EmploymentEventType;
+  effectiveFrom: string;
+  effectiveTo?: string | null;
+  locationId?: string | null;
+  locationName?: string | null;
+  departmentId?: string | null;
+  departmentName?: string | null;
+  designationId?: string | null;
+  designationName?: string | null;
+  gradeId?: string | null;
+  gradeName?: string | null;
+  reportingManagerId?: string | null;
+  reportingManagerName?: string | null;
+  employmentType?: EmploymentType | null;
+  employeeStatus?: EmployeeStatus | null;
+  remarks?: string | null;
+  previousValues?: Record<string, unknown> | null;
+  newValues?: Record<string, unknown> | null;
+  changedByUserId?: string | null;
+  changedByName?: string | null;
+  createdAt: string;
+}
+
+export interface EmployeeTimelineItemDto {
+  id: string;
+  date: string;
+  title: string;
+  eventType: EmploymentEventType;
+  description: string;
+  changedByName?: string | null;
+  metadata?: Record<string, unknown> | null;
+}
+
+export interface ReportingStructureDto {
+  employee: EmployeeBasicDto;
+  manager?: EmployeeBasicDto | null;
+  skipLevelManager?: EmployeeBasicDto | null;
+  departmentHead?: EmployeeBasicDto | null;
+  reportees: EmployeeBasicDto[];
+}
+
+export interface EmployeeImportJobDto {
+  id: string;
+  organizationId: string;
+  status: string;
+  fileName: string;
+  totalRows: number;
+  processedRows: number;
+  successfulRows: number;
+  failedRows: number;
+  errors: { row: number; field?: string; message: string; data?: any }[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeExportJobDto {
+  id: string;
+  organizationId: string;
+  status: string;
+  fileName: string;
+  totalRecords: number;
+  createdAt: string;
+}
+
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 export interface ApiResponse<T = unknown> {

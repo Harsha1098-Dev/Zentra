@@ -309,3 +309,43 @@ All endpoints below require authentication with an active organization membershi
 
 ### Organization Chart
 - `GET /organization-chart` - Aggregated public structure returning company profile, location hubs, recursive department tree, designations, and grade hierarchy. (Requires `organization_chart.read`)
+
+---
+
+## 5. Employee Management Endpoints
+
+All employee operations are strictly scoped to the active organization (`organization_id` derived from the session membership). Role-based field masking automatically removes sensitive personal details (personal email, birth date, residential addresses, emergency contacts) when accessed by non-administrative team members.
+
+### Directory & Lifecycle
+- `GET /employees` - Search, filter, and paginate employees. Supports filters for `search`, `departmentId`, `locationId`, `designationId`, `gradeId`, `employmentType`, `status`, `page`, `limit`, `sortBy`, `sortOrder`. (Requires `employee.read_basic`)
+- `POST /employees` - Create a new employee record. Supports automatic sequence generation (e.g. `ZEN-0001`). Can optionally create and send an organization invitation or save without an account. (Requires `employee.create`)
+- `GET /employees/next-code` - Generate the next sequential preview employee code. (Requires `employee.create`)
+- `GET /employees/me` - Self-service profile for the authenticated employee (full personal details without colleague masking). (Requires `employee.read_basic`)
+- `GET /employees/:id` - Get employee details by ID. (Requires `employee.read_basic`)
+- `GET /employees/:id/profile` - Comprehensive profile with placement, reporting structure, and reverse-chronological timeline. (Requires `employee.read_basic`)
+- `PATCH /employees/:id` - Update general employee details, addresses, emergency contacts, probation date, and custom fields. (Requires `employee.update`)
+- `DELETE /employees/:id` - Soft delete employee record (sets `deleted_at`). (Requires `employee.delete`)
+
+### Lifecycle & Transfer Transitions
+Each lifecycle transition updates the employee state and immutably records an event in `EmploymentHistory`:
+- `PATCH /employees/:id/status` - Transition employee lifecycle status (`ACTIVE`, `ON_PROBATION`, `ON_NOTICE_PERIOD`, `ON_LONG_LEAVE`, `SUSPENDED`, `INACTIVE`, `RESIGNED`, `TERMINATED`, `EXITED`). (Requires `employee.status.manage`)
+- `PATCH /employees/:id/reporting-manager` - Reassign reporting manager with upward ancestor cycle detection and active status validation. (Requires `employee.reporting_manager.manage`)
+- `PATCH /employees/:id/department` - Transfer employee to a new department. (Requires `employee.department.manage`)
+- `PATCH /employees/:id/designation` - Change employee designation / promotion. (Requires `employee.designation.manage`)
+- `PATCH /employees/:id/location` - Transfer employee to a different office location. (Requires `employee.location.manage`)
+- `PATCH /employees/:id/employment-type` - Change employment contract type (`FULL_TIME`, `PART_TIME`, `CONTRACT`, `INTERN`, `CONSULTANT`, `TEMPORARY`). (Requires `employee.employment_type.manage`)
+
+### Org Tree & Team
+- `GET /employees/:id/timeline` - Get reverse-chronological timeline of employee lifecycle and milestone events. (Requires `employee.timeline.read`)
+- `GET /employees/:id/employment-history` - Get immutable audit trail of employment state transitions. (Requires `employee.employment_history.read`)
+- `GET /employees/:id/reportees` - Get direct and indirect reportees for a manager. (Requires `employee.read_basic`)
+- `GET /employees/:id/reporting-structure` - Get hierarchical structure (manager, upward leadership chain, and direct reportees). (Requires `employee.read_basic`)
+
+### Bulk Import & Export
+- `GET /employees/import-template` - Download standard CSV template with headers and sample rows. (Requires `employee.import`)
+- `POST /employees/import` - Validate and execute CSV import. When `dryRun: true`, validates data without DB mutation and returns row preview and errors. When `dryRun: false`, executes import and returns job summary. (Requires `employee.import`)
+- `GET /employees/import/:importId` - Get status and statistics of an import job. (Requires `employee.import`)
+- `GET /employees/import/:importId/errors` - Download CSV error report for failed rows. (Requires `employee.import`)
+- `POST /employees/export` - Generate role-scoped CSV export with customized query filters. (Requires `employee.export`)
+- `GET /employees/export/:exportId` - Download the generated CSV export file. (Requires `employee.export`)
+

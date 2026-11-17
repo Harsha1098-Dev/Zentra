@@ -47,6 +47,23 @@ const BASE_PERMISSIONS: { code: string; name: string; description: string }[] = 
   { code: 'holiday.delete', name: 'Delete Holiday', description: 'Remove holiday from calendar' },
 
   { code: 'organization_chart.read', name: 'Read Organization Chart', description: 'View organization chart structure' },
+
+  // Employee Management Permissions
+  { code: 'employee.read', name: 'Read Employees', description: 'View full employee profiles and directory' },
+  { code: 'employee.read_basic', name: 'Read Basic Employees', description: 'View basic colleague directory information' },
+  { code: 'employee.create', name: 'Create Employee', description: 'Create employee records and trigger invitations' },
+  { code: 'employee.update', name: 'Update Employee', description: 'Edit employee details' },
+  { code: 'employee.delete', name: 'Delete Employee', description: 'Soft delete employee records' },
+  { code: 'employee.status.manage', name: 'Manage Employee Status', description: 'Change employee lifecycle statuses' },
+  { code: 'employee.reporting_manager.manage', name: 'Manage Reporting Manager', description: 'Reassign employee reporting managers' },
+  { code: 'employee.department.manage', name: 'Manage Employee Department', description: 'Transfer employee departments' },
+  { code: 'employee.designation.manage', name: 'Manage Employee Designation', description: 'Change employee job designations' },
+  { code: 'employee.location.manage', name: 'Manage Employee Location', description: 'Change employee work locations' },
+  { code: 'employee.employment_type.manage', name: 'Manage Employment Type', description: 'Change employment types' },
+  { code: 'employee.import', name: 'Import Employees', description: 'Bulk import employees via CSV' },
+  { code: 'employee.export', name: 'Export Employees', description: 'Export employee dataset to CSV' },
+  { code: 'employee.timeline.read', name: 'Read Employee Timeline', description: 'View employee milestone timeline' },
+  { code: 'employee.employment_history.read', name: 'Read Employment History', description: 'View complete employment history events' },
 ];
 
 const BASE_ROLES = [

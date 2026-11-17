@@ -221,13 +221,35 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
+            <Link
+              href="/employees"
+              className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#1E3A8A] text-white hover:bg-[#1D4ED8] rounded-lg text-xs font-semibold shadow-sm transition-colors"
+            >
+              <Users className="w-3.5 h-3.5" />
+              <span>Employees</span>
+            </Link>
+
+            <Link
+              href="/my-team"
+              className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
+            >
+              <span>My Team</span>
+            </Link>
+
+            <Link
+              href="/my-profile"
+              className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
+            >
+              <span>My Profile</span>
+            </Link>
+
             <Link
               href="/settings/organization"
               className="hidden md:inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#E0E7FF] text-[#1E3A8A] hover:bg-indigo-100 rounded-lg text-xs font-semibold border border-indigo-200 transition-colors"
             >
               <Sliders className="w-3.5 h-3.5" />
-              <span>Organization Setup</span>
+              <span>Org Setup</span>
             </Link>
 
             {/* User Profile & Role Badge */}
@@ -381,13 +403,41 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[#E2E8F0] flex items-center justify-between text-xs text-[#64748B]">
-                  <span>Entitlement: <strong>Enabled by Company Registration</strong></span>
+                <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap gap-2">
+                  <Link
+                    href="/employees"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 bg-[#1E3A8A] text-white hover:bg-[#1D4ED8] rounded text-xs font-semibold"
+                  >
+                    <Users className="w-3 h-3" />
+                    <span>Employees Directory</span>
+                  </Link>
+                  <Link
+                    href="/employees/new"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 bg-blue-50 text-[#1E3A8A] hover:bg-blue-100 rounded text-xs font-semibold"
+                  >
+                    <span>+ Add Employee</span>
+                  </Link>
+                  <Link
+                    href="/employees/import"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 border border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A] rounded text-xs font-semibold"
+                  >
+                    <span>Import CSV</span>
+                  </Link>
+                  <Link
+                    href="/employees/export"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 border border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A] rounded text-xs font-semibold"
+                  >
+                    <span>Export</span>
+                  </Link>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-[#E2E8F0] flex items-center justify-between text-xs text-[#64748B]">
+                  <span>Entitlement: <strong>Active</strong></span>
                   <Link
                     href="/settings/organization"
                     className="text-[#1E3A8A] font-semibold hover:underline inline-flex items-center space-x-1"
                   >
-                    <span>Organization Setup</span>
+                    <span>Org Setup</span>
                     <ArrowRight className="w-3 h-3" />
                   </Link>
                 </div>

@@ -345,3 +345,128 @@ CREATE TABLE IF NOT EXISTS "holidays" (
 CREATE INDEX IF NOT EXISTS "idx_holidays_org_id" ON "holidays"("organization_id");
 CREATE INDEX IF NOT EXISTS "idx_holidays_date" ON "holidays"("date");
 CREATE INDEX IF NOT EXISTS "idx_holidays_location_id" ON "holidays"("location_id");
+
+
+-- ----------------------------------------------------
+-- Employee Management Tables
+-- ----------------------------------------------------
+CREATE TABLE IF NOT EXISTS "employees" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "user_id" UUID REFERENCES "users"("id") ON DELETE SET NULL,
+    "employee_code" VARCHAR(50) NOT NULL,
+    "first_name" VARCHAR(100) NOT NULL,
+    "middle_name" VARCHAR(100),
+    "last_name" VARCHAR(100) NOT NULL,
+    "work_email" VARCHAR(255) NOT NULL,
+    "personal_email" VARCHAR(255),
+    "phone" VARCHAR(50) NOT NULL,
+    "date_of_birth" DATE,
+    "gender" VARCHAR(50),
+    "marital_status" VARCHAR(50),
+    "blood_group" VARCHAR(50),
+    "nationality" VARCHAR(100),
+    "current_address" TEXT,
+    "permanent_address" TEXT,
+    "city" VARCHAR(100),
+    "state" VARCHAR(100),
+    "country" VARCHAR(100),
+    "postal_code" VARCHAR(20),
+    "emergency_contact_name" VARCHAR(150),
+    "emergency_contact_phone" VARCHAR(50),
+    "emergency_contact_relationship" VARCHAR(100),
+    "profile_photo_url" TEXT,
+    "date_of_joining" DATE NOT NULL,
+    "probation_end_date" DATE,
+    "employment_type" VARCHAR(50) NOT NULL DEFAULT 'FULL_TIME',
+    "status" VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
+    "location_id" UUID NOT NULL REFERENCES "locations"("id"),
+    "department_id" UUID NOT NULL REFERENCES "departments"("id"),
+    "designation_id" UUID NOT NULL REFERENCES "designations"("id"),
+    "grade_id" UUID REFERENCES "grades"("id") ON DELETE SET NULL,
+    "reporting_manager_id" UUID REFERENCES "employees"("id") ON DELETE SET NULL,
+    "work_location_id" UUID,
+    "date_of_exit" DATE,
+    "exit_reason" TEXT,
+    "custom_fields" JSONB DEFAULT '{}',
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "deleted_at" TIMESTAMPTZ,
+    CONSTRAINT "uq_employees_org_code" UNIQUE ("organization_id", "employee_code"),
+    CONSTRAINT "uq_employees_org_work_email" UNIQUE ("organization_id", "work_email")
+);
+
+CREATE INDEX IF NOT EXISTS "idx_employees_organization_id" ON "employees"("organization_id");
+CREATE INDEX IF NOT EXISTS "idx_employees_employee_code" ON "employees"("employee_code");
+CREATE INDEX IF NOT EXISTS "idx_employees_work_email" ON "employees"("work_email");
+CREATE INDEX IF NOT EXISTS "idx_employees_status" ON "employees"("status");
+CREATE INDEX IF NOT EXISTS "idx_employees_department_id" ON "employees"("department_id");
+CREATE INDEX IF NOT EXISTS "idx_employees_location_id" ON "employees"("location_id");
+CREATE INDEX IF NOT EXISTS "idx_employees_designation_id" ON "employees"("designation_id");
+CREATE INDEX IF NOT EXISTS "idx_employees_reporting_manager_id" ON "employees"("reporting_manager_id");
+
+CREATE TABLE IF NOT EXISTS "employment_histories" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "employee_id" UUID NOT NULL REFERENCES "employees"("id") ON DELETE CASCADE,
+    "event_type" VARCHAR(100) NOT NULL,
+    "effective_from" DATE NOT NULL,
+    "effective_to" DATE,
+    "location_id" UUID REFERENCES "locations"("id") ON DELETE SET NULL,
+    "department_id" UUID REFERENCES "departments"("id") ON DELETE SET NULL,
+    "designation_id" UUID REFERENCES "designations"("id") ON DELETE SET NULL,
+    "grade_id" UUID REFERENCES "grades"("id") ON DELETE SET NULL,
+    "reporting_manager_id" UUID,
+    "employment_type" VARCHAR(50),
+    "employee_status" VARCHAR(50),
+    "remarks" TEXT,
+    "previous_values" JSONB,
+    "new_values" JSONB,
+    "changed_by_user_id" UUID,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS "idx_employment_histories_organization_id" ON "employment_histories"("organization_id");
+CREATE INDEX IF NOT EXISTS "idx_employment_histories_employee_id" ON "employment_histories"("employee_id");
+CREATE INDEX IF NOT EXISTS "idx_employment_histories_event_type" ON "employment_histories"("event_type");
+CREATE INDEX IF NOT EXISTS "idx_employment_histories_effective_from" ON "employment_histories"("effective_from");
+
+CREATE TABLE IF NOT EXISTS "employee_code_sequences" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID UNIQUE NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "prefix" VARCHAR(20) NOT NULL DEFAULT 'ZEN-',
+    "next_number" INTEGER NOT NULL DEFAULT 1,
+    "padding" INTEGER NOT NULL DEFAULT 4,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS "employee_import_jobs" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "status" VARCHAR(50) NOT NULL DEFAULT 'PENDING',
+    "file_name" VARCHAR(255) NOT NULL,
+    "total_rows" INTEGER NOT NULL DEFAULT 0,
+    "processed_rows" INTEGER NOT NULL DEFAULT 0,
+    "successful_rows" INTEGER NOT NULL DEFAULT 0,
+    "failed_rows" INTEGER NOT NULL DEFAULT 0,
+    "errors" JSONB DEFAULT '[]',
+    "created_by_user_id" UUID NOT NULL,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS "idx_employee_import_jobs_organization_id" ON "employee_import_jobs"("organization_id");
+
+CREATE TABLE IF NOT EXISTS "employee_export_jobs" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "organization_id" UUID NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
+    "status" VARCHAR(50) NOT NULL DEFAULT 'COMPLETED',
+    "file_name" VARCHAR(255) NOT NULL,
+    "file_content" TEXT NOT NULL,
+    "total_records" INTEGER NOT NULL DEFAULT 0,
+    "created_by_user_id" UUID NOT NULL,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS "idx_employee_export_jobs_organization_id" ON "employee_export_jobs"("organization_id");
