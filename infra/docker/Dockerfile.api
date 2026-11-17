@@ -1,0 +1,32 @@
+FROM node:22-alpine AS base
+WORKDIR /app
+RUN npm install -g pnpm@11.9.0
+
+FROM base AS dependencies
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+COPY packages/shared-types/package.json ./packages/shared-types/
+COPY packages/ui/package.json ./packages/ui/
+COPY apps/api/package.json ./apps/api/
+COPY apps/api/prisma ./apps/api/prisma/
+RUN pnpm install --frozen-lockfile=false
+
+FROM dependencies AS builder
+COPY . .
+RUN pnpm --filter @zentra/shared-types build
+RUN pnpm --filter @zentra/api db:generate
+RUN pnpm --filter @zentra/api build
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=dependencies /app/packages/shared-types/node_modules ./packages/shared-types/node_modules
+COPY --from=builder /app/packages/shared-types/dist ./packages/shared-types/dist
+COPY --from=builder /app/packages/shared-types/package.json ./packages/shared-types/package.json
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
+COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
+
+EXPOSE 4000
+CMD ["node", "apps/api/dist/src/main"]

@@ -1,0 +1,29 @@
+{
+  "name": "zentra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Zentra - Multi-tenant HRMS SaaS Platform",
+  "scripts": {
+    "build": "pnpm --recursive run build",
+    "dev": "pnpm --recursive --parallel run dev",
+    "dev:api": "pnpm --filter @zentra/api run start:dev",
+    "dev:web": "pnpm --filter @zentra/web run dev",
+    "test": "pnpm --filter @zentra/api run test",
+    "test:watch": "pnpm --filter @zentra/api run test:watch",
+    "test:cov": "pnpm --filter @zentra/api run test:cov",
+    "lint": "pnpm --recursive run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "db:migrate": "pnpm --filter @zentra/api run db:migrate",
+    "db:generate": "pnpm --filter @zentra/api run db:generate",
+    "db:seed": "pnpm --filter @zentra/api run db:seed",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  },
+  "packageManager": "pnpm@11.9.0"
+}

@@ -1,0 +1,138 @@
+# Zentra Database Architecture & Schema
+
+Zentra uses PostgreSQL with Prisma ORM. All primary keys are UUIDs (`gen_random_uuid()`). Every tenant-owned table strictly includes `organization_id`.
+
+## Entity-Relationship Diagram
+
+```mermaid
+erDiagram
+    users ||--o{ organization_memberships : "has"
+    users ||--o{ audit_logs : "acts in"
+    users ||--o{ refresh_tokens : "owns"
+    users ||--o{ email_verification_tokens : "has"
+    users ||--o{ password_reset_tokens : "has"
+    users ||--o{ invitations : "invites"
+
+    organizations ||--o{ organization_memberships : "contains"
+    organizations ||--o{ organization_products : "entitled to"
+    organizations ||--o{ roles : "defines"
+    organizations ||--o{ user_roles : "scopes"
+    organizations ||--o{ audit_logs : "records"
+    organizations ||--o{ invitations : "issues"
+
+    organization_memberships ||--o{ user_roles : "assigned"
+    roles ||--o{ user_roles : "held by"
+    roles ||--o{ role_permissions : "includes"
+    permissions ||--o{ role_permissions : "granted by"
+    roles ||--o{ invitations : "assigned to"
+```
+
+---
+
+## Model Specifications
+
+### 1. `users`
+Global single identity per person.
+- `id` (UUID, Primary Key)
+- `email` (VARCHAR(255), Unique, Indexed, Normalized)
+- `password_hash` (VARCHAR(255), Nullable for invited users)
+- `first_name` (VARCHAR(100))
+- `last_name` (VARCHAR(100))
+- `is_email_verified` (BOOLEAN, Default: false)
+- `status` (VARCHAR(50), Default: 'ACTIVE')
+- `created_at`, `updated_at`, `deleted_at`
+
+### 2. `organizations`
+Tenants in the system.
+- `id` (UUID, Primary Key)
+- `name` (VARCHAR(255))
+- `slug` (VARCHAR(255), Unique, Indexed)
+- `status` (VARCHAR(50), Default: 'ACTIVE')
+- `created_at`, `updated_at`, `deleted_at`
+
+### 3. `organization_memberships`
+Links a global user to an organization.
+- `id` (UUID, Primary Key)
+- `user_id` (UUID, Foreign Key -> `users.id`)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `status` (VARCHAR(50), Default: 'ACTIVE')
+- `joined_at` (TIMESTAMPTZ)
+- `created_at`, `updated_at`, `deleted_at`
+- **Constraint:** UNIQUE(`user_id`, `organization_id`)
+
+### 4. `organization_products`
+Product entitlements per tenant.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `product_code` (VARCHAR(100), e.g., 'ZENTRA_PEOPLE', 'ZENTRA_PAYROLL')
+- `status` (VARCHAR(50), 'ACTIVE', 'TRIAL', 'EXPIRED', 'CANCELLED')
+- `trial_ends_at` (TIMESTAMPTZ)
+- `created_at`, `updated_at`
+- **Constraint:** UNIQUE(`organization_id`, `product_code`)
+
+### 5. `roles`
+Roles scoped to an organization (or global system base roles where `organization_id` is null).
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Nullable Foreign Key -> `organizations.id`)
+- `name` (VARCHAR(100))
+- `code` (VARCHAR(100))
+- `description` (TEXT)
+- `is_system` (BOOLEAN, Default: false)
+- `created_at`, `updated_at`
+
+### 6. `permissions`
+Granular capabilities.
+- `id` (UUID, Primary Key)
+- `code` (VARCHAR(100), Unique, e.g., `user.invite`, `audit.read`)
+- `name` (VARCHAR(100))
+- `description` (TEXT)
+- `created_at`, `updated_at`
+
+### 7. `role_permissions`
+Join table mapping permissions to roles.
+- `id` (UUID, Primary Key)
+- `role_id` (UUID, Foreign Key -> `roles.id`)
+- `permission_id` (UUID, Foreign Key -> `permissions.id`)
+- `created_at`
+- **Constraint:** UNIQUE(`role_id`, `permission_id`)
+
+### 8. `user_roles`
+Assigns roles to organization memberships.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `membership_id` (UUID, Foreign Key -> `organization_memberships.id`)
+- `role_id` (UUID, Foreign Key -> `roles.id`)
+- `created_at`
+- **Constraint:** UNIQUE(`membership_id`, `role_id`)
+
+### 9. `audit_logs`
+Immutable audit records with sanitized values.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Nullable Foreign Key -> `organizations.id`)
+- `actor_user_id` (UUID, Nullable Foreign Key -> `users.id`)
+- `action` (VARCHAR(100), Indexed)
+- `entity_type` (VARCHAR(100))
+- `entity_id` (VARCHAR(255))
+- `old_values` (JSONB)
+- `new_values` (JSONB)
+- `ip_address` (VARCHAR(100))
+- `user_agent` (TEXT)
+- `created_at` (TIMESTAMPTZ, Indexed)
+
+### 10. `invitations`
+Pending and accepted employee invitations.
+- `id` (UUID, Primary Key)
+- `organization_id` (UUID, Foreign Key -> `organizations.id`)
+- `email` (VARCHAR(255), Indexed)
+- `role_id` (UUID, Foreign Key -> `roles.id`)
+- `invited_by_user_id` (UUID, Foreign Key -> `users.id`)
+- `token_hash` (VARCHAR(255), Unique, Indexed)
+- `status` (VARCHAR(50), Default: 'PENDING', Indexed)
+- `expires_at` (TIMESTAMPTZ)
+- `accepted_at` (TIMESTAMPTZ)
+- `created_at`, `updated_at`
+
+### 11. Token Tables
+- `refresh_tokens`: Stores hashed refresh tokens with expiration and revocation timestamps.
+- `email_verification_tokens`: Stores hashed email tokens.
+- `password_reset_tokens`: Stores hashed password reset tokens.
