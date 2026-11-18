@@ -13,7 +13,7 @@ export class PayslipTemplatesService {
   constructor(
     private readonly repo: PayslipTemplatesRepository,
     private readonly auditService: AuditService,
-  ) {}
+  ) { }
 
   async findAll(organizationId: string) {
     return this.repo.findAll(organizationId);

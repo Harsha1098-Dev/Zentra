@@ -28,7 +28,7 @@ export class PayslipsService {
     private readonly employeesRepo: EmployeesRepository,
     private readonly auditService: AuditService,
     private readonly emailService: EmailService,
-  ) {}
+  ) { }
 
   async generatePayslips(
     payrollRunId: string,
@@ -125,6 +125,16 @@ export class PayslipsService {
         payDate: run.paymentDate || payrollPeriod.payDate,
         grossEarnings: rec.grossEarnings,
         totalDeductions: rec.totalDeductions,
+        employeePf: rec.employeePf,
+        employerPf: rec.employerPf,
+        eps: rec.eps,
+        edli: rec.edli,
+        employeeEsi: rec.employeeEsi,
+        employerEsi: rec.employerEsi,
+        professionalTax: rec.professionalTax,
+        lwfEmployee: rec.lwfEmployee,
+        lwfEmployer: rec.lwfEmployer,
+        tds: rec.tds,
         netPay: rec.netPay,
         netPayWords,
         earningsBreakdown,
@@ -240,7 +250,7 @@ export class PayslipsService {
             `Your Payslip for ${p.periodName} is Available`,
             `Hello ${p.employee.firstName},\n\nYour payslip for ${p.periodName} has been processed and published to your employee portal.\n\nNet Pay: ₹ ${p.netPay.toLocaleString('en-IN')}\n\nYou can view and download your payslip anytime from your self-service portal.`,
           )
-          .catch(() => {});
+          .catch(() => { });
       }
     }
 

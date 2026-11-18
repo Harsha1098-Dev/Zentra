@@ -15,7 +15,7 @@ export class PayrollPeriodsService {
     private readonly repo: PayrollPeriodsRepository,
     private readonly orgsRepo: OrganizationsRepository,
     private readonly auditService: AuditService,
-  ) {}
+  ) { }
 
   async findAll(organizationId: string, year?: number) {
     return this.repo.findAll(organizationId, year);

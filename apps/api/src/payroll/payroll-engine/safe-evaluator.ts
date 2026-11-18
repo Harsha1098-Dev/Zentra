@@ -75,6 +75,8 @@ export class SafeFormulaEvaluator {
     return tokens;
   }
 
+  private static readonly FUNCTIONS = new Set(['min', 'max', 'round', 'floor', 'ceil', 'abs']);
+
   /**
    * Converts infix tokens to Reverse Polish Notation (RPN) using Dijkstra's Shunting-yard algorithm.
    */
@@ -94,7 +96,16 @@ export class SafeFormulaEvaluator {
     const isRightAssociative = (op: string) => op === '^' || op === 'u-';
 
     for (const token of tokens) {
-      if (/^[0-9.]+$/.test(token) || /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(token)) {
+      const lower = token.toLowerCase();
+      if (/^[0-9.]+$/.test(token)) {
+        output.push(token);
+      } else if (this.FUNCTIONS.has(lower)) {
+        opStack.push(lower);
+      } else if (token === ',') {
+        while (opStack.length > 0 && opStack[opStack.length - 1] !== '(') {
+          output.push(opStack.pop()!);
+        }
+      } else if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(token)) {
         output.push(token);
       } else if (token in precedence) {
         while (
@@ -116,6 +127,9 @@ export class SafeFormulaEvaluator {
           throw new Error('Mismatched parentheses in formula');
         }
         opStack.pop(); // Remove '('
+        if (opStack.length > 0 && this.FUNCTIONS.has(opStack[opStack.length - 1])) {
+          output.push(opStack.pop()!);
+        }
       }
     }
 
@@ -137,6 +151,7 @@ export class SafeFormulaEvaluator {
     const stack: number[] = [];
 
     for (const token of rpn) {
+      const lower = token.toLowerCase();
       if (/^[0-9.]+$/.test(token)) {
         stack.push(parseFloat(token));
       } else if (token === 'u-') {
@@ -161,6 +176,28 @@ export class SafeFormulaEvaluator {
             break;
           case '^':
             stack.push(Math.pow(a, b));
+            break;
+        }
+      } else if (lower === 'min' || lower === 'max') {
+        if (stack.length < 2) throw new Error(`Function '${token}' requires 2 arguments`);
+        const b = stack.pop()!;
+        const a = stack.pop()!;
+        stack.push(lower === 'min' ? Math.min(a, b) : Math.max(a, b));
+      } else if (['round', 'floor', 'ceil', 'abs'].includes(lower)) {
+        if (stack.length < 1) throw new Error(`Function '${token}' requires 1 argument`);
+        const a = stack.pop()!;
+        switch (lower) {
+          case 'round':
+            stack.push(Math.round(a));
+            break;
+          case 'floor':
+            stack.push(Math.floor(a));
+            break;
+          case 'ceil':
+            stack.push(Math.ceil(a));
+            break;
+          case 'abs':
+            stack.push(Math.abs(a));
             break;
         }
       } else {

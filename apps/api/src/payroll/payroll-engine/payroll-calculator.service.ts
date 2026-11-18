@@ -1,10 +1,12 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SafeFormulaEvaluator } from './safe-evaluator';
+import { StatutoryCalculatorService } from '../statutory/statutory-calculator.service';
 import {
   SalaryComponentType,
   CalculationType,
   PayrollRunStatus,
+  TaxRegime,
 } from '@zentra/shared-types';
 
 export interface CalculationResult {
@@ -15,6 +17,18 @@ export interface CalculationResult {
   totalDeductions: number;
   totalEmployerContributions: number;
   netPay: number;
+  employeePf: number;
+  employerPf: number;
+  eps: number;
+  edli: number;
+  adminChargesPf: number;
+  employeeEsi: number;
+  employerEsi: number;
+  professionalTax: number;
+  lwfEmployee: number;
+  lwfEmployer: number;
+  tds: number;
+  tdsCalculation?: any;
   earningsBreakdown: Array<{ name: string; code: string; amount: number; type: string }>;
   deductionsBreakdown: Array<{ name: string; code: string; amount: number; type: string }>;
   contributionsBreakdown: Array<{ name: string; code: string; amount: number }>;
@@ -23,7 +37,10 @@ export interface CalculationResult {
 
 @Injectable()
 export class PayrollCalculatorService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly statutoryCalculator: StatutoryCalculatorService,
+  ) {}
 
   /**
    * Executes the calculation for an entire payroll run.
@@ -44,7 +61,7 @@ export class PayrollCalculatorService {
       throw new BadRequestException(`Cannot calculate a payroll run that is already ${run.status}`);
     }
 
-    const { periodStartDate, periodEndDate } = run.payrollPeriod;
+    const { periodStartDate, periodEndDate, payrollMonth, payrollYear } = run.payrollPeriod;
     const periodStart = new Date(periodStartDate);
     const periodEnd = new Date(periodEndDate);
 
@@ -52,7 +69,7 @@ export class PayrollCalculatorService {
     const totalDaysInPeriod =
       Math.round((periodEnd.getTime() - periodStart.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 
-    // 1. Fetch eligible employees
+    // 1. Fetch eligible employees with tax details and locations
     const employees = await this.prisma.employee.findMany({
       where: {
         organizationId,
@@ -77,6 +94,14 @@ export class PayrollCalculatorService {
         bankDetail: true,
         department: { select: { id: true, name: true } },
         designation: { select: { id: true, name: true } },
+        location: true,
+        taxProfiles: {
+          where: { organizationId },
+          take: 1,
+        },
+        taxDeclarations: {
+          where: { organizationId },
+        },
       },
     });
 
@@ -85,6 +110,25 @@ export class PayrollCalculatorService {
       where: { payrollRunId, organizationId },
     });
 
+    // 3. Fetch Statutory Configuration & Rules
+    const statutorySettings = await this.prisma.statutorySetting.findUnique({
+      where: { organizationId },
+    });
+    const pfConfig = await this.prisma.pfConfiguration.findUnique({
+      where: { organizationId },
+    });
+    const esiConfig = await this.prisma.esiConfiguration.findUnique({
+      where: { organizationId },
+    });
+    const ptRules = await this.prisma.professionalTaxRule.findMany({
+      where: { organizationId, isActive: true },
+      include: { slabs: true },
+    });
+    const lwfRules = await this.prisma.lwfRule.findMany({
+      where: { organizationId, isActive: true },
+    });
+
+    const financialYear = statutorySettings?.financialYear || '2025-2026';
     const results: CalculationResult[] = [];
 
     for (const emp of employees) {
@@ -94,7 +138,6 @@ export class PayrollCalculatorService {
 
       const assignment = emp.salaryAssignments[0];
       if (!assignment || !assignment.salaryStructure) {
-        // Skip employees without active structure from computation (will remain flagged in exceptions)
         continue;
       }
 
@@ -201,14 +244,11 @@ export class PayrollCalculatorService {
 
       // Add Overtime from Inputs
       const otInputs = empInputs.filter((i) => i.inputType === 'OVERTIME');
-      let totalOtMinutes = 0;
       let totalOtAmount = 0;
       for (const ot of otInputs) {
-        totalOtMinutes += ot.units || 0;
         if (ot.amount > 0) {
           totalOtAmount += ot.amount;
         } else {
-          // Standard OT formula: (Basic / (totalDaysInPeriod * 8)) * 1.5 * hours
           const basic = context['BASIC'] || context['BASIC_SALARY'] || (monthlyCtc * 0.5);
           const hourlyRate = basic / (totalDaysInPeriod * 8);
           const otHours = (ot.units || 0) / 60;
@@ -256,6 +296,206 @@ export class PayrollCalculatorService {
         }
       }
 
+      // --- Statutory Calculations (India) ---
+      const taxProfile = emp.taxProfiles?.[0];
+      const isPfEligible = taxProfile ? taxProfile.isPfEligible : true;
+      const isEsiEligible = taxProfile ? taxProfile.isEsiEligible : true;
+      const isPtEligible = taxProfile ? taxProfile.isPtEligible : true;
+      const isLwfEligible = taxProfile ? taxProfile.isLwfEligible : true;
+      const vpfPercentage = taxProfile?.vpfPercentage || 0;
+      const selectedRegime = taxProfile?.selectedRegime || statutorySettings?.defaultTaxRegime || TaxRegime.NEW_REGIME;
+
+      // 1. EPF
+      let employeePf = 0;
+      let employerPf = 0;
+      let eps = 0;
+      let edli = 0;
+      let adminChargesPf = 0;
+
+      if (statutorySettings?.pfEnabled !== false && isPfEligible) {
+        const basicWages = context['BASIC'] || context['BASIC_SALARY'] || (runningGross * 0.5);
+        const pfResult = this.statutoryCalculator.calculatePf(
+          basicWages,
+          pfConfig || {},
+          isPfEligible,
+          vpfPercentage,
+        );
+        employeePf = pfResult.employeePf;
+        employerPf = pfResult.employerPf;
+        eps = pfResult.eps;
+        edli = pfResult.edli;
+        adminChargesPf = pfResult.adminChargesPf;
+
+        if (employeePf > 0) {
+          runningDeductions += employeePf;
+          deductionsBreakdown.push({
+            name: 'Provident Fund (Employee)',
+            code: 'PF_EMPLOYEE',
+            amount: employeePf,
+            type: 'DEDUCTION',
+          });
+        }
+
+        if (employerPf > 0 || eps > 0) {
+          runningContributions += pfResult.totalEmployerContribution;
+          contributionsBreakdown.push({
+            name: 'EPF Employer Share',
+            code: 'EPF_EMPLOYER',
+            amount: employerPf,
+          });
+          contributionsBreakdown.push({
+            name: 'EPS Employer Share',
+            code: 'EPS_EMPLOYER',
+            amount: eps,
+          });
+          if (edli > 0) {
+            contributionsBreakdown.push({
+              name: 'EDLI Share',
+              code: 'EDLI',
+              amount: edli,
+            });
+          }
+          if (adminChargesPf > 0) {
+            contributionsBreakdown.push({
+              name: 'PF Admin Charges',
+              code: 'PF_ADMIN',
+              amount: adminChargesPf,
+            });
+          }
+        }
+      }
+
+      // 2. ESI
+      let employeeEsi = 0;
+      let employerEsi = 0;
+      if (statutorySettings?.esiEnabled !== false && isEsiEligible) {
+        const esiResult = this.statutoryCalculator.calculateEsi(
+          runningGross,
+          esiConfig || {},
+          isEsiEligible,
+          false,
+        );
+        employeeEsi = esiResult.employeeEsi;
+        employerEsi = esiResult.employerEsi;
+
+        if (employeeEsi > 0) {
+          runningDeductions += employeeEsi;
+          deductionsBreakdown.push({
+            name: 'ESI (Employee)',
+            code: 'ESI_EMPLOYEE',
+            amount: employeeEsi,
+            type: 'DEDUCTION',
+          });
+        }
+        if (employerEsi > 0) {
+          runningContributions += employerEsi;
+          contributionsBreakdown.push({
+            name: 'ESI (Employer)',
+            code: 'ESI_EMPLOYER',
+            amount: employerEsi,
+          });
+        }
+      }
+
+      // 3. Professional Tax
+      let professionalTax = 0;
+      if (statutorySettings?.ptEnabled !== false && isPtEligible) {
+        const empState = emp.location?.state || 'Maharashtra';
+        const matchedRule = ptRules.find(
+          (r) =>
+            r.state.toLowerCase() === empState.toLowerCase() ||
+            (emp.location?.state && r.stateCode.toLowerCase() === emp.location.state.toLowerCase()),
+        ) || ptRules[0];
+
+        const slabs = matchedRule?.slabs || [];
+        professionalTax = this.statutoryCalculator.calculateProfessionalTax(
+          runningGross,
+          slabs,
+          payrollMonth,
+          (emp as any).gender || 'ALL',
+        );
+
+        if (professionalTax > 0) {
+          runningDeductions += professionalTax;
+          deductionsBreakdown.push({
+            name: 'Professional Tax',
+            code: 'PROFESSIONAL_TAX',
+            amount: professionalTax,
+            type: 'DEDUCTION',
+          });
+        }
+      }
+
+      // 4. LWF
+      let lwfEmployee = 0;
+      let lwfEmployer = 0;
+      if (statutorySettings?.lwfEnabled !== false && isLwfEligible) {
+        const empState = emp.location?.state || 'Maharashtra';
+        const matchedLwfRule = lwfRules.find(
+          (r) =>
+            r.state.toLowerCase() === empState.toLowerCase() ||
+            (emp.location?.state && r.stateCode.toLowerCase() === emp.location.state.toLowerCase()),
+        ) || lwfRules[0];
+
+        if (matchedLwfRule) {
+          const lwfResult = this.statutoryCalculator.calculateLwf(
+            runningGross,
+            matchedLwfRule,
+            payrollMonth,
+            isLwfEligible,
+          );
+          lwfEmployee = lwfResult.lwfEmployee;
+          lwfEmployer = lwfResult.lwfEmployer;
+
+          if (lwfEmployee > 0) {
+            runningDeductions += lwfEmployee;
+            deductionsBreakdown.push({
+              name: 'LWF (Employee)',
+              code: 'LWF_EMPLOYEE',
+              amount: lwfEmployee,
+              type: 'DEDUCTION',
+            });
+          }
+          if (lwfEmployer > 0) {
+            runningContributions += lwfEmployer;
+            contributionsBreakdown.push({
+              name: 'LWF (Employer)',
+              code: 'LWF_EMPLOYER',
+              amount: lwfEmployer,
+            });
+          }
+        }
+      }
+
+      // 5. TDS
+      let tds = 0;
+      let tdsCalcResult = null;
+      const pastTdsRecords = await this.prisma.employeeTdsCalculation.findMany({
+        where: { organizationId, employeeId: emp.id, financialYear },
+      });
+      const ytdTdsPaid = pastTdsRecords.reduce((acc, c) => acc + c.monthlyTds, 0);
+
+      const annualGross = assignment.annualCtc || runningGross * 12;
+      tdsCalcResult = this.statutoryCalculator.calculateTds(
+        selectedRegime,
+        annualGross,
+        emp.taxDeclarations || [],
+        payrollMonth,
+        ytdTdsPaid,
+        professionalTax * 12,
+      );
+      tds = tdsCalcResult.monthlyTds;
+
+      if (tds > 0) {
+        runningDeductions += tds;
+        deductionsBreakdown.push({
+          name: 'TDS (Income Tax)',
+          code: 'TDS',
+          amount: tds,
+          type: 'DEDUCTION',
+        });
+      }
+
       const grossEarnings = Number(runningGross.toFixed(2));
       const totalDeductions = Number(runningDeductions.toFixed(2));
       const totalEmployerContributions = Number(runningContributions.toFixed(2));
@@ -269,6 +509,18 @@ export class PayrollCalculatorService {
         totalDeductions,
         totalEmployerContributions,
         netPay,
+        employeePf,
+        employerPf,
+        eps,
+        edli,
+        adminChargesPf,
+        employeeEsi,
+        employerEsi,
+        professionalTax,
+        lwfEmployee,
+        lwfEmployer,
+        tds,
+        tdsCalculation: tdsCalcResult,
         earningsBreakdown,
         deductionsBreakdown,
         contributionsBreakdown,
@@ -308,6 +560,20 @@ export class PayrollCalculatorService {
             deductions: deductionsBreakdown,
             contributions: contributionsBreakdown,
           },
+          statutory: {
+            employeePf,
+            employerPf,
+            eps,
+            edli,
+            adminChargesPf,
+            employeeEsi,
+            employerEsi,
+            professionalTax,
+            lwfEmployee,
+            lwfEmployer,
+            tds,
+            regime: selectedRegime,
+          },
         },
       });
     }
@@ -319,7 +585,7 @@ export class PayrollCalculatorService {
         where: { payrollRunId },
       });
 
-      // 2. Insert new calculated employee records
+      // 2. Insert new calculated employee records & TDS records
       for (const res of results) {
         await tx.payrollEmployeeRecord.create({
           data: {
@@ -331,12 +597,91 @@ export class PayrollCalculatorService {
             grossEarnings: res.grossEarnings,
             totalDeductions: res.totalDeductions,
             totalEmployerContributions: res.totalEmployerContributions,
+            employeePf: res.employeePf,
+            employerPf: res.employerPf,
+            eps: res.eps,
+            edli: res.edli,
+            adminChargesPf: res.adminChargesPf,
+            employeeEsi: res.employeeEsi,
+            employerEsi: res.employerEsi,
+            professionalTax: res.professionalTax,
+            lwfEmployee: res.lwfEmployee,
+            lwfEmployer: res.lwfEmployer,
+            tds: res.tds,
             netPay: res.netPay,
             paymentStatus: 'PENDING',
             payslipStatus: 'DRAFT',
             snapshotData: res.snapshotData,
           },
         });
+
+        if (res.tdsCalculation) {
+          const calc = res.tdsCalculation;
+          await tx.employeeTdsCalculation.upsert({
+            where: {
+              organizationId_employeeId_financialYear_month_year: {
+                organizationId,
+                employeeId: res.employeeId,
+                financialYear,
+                month: payrollMonth,
+                year: payrollYear,
+              },
+            },
+            create: {
+              organizationId,
+              employeeId: res.employeeId,
+              payrollRunId,
+              financialYear,
+              month: payrollMonth,
+              year: payrollYear,
+              selectedRegime: calc.selectedRegime,
+              annualGrossSalary: calc.annualGrossSalary,
+              standardDeduction: calc.standardDeduction,
+              professionalTaxAnnual: calc.professionalTaxAnnual,
+              chapterVIAExemptions: calc.chapterVIAExemptions,
+              section80C: calc.section80C,
+              section80D: calc.section80D,
+              section80CCD1B: calc.section80CCD1B,
+              section24HomeLoan: calc.section24HomeLoan,
+              hraExemption: calc.hraExemption,
+              otherExemptions: calc.otherExemptions,
+              netTaxableIncome: calc.netTaxableIncome,
+              calculatedAnnualTax: calc.calculatedAnnualTax,
+              section87ARebate: calc.section87ARebate,
+              taxAfterRebate: calc.taxAfterRebate,
+              educationCess: calc.educationCess,
+              totalAnnualTaxLiability: calc.totalAnnualTaxLiability,
+              taxPaidYtd: calc.taxPaidYtd,
+              remainingTax: calc.remainingTax,
+              remainingMonths: calc.remainingMonths,
+              monthlyTds: calc.monthlyTds,
+            },
+            update: {
+              payrollRunId,
+              selectedRegime: calc.selectedRegime,
+              annualGrossSalary: calc.annualGrossSalary,
+              standardDeduction: calc.standardDeduction,
+              professionalTaxAnnual: calc.professionalTaxAnnual,
+              chapterVIAExemptions: calc.chapterVIAExemptions,
+              section80C: calc.section80C,
+              section80D: calc.section80D,
+              section80CCD1B: calc.section80CCD1B,
+              section24HomeLoan: calc.section24HomeLoan,
+              hraExemption: calc.hraExemption,
+              otherExemptions: calc.otherExemptions,
+              netTaxableIncome: calc.netTaxableIncome,
+              calculatedAnnualTax: calc.calculatedAnnualTax,
+              section87ARebate: calc.section87ARebate,
+              taxAfterRebate: calc.taxAfterRebate,
+              educationCess: calc.educationCess,
+              totalAnnualTaxLiability: calc.totalAnnualTaxLiability,
+              taxPaidYtd: calc.taxPaidYtd,
+              remainingTax: calc.remainingTax,
+              remainingMonths: calc.remainingMonths,
+              monthlyTds: calc.monthlyTds,
+            },
+          });
+        }
       }
 
       // 3. Compute totals

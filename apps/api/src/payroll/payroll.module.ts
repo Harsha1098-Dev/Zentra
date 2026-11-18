@@ -4,6 +4,7 @@ import { AuditModule } from '../audit/audit.module';
 import { EmailModule } from '../email/email.module';
 import { EmployeesModule } from '../employees/employees.module';
 import { OrganizationsModule } from '../organizations/organizations.module';
+import { StatutoryModule } from './statutory/statutory.module';
 
 // Salary Components
 import { SalaryComponentsRepository } from './salary-components/salary-components.repository';
@@ -65,6 +66,7 @@ import { PayslipsController } from './payslips/payslips.controller';
     EmailModule,
     EmployeesModule,
     OrganizationsModule,
+    StatutoryModule,
   ],
   controllers: [
     SalaryComponentsController,
@@ -111,6 +113,7 @@ import { PayslipsController } from './payslips/payslips.controller';
     PayrollPeriodsService,
     PayrollRunsService,
     PayslipsService,
+    StatutoryModule,
   ],
 })
 export class PayrollModule {}

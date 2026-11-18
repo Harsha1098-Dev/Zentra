@@ -7,15 +7,21 @@ export class AuditRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateAuditLogDto) {
+    const actorUserId = data.actorUserId || data.userId || null;
+    const entityType = data.entityType || data.resource || 'UNKNOWN';
+    const entityId = data.entityId || data.resourceId || 'UNKNOWN';
+    const newValues = data.newValues || data.details || null;
+    const oldValues = data.oldValues || data.prevValues || null;
+
     return this.prisma.auditLog.create({
       data: {
         organizationId: data.organizationId || null,
-        actorUserId: data.actorUserId || null,
+        actorUserId,
         action: data.action,
-        entityType: data.entityType,
-        entityId: data.entityId,
-        oldValues: data.oldValues ? JSON.parse(JSON.stringify(data.oldValues)) : null,
-        newValues: data.newValues ? JSON.parse(JSON.stringify(data.newValues)) : null,
+        entityType,
+        entityId,
+        oldValues: oldValues ? JSON.parse(JSON.stringify(oldValues)) : null,
+        newValues: newValues ? JSON.parse(JSON.stringify(newValues)) : null,
         ipAddress: data.ipAddress || null,
         userAgent: data.userAgent || null,
       },

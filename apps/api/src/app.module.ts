@@ -22,6 +22,7 @@ import { WorkflowsModule } from './workflows/workflows.module';
 import { LeaveModule } from './leave/leave.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { PayrollModule } from './payroll/payroll.module';
+import { StatutoryModule } from './payroll/statutory/statutory.module';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { TenantContextInterceptor } from './common/interceptors/tenant-context.interceptor';
@@ -53,6 +54,7 @@ import { TenantContextInterceptor } from './common/interceptors/tenant-context.i
     LeaveModule,
     AttendanceModule,
     PayrollModule,
+    StatutoryModule,
   ],
   providers: [
     {

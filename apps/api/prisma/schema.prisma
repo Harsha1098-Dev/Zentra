@@ -92,6 +92,18 @@ model Organization {
   payrollExceptions       PayrollException[]
   payslipTemplates        PayslipTemplate[]
   payslips                Payslip[]
+  statutorySetting        StatutorySetting?
+  statutoryComponents     StatutoryComponent[]
+  pfConfiguration         PfConfiguration?
+  esiConfiguration        EsiConfiguration?
+  professionalTaxRules    ProfessionalTaxRule[]
+  professionalTaxSlabs    ProfessionalTaxSlab[]
+  lwfRules                LwfRule[]
+  employeeTaxProfiles     EmployeeTaxProfile[]
+  employeeTaxDeclarations  EmployeeTaxDeclaration[]
+  employeeInvestmentProofs EmployeeInvestmentProof[]
+  employeeTdsCalculations EmployeeTdsCalculation[]
+  form16Records           Form16Record[]
 
   @@index([slug])
   @@map("organizations")
@@ -552,6 +564,11 @@ model Employee {
   payrollInputs             PayrollInput[]
   payrollExceptions         PayrollException[]
   payslips                  Payslip[]
+  taxProfiles               EmployeeTaxProfile[]
+  taxDeclarations           EmployeeTaxDeclaration[]
+  investmentProofs          EmployeeInvestmentProof[]
+  tdsCalculations           EmployeeTdsCalculation[]
+  form16Records             Form16Record[]
 
   @@unique([organizationId, employeeCode])
   @@unique([organizationId, workEmail])
@@ -1676,6 +1693,7 @@ model PayrollRun {
   inputs        PayrollInput[]
   exceptions    PayrollException[]
   payslips      Payslip[]
+  tdsCalculations EmployeeTdsCalculation[]
 
   @@unique([organizationId, payrollPeriodId, runType])
   @@index([organizationId])
@@ -1709,6 +1727,17 @@ model PayrollEmployeeRecord {
   grossEarnings              Float     @default(0) @map("gross_earnings")
   totalDeductions            Float     @default(0) @map("total_deductions")
   totalEmployerContributions Float     @default(0) @map("total_employer_contributions")
+  employeePf                 Float     @default(0) @map("employee_pf")
+  employerPf                 Float     @default(0) @map("employer_pf")
+  eps                        Float     @default(0)
+  edli                       Float     @default(0)
+  adminChargesPf             Float     @default(0) @map("admin_charges_pf")
+  employeeEsi                Float     @default(0) @map("employee_esi")
+  employerEsi                Float     @default(0) @map("employer_esi")
+  professionalTax            Float     @default(0) @map("professional_tax")
+  lwfEmployee                Float     @default(0) @map("lwf_employee")
+  lwfEmployer                Float     @default(0) @map("lwf_employer")
+  tds                        Float     @default(0)
   netPay                     Float     @default(0) @map("net_pay")
   paymentStatus              String    @default("PENDING") @map("payment_status") // PENDING, PROCESSED, PAID, FAILED, REVERSED, ON_HOLD
   paymentDate                DateTime? @map("payment_date")
@@ -1856,6 +1885,16 @@ model Payslip {
   earningsBreakdown       Json      @map("earnings_breakdown")
   deductionsBreakdown     Json      @map("deductions_breakdown")
   contributionsBreakdown  Json      @map("contributions_breakdown")
+  employeePf              Float     @default(0) @map("employee_pf")
+  employerPf              Float     @default(0) @map("employer_pf")
+  eps                     Float     @default(0)
+  edli                    Float     @default(0)
+  employeeEsi             Float     @default(0) @map("employee_esi")
+  employerEsi             Float     @default(0) @map("employer_esi")
+  professionalTax         Float     @default(0) @map("professional_tax")
+  lwfEmployee             Float     @default(0) @map("lwf_employee")
+  lwfEmployer             Float     @default(0) @map("lwf_employer")
+  tds                     Float     @default(0)
   ytdEarnings             Float     @default(0) @map("ytd_earnings")
   ytdDeductions           Float     @default(0) @map("ytd_deductions")
   ytdNetPay               Float     @default(0) @map("ytd_net_pay")
@@ -1885,4 +1924,340 @@ model Payslip {
   @@index([payrollPeriodId])
   @@index([status])
   @@map("payslips")
+}
+
+// ==========================================
+// STATUTORY PAYROLL & COMPLIANCE (INDIA)
+// ==========================================
+
+model StatutorySetting {
+  id                         String    @id @default(uuid())
+  organizationId             String    @unique @map("organization_id")
+  financialYear              String    @default("2025-2026") @map("financial_year")
+  defaultTaxRegime           String    @default("NEW_REGIME") @map("default_tax_regime") // NEW_REGIME, OLD_REGIME
+  panNumber                  String?   @map("pan_number")
+  tanNumber                  String?   @map("tan_number")
+  tdsCircle                  String?   @map("tds_circle")
+  pfEnabled                  Boolean   @default(true) @map("pf_enabled")
+  pfEstablishmentCode        String?   @map("pf_establishment_code")
+  esiEnabled                 Boolean   @default(true) @map("esi_enabled")
+  esiEstablishmentCode       String?   @map("esi_establishment_code")
+  ptEnabled                  Boolean   @default(true) @map("pt_enabled")
+  lwfEnabled                 Boolean   @default(true) @map("lwf_enabled")
+  isDeclarationWindowOpen    Boolean   @default(true) @map("is_declaration_window_open")
+  declarationWindowStartDate DateTime? @map("declaration_window_start_date")
+  declarationWindowEndDate   DateTime? @map("declaration_window_end_date")
+  isProofSubmissionOpen      Boolean   @default(false) @map("is_proof_submission_open")
+  proofSubmissionStartDate   DateTime? @map("proof_submission_start_date")
+  proofSubmissionEndDate     DateTime? @map("proof_submission_end_date")
+  createdAt                  DateTime  @default(now()) @map("created_at")
+  updatedAt                  DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("statutory_settings")
+}
+
+model StatutoryComponent {
+  id                       String   @id @default(uuid())
+  organizationId           String   @map("organization_id")
+  statutoryType            String   @map("statutory_type") // PF, ESI, PROFESSIONAL_TAX, LWF, TDS
+  name                     String
+  code                     String
+  description              String?
+  isActive                 Boolean  @default(true) @map("is_active")
+  deductionFrequency       String   @default("MONTHLY") @map("deduction_frequency") // MONTHLY, HALF_YEARLY, YEARLY
+  wageCeiling              Float?   @map("wage_ceiling")
+  eligibilityWageLimit     Float?   @map("eligibility_wage_limit")
+  calculationBase          String   @default("BASIC_DA") @map("calculation_base")
+  employeeContributionRate Float    @default(0) @map("employee_contribution_rate")
+  employerContributionRate Float    @default(0) @map("employer_contribution_rate")
+  configuration            Json?    @default("{}")
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, code])
+  @@index([organizationId])
+  @@index([statutoryType])
+  @@index([isActive])
+  @@map("statutory_components")
+}
+
+model PfConfiguration {
+  id                             String   @id @default(uuid())
+  organizationId                 String   @unique @map("organization_id")
+  pfEnabled                      Boolean  @default(true) @map("pf_enabled")
+  epfRateEmployee                Float    @default(12.0) @map("epf_rate_employee")
+  epfRateEmployer                Float    @default(3.67) @map("epf_rate_employer")
+  epsRateEmployer                Float    @default(8.33) @map("eps_rate_employer")
+  edliRate                       Float    @default(0.5) @map("edli_rate")
+  adminChargesRate               Float    @default(0.5) @map("admin_charges_rate")
+  wageCeiling                    Float    @default(15000) @map("wage_ceiling")
+  restrictEmployerShareToCeiling Boolean  @default(true) @map("restrict_employer_share_to_ceiling")
+  allowVpf                       Boolean  @default(true) @map("allow_vpf")
+  proRatePensionBasis            Boolean  @default(true) @map("pro_rate_pension_basis")
+  createdAt                      DateTime @default(now()) @map("created_at")
+  updatedAt                      DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("pf_configurations")
+}
+
+model EsiConfiguration {
+  id                       String   @id @default(uuid())
+  organizationId           String   @unique @map("organization_id")
+  esiEnabled               Boolean  @default(true) @map("esi_enabled")
+  employeeContributionRate Float    @default(0.75) @map("employee_contribution_rate")
+  employerContributionRate Float    @default(3.25) @map("employer_contribution_rate")
+  wageCeiling              Float    @default(21000) @map("wage_ceiling")
+  disabilityWageCeiling    Float    @default(25000) @map("disability_wage_ceiling")
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("esi_configurations")
+}
+
+model ProfessionalTaxRule {
+  id                 String   @id @default(uuid())
+  organizationId     String   @map("organization_id")
+  state              String
+  stateCode          String   @map("state_code")
+  registrationNumber String?  @map("registration_number")
+  isActive           Boolean  @default(true) @map("is_active")
+  deductionFrequency String   @default("MONTHLY") @map("deduction_frequency") // MONTHLY, HALF_YEARLY, YEARLY
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  organization Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  slabs        ProfessionalTaxSlab[]
+
+  @@unique([organizationId, stateCode])
+  @@index([organizationId])
+  @@index([state])
+  @@map("professional_tax_rules")
+}
+
+model ProfessionalTaxSlab {
+  id                  String   @id @default(uuid())
+  organizationId      String   @map("organization_id")
+  ruleId              String   @map("rule_id")
+  minSalary           Float    @default(0) @map("min_salary")
+  maxSalary           Float?   @map("max_salary")
+  taxAmount           Float    @map("tax_amount")
+  gender              String   @default("ALL") // ALL, MALE, FEMALE
+  specificMonth       Int?     @map("specific_month") // e.g. 2 for February in MH
+  specificMonthAmount Float?   @map("specific_month_amount") // e.g. 300 for Feb in MH
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  rule         ProfessionalTaxRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([ruleId])
+  @@map("professional_tax_slabs")
+}
+
+model LwfRule {
+  id                   String   @id @default(uuid())
+  organizationId       String   @map("organization_id")
+  state                String
+  stateCode            String   @map("state_code")
+  isActive             Boolean  @default(true) @map("is_active")
+  employeeContribution Float    @default(0) @map("employee_contribution")
+  employerContribution Float    @default(0) @map("employer_contribution")
+  deductionFrequency   String   @default("HALF_YEARLY") @map("deduction_frequency")
+  deductionMonths      Int[]    @default([6, 12]) @map("deduction_months")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, stateCode])
+  @@index([organizationId])
+  @@index([state])
+  @@map("lwf_rules")
+}
+
+model EmployeeTaxProfile {
+  id                    String   @id @default(uuid())
+  organizationId        String   @map("organization_id")
+  employeeId            String   @map("employee_id")
+  financialYear         String   @map("financial_year")
+  selectedRegime        String   @default("NEW_REGIME") @map("selected_regime") // NEW_REGIME, OLD_REGIME
+  panNumber             String?  @map("pan_number")
+  panVerificationStatus String   @default("UNVERIFIED") @map("pan_verification_status") // UNVERIFIED, VERIFIED, FAILED
+  isPfEligible          Boolean  @default(true) @map("is_pf_eligible")
+  isEsiEligible         Boolean  @default(true) @map("is_esi_eligible")
+  isPtEligible          Boolean  @default(true) @map("is_pt_eligible")
+  isLwfEligible         Boolean  @default(true) @map("is_lwf_eligible")
+  uanNumber             String?  @map("uan_number")
+  esiNumber             String?  @map("esi_number")
+  vpfPercentage         Float    @default(0) @map("vpf_percentage")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, employeeId, financialYear])
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([financialYear])
+  @@index([selectedRegime])
+  @@map("employee_tax_profiles")
+}
+
+model EmployeeTaxDeclaration {
+  id              String    @id @default(uuid())
+  organizationId  String    @map("organization_id")
+  employeeId      String    @map("employee_id")
+  financialYear   String    @map("financial_year")
+  declarationType String    @map("declaration_type") // SECTION_80C, SECTION_80D, SECTION_80CCD_1B, SECTION_24_HOME_LOAN, HRA, OTHER_EXEMPTION
+  subCategory     String    @map("sub_category")
+  declaredAmount  Float     @default(0) @map("declared_amount")
+  approvedAmount  Float?    @map("approved_amount")
+  status          String    @default("DRAFT") // DRAFT, SUBMITTED, APPROVED, REJECTED
+  particulars     String?
+  landlordName    String?   @map("landlord_name")
+  landlordPan     String?   @map("landlord_pan")
+  landlordAddress String?   @map("landlord_address")
+  rejectionReason String?   @map("rejection_reason")
+  reviewedBy      String?   @map("reviewed_by")
+  reviewedAt      DateTime? @map("reviewed_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  organization Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee                  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  proofs       EmployeeInvestmentProof[]
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([financialYear])
+  @@index([declarationType])
+  @@index([status])
+  @@map("employee_tax_declarations")
+}
+
+model EmployeeInvestmentProof {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  employeeId         String    @map("employee_id")
+  declarationId      String    @map("declaration_id")
+  documentName       String    @map("document_name")
+  documentUrl        String    @map("document_url")
+  fileSize           Int?      @map("file_size")
+  fileType           String?   @map("file_type")
+  amountDeclared     Float     @default(0) @map("amount_declared")
+  amountSubmitted    Float     @default(0) @map("amount_submitted")
+  verifiedAmount     Float?    @map("verified_amount")
+  verificationStatus String    @default("PENDING") @map("verification_status") // PENDING, VERIFIED, REJECTED
+  rejectionReason    String?   @map("rejection_reason")
+  verifiedBy         String?   @map("verified_by")
+  verifiedAt         DateTime? @map("verified_at")
+  remarks            String?
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee               @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  declaration  EmployeeTaxDeclaration @relation(fields: [declarationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([declarationId])
+  @@index([verificationStatus])
+  @@map("employee_investment_proofs")
+}
+
+model EmployeeTdsCalculation {
+  id                      String   @id @default(uuid())
+  organizationId          String   @map("organization_id")
+  employeeId              String   @map("employee_id")
+  payrollRunId            String?  @map("payroll_run_id")
+  financialYear           String   @map("financial_year")
+  month                   Int
+  year                    Int
+  selectedRegime          String   @map("selected_regime")
+  annualGrossSalary       Float    @default(0) @map("annual_gross_salary")
+  standardDeduction       Float    @default(0) @map("standard_deduction")
+  professionalTaxAnnual   Float    @default(0) @map("professional_tax_annual")
+  chapterVIAExemptions    Float    @default(0) @map("chapter_vi_a_exemptions")
+  section80C              Float    @default(0) @map("section_80c")
+  section80D              Float    @default(0) @map("section_80d")
+  section80CCD1B          Float    @default(0) @map("section_80ccd_1b")
+  section24HomeLoan       Float    @default(0) @map("section_24_home_loan")
+  hraExemption            Float    @default(0) @map("hra_exemption")
+  otherExemptions         Float    @default(0) @map("other_exemptions")
+  netTaxableIncome        Float    @default(0) @map("net_taxable_income")
+  calculatedAnnualTax     Float    @default(0) @map("calculated_annual_tax")
+  section87ARebate        Float    @default(0) @map("section_87a_rebate")
+  taxAfterRebate          Float    @default(0) @map("tax_after_rebate")
+  educationCess           Float    @default(0) @map("education_cess")
+  totalAnnualTaxLiability Float    @default(0) @map("total_annual_tax_liability")
+  taxPaidYtd              Float    @default(0) @map("tax_paid_ytd")
+  remainingTax            Float    @default(0) @map("remaining_tax")
+  remainingMonths         Int      @default(1) @map("remaining_months")
+  monthlyTds              Float    @default(0) @map("monthly_tds")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  payrollRun   PayrollRun?  @relation(fields: [payrollRunId], references: [id], onDelete: SetNull)
+
+  @@unique([organizationId, employeeId, financialYear, month, year])
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([payrollRunId])
+  @@index([financialYear])
+  @@map("employee_tds_calculations")
+}
+
+model Form16Record {
+  id                        String    @id @default(uuid())
+  organizationId            String    @map("organization_id")
+  employeeId                String    @map("employee_id")
+  financialYear             String    @map("financial_year")
+  assessmentYear            String    @map("assessment_year")
+  selectedRegime            String    @map("selected_regime")
+  grossSalary               Float     @default(0) @map("gross_salary")
+  exemptionsUs10            Float     @default(0) @map("exemptions_us_10")
+  standardDeduction         Float     @default(0) @map("standard_deduction")
+  professionalTax           Float     @default(0) @map("professional_tax")
+  grossTotalIncome          Float     @default(0) @map("gross_total_income")
+  totalDeductionsChapterVIA Float     @default(0) @map("total_deductions_chapter_vi_a")
+  totalTaxableIncome        Float     @default(0) @map("total_taxable_income")
+  totalTaxPayable           Float     @default(0) @map("total_tax_payable")
+  section87ARebate          Float     @default(0) @map("section_87a_rebate")
+  cess                      Float     @default(0)
+  netTaxPayable             Float     @default(0) @map("net_tax_payable")
+  totalTdsDeducted          Float     @default(0) @map("total_tds_deducted")
+  totalTdsDeposited         Float     @default(0) @map("total_tds_deposited")
+  status                    String    @default("DRAFT") // DRAFT, GENERATED, PUBLISHED
+  partAUrl                  String?   @map("part_a_url")
+  partBUrl                  String?   @map("part_b_url")
+  publishedAt               DateTime? @map("published_at")
+  publishedBy               String?   @map("published_by")
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, employeeId, financialYear])
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([financialYear])
+  @@index([status])
+  @@map("form16_records")
 }

@@ -330,6 +330,62 @@ export enum PermissionCode {
   PAYROLL_TEMPLATE_DELETE = 'payroll.template.delete',
   PAYROLL_REPORT_VIEW = 'payroll.report.view',
   PAYROLL_REPORT_EXPORT = 'payroll.report.export',
+
+  // Statutory Payroll & Compliance (India)
+  PAYROLL_STATUTORY_READ = 'payroll.statutory.read',
+  PAYROLL_STATUTORY_CONFIGURE = 'payroll.statutory.configure',
+  PAYROLL_STATUTORY_UPDATE = 'payroll.statutory.update',
+  PAYROLL_STATUTORY_CALCULATE = 'payroll.statutory.calculate',
+  PAYROLL_STATUTORY_REPORT_VIEW = 'payroll.statutory.report.view',
+  PAYROLL_STATUTORY_REPORT_EXPORT = 'payroll.statutory.report.export',
+
+  PAYROLL_PF_READ = 'payroll.pf.read',
+  PAYROLL_PF_CONFIGURE = 'payroll.pf.configure',
+  PAYROLL_PF_CALCULATE = 'payroll.pf.calculate',
+  PAYROLL_PF_REPORT_VIEW = 'payroll.pf.report.view',
+  PAYROLL_PF_REPORT_EXPORT = 'payroll.pf.report.export',
+
+  PAYROLL_ESI_READ = 'payroll.esi.read',
+  PAYROLL_ESI_CONFIGURE = 'payroll.esi.configure',
+  PAYROLL_ESI_CALCULATE = 'payroll.esi.calculate',
+  PAYROLL_ESI_REPORT_VIEW = 'payroll.esi.report.view',
+  PAYROLL_ESI_REPORT_EXPORT = 'payroll.esi.report.export',
+
+  PAYROLL_PROFESSIONAL_TAX_READ = 'payroll.professional_tax.read',
+  PAYROLL_PROFESSIONAL_TAX_CONFIGURE = 'payroll.professional_tax.configure',
+  PAYROLL_PROFESSIONAL_TAX_CALCULATE = 'payroll.professional_tax.calculate',
+  PAYROLL_PROFESSIONAL_TAX_REPORT_VIEW = 'payroll.professional_tax.report.view',
+  PAYROLL_PROFESSIONAL_TAX_REPORT_EXPORT = 'payroll.professional_tax.report.export',
+
+  PAYROLL_LWF_READ = 'payroll.lwf.read',
+  PAYROLL_LWF_CONFIGURE = 'payroll.lwf.configure',
+  PAYROLL_LWF_CALCULATE = 'payroll.lwf.calculate',
+  PAYROLL_LWF_REPORT_VIEW = 'payroll.lwf.report.view',
+  PAYROLL_LWF_REPORT_EXPORT = 'payroll.lwf.report.export',
+
+  PAYROLL_TDS_READ = 'payroll.tds.read',
+  PAYROLL_TDS_CONFIGURE = 'payroll.tds.configure',
+  PAYROLL_TDS_CALCULATE = 'payroll.tds.calculate',
+  PAYROLL_TDS_REPORT_VIEW = 'payroll.tds.report.view',
+  PAYROLL_TDS_REPORT_EXPORT = 'payroll.tds.report.export',
+
+  PAYROLL_TAX_DECLARATION_READ = 'payroll.tax_declaration.read',
+  PAYROLL_TAX_DECLARATION_CREATE = 'payroll.tax_declaration.create',
+  PAYROLL_TAX_DECLARATION_SUBMIT = 'payroll.tax_declaration.submit',
+  PAYROLL_TAX_DECLARATION_REVIEW = 'payroll.tax_declaration.review',
+  PAYROLL_TAX_DECLARATION_APPROVE = 'payroll.tax_declaration.approve',
+  PAYROLL_TAX_DECLARATION_REJECT = 'payroll.tax_declaration.reject',
+
+  PAYROLL_INVESTMENT_PROOF_READ = 'payroll.investment_proof.read',
+  PAYROLL_INVESTMENT_PROOF_UPLOAD = 'payroll.investment_proof.upload',
+  PAYROLL_INVESTMENT_PROOF_VERIFY = 'payroll.investment_proof.verify',
+  PAYROLL_INVESTMENT_PROOF_REJECT = 'payroll.investment_proof.reject',
+  PAYROLL_INVESTMENT_PROOF_DOWNLOAD = 'payroll.investment_proof.download',
+
+  PAYROLL_FORM16_READ = 'payroll.form16.read',
+  PAYROLL_FORM16_PREPARE = 'payroll.form16.prepare',
+  PAYROLL_FORM16_PUBLISH = 'payroll.form16.publish',
+  PAYROLL_FORM16_DOWNLOAD = 'payroll.form16.download',
 }
 
 export enum InvitationStatus {
@@ -603,6 +659,50 @@ export enum AuditAction {
   PAYSLIP_VIEWED = 'PAYSLIP_VIEW',
   PAYSLIP_DOWNLOAD = 'PAYSLIP_DOWNLOAD',
   PAYSLIP_DOWNLOADED = 'PAYSLIP_DOWNLOAD',
+
+  // Statutory Payroll Audit Actions
+  STATUTORY_SETTING_CREATE = 'STATUTORY_SETTING_CREATE',
+  STATUTORY_SETTING_UPDATE = 'STATUTORY_SETTING_UPDATE',
+  STATUTORY_COMPONENT_CREATE = 'STATUTORY_COMPONENT_CREATE',
+  STATUTORY_COMPONENT_UPDATE = 'STATUTORY_COMPONENT_UPDATE',
+  STATUTORY_COMPONENT_ACTIVATE = 'STATUTORY_COMPONENT_ACTIVATE',
+  STATUTORY_COMPONENT_DEACTIVATE = 'STATUTORY_COMPONENT_DEACTIVATE',
+  STATUTORY_COMPONENT_DELETE = 'STATUTORY_COMPONENT_DELETE',
+
+  PF_CONFIG_UPDATE = 'PF_CONFIG_UPDATE',
+  ESI_CONFIG_UPDATE = 'ESI_CONFIG_UPDATE',
+  PROFESSIONAL_TAX_UPDATE = 'PROFESSIONAL_TAX_UPDATE',
+  PROFESSIONAL_TAX_SLAB_CREATE = 'PROFESSIONAL_TAX_SLAB_CREATE',
+  PROFESSIONAL_TAX_SLAB_UPDATE = 'PROFESSIONAL_TAX_SLAB_UPDATE',
+  PROFESSIONAL_TAX_SLAB_DELETE = 'PROFESSIONAL_TAX_SLAB_DELETE',
+  LWF_CONFIG_UPDATE = 'LWF_CONFIG_UPDATE',
+  LWF_RULE_CREATE = 'LWF_RULE_CREATE',
+  LWF_RULE_UPDATE = 'LWF_RULE_UPDATE',
+  LWF_RULE_DELETE = 'LWF_RULE_DELETE',
+
+  TAX_PROFILE_CREATE = 'TAX_PROFILE_CREATE',
+  TAX_PROFILE_UPDATE = 'TAX_PROFILE_UPDATE',
+  TAX_REGIME_CHANGE = 'TAX_REGIME_CHANGE',
+
+  TAX_DECLARATION_CREATE = 'TAX_DECLARATION_CREATE',
+  TAX_DECLARATION_UPDATE = 'TAX_DECLARATION_UPDATE',
+  TAX_DECLARATION_SUBMIT = 'TAX_DECLARATION_SUBMIT',
+  TAX_DECLARATION_APPROVE = 'TAX_DECLARATION_APPROVE',
+  TAX_DECLARATION_REJECT = 'TAX_DECLARATION_REJECT',
+
+  INVESTMENT_PROOF_UPLOAD = 'INVESTMENT_PROOF_UPLOAD',
+  INVESTMENT_PROOF_VERIFY = 'INVESTMENT_PROOF_VERIFY',
+  INVESTMENT_PROOF_REJECT = 'INVESTMENT_PROOF_REJECT',
+  INVESTMENT_PROOF_DELETE = 'INVESTMENT_PROOF_DELETE',
+
+  TDS_CALCULATE = 'TDS_CALCULATE',
+  TDS_RECALCULATE = 'TDS_RECALCULATE',
+
+  COMPLIANCE_REPORT_EXPORT = 'COMPLIANCE_REPORT_EXPORT',
+
+  FORM16_PREPARE = 'FORM16_PREPARE',
+  FORM16_PUBLISH = 'FORM16_PUBLISH',
+  FORM16_DOWNLOAD = 'FORM16_DOWNLOAD',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -787,6 +887,49 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.PAYROLL_TEMPLATE_DELETE,
     PermissionCode.PAYROLL_REPORT_VIEW,
     PermissionCode.PAYROLL_REPORT_EXPORT,
+    // Statutory Payroll & Compliance
+    PermissionCode.PAYROLL_STATUTORY_READ,
+    PermissionCode.PAYROLL_STATUTORY_CONFIGURE,
+    PermissionCode.PAYROLL_STATUTORY_UPDATE,
+    PermissionCode.PAYROLL_STATUTORY_CALCULATE,
+    PermissionCode.PAYROLL_STATUTORY_REPORT_VIEW,
+    PermissionCode.PAYROLL_STATUTORY_REPORT_EXPORT,
+    PermissionCode.PAYROLL_PF_READ,
+    PermissionCode.PAYROLL_PF_CONFIGURE,
+    PermissionCode.PAYROLL_PF_CALCULATE,
+    PermissionCode.PAYROLL_PF_REPORT_VIEW,
+    PermissionCode.PAYROLL_PF_REPORT_EXPORT,
+    PermissionCode.PAYROLL_ESI_READ,
+    PermissionCode.PAYROLL_ESI_CONFIGURE,
+    PermissionCode.PAYROLL_ESI_CALCULATE,
+    PermissionCode.PAYROLL_ESI_REPORT_VIEW,
+    PermissionCode.PAYROLL_ESI_REPORT_EXPORT,
+    PermissionCode.PAYROLL_PROFESSIONAL_TAX_READ,
+    PermissionCode.PAYROLL_PROFESSIONAL_TAX_CONFIGURE,
+    PermissionCode.PAYROLL_PROFESSIONAL_TAX_CALCULATE,
+    PermissionCode.PAYROLL_PROFESSIONAL_TAX_REPORT_VIEW,
+    PermissionCode.PAYROLL_PROFESSIONAL_TAX_REPORT_EXPORT,
+    PermissionCode.PAYROLL_LWF_READ,
+    PermissionCode.PAYROLL_LWF_CONFIGURE,
+    PermissionCode.PAYROLL_LWF_CALCULATE,
+    PermissionCode.PAYROLL_LWF_REPORT_VIEW,
+    PermissionCode.PAYROLL_LWF_REPORT_EXPORT,
+    PermissionCode.PAYROLL_TDS_READ,
+    PermissionCode.PAYROLL_TDS_CONFIGURE,
+    PermissionCode.PAYROLL_TDS_CALCULATE,
+    PermissionCode.PAYROLL_TDS_REPORT_VIEW,
+    PermissionCode.PAYROLL_TDS_REPORT_EXPORT,
+    PermissionCode.PAYROLL_TAX_DECLARATION_READ,
+    PermissionCode.PAYROLL_TAX_DECLARATION_REVIEW,
+    PermissionCode.PAYROLL_TAX_DECLARATION_APPROVE,
+    PermissionCode.PAYROLL_TAX_DECLARATION_REJECT,
+    PermissionCode.PAYROLL_INVESTMENT_PROOF_READ,
+    PermissionCode.PAYROLL_INVESTMENT_PROOF_VERIFY,
+    PermissionCode.PAYROLL_INVESTMENT_PROOF_REJECT,
+    PermissionCode.PAYROLL_INVESTMENT_PROOF_DOWNLOAD,
+    PermissionCode.PAYROLL_FORM16_READ,
+    PermissionCode.PAYROLL_FORM16_PREPARE,
+    PermissionCode.PAYROLL_FORM16_PUBLISH,
   ],
   [RoleCode.PAYROLL_ADMIN]: Object.values(PermissionCode),
   [RoleCode.FINANCE]: [
@@ -805,6 +948,27 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.PAYROLL_PAYSLIP_READ,
     PermissionCode.PAYROLL_REPORT_VIEW,
     PermissionCode.PAYROLL_REPORT_EXPORT,
+    // Statutory Payroll & Compliance
+    PermissionCode.PAYROLL_STATUTORY_READ,
+    PermissionCode.PAYROLL_STATUTORY_REPORT_VIEW,
+    PermissionCode.PAYROLL_STATUTORY_REPORT_EXPORT,
+    PermissionCode.PAYROLL_PF_READ,
+    PermissionCode.PAYROLL_PF_REPORT_VIEW,
+    PermissionCode.PAYROLL_PF_REPORT_EXPORT,
+    PermissionCode.PAYROLL_ESI_READ,
+    PermissionCode.PAYROLL_ESI_REPORT_VIEW,
+    PermissionCode.PAYROLL_ESI_REPORT_EXPORT,
+    PermissionCode.PAYROLL_PROFESSIONAL_TAX_READ,
+    PermissionCode.PAYROLL_PROFESSIONAL_TAX_REPORT_VIEW,
+    PermissionCode.PAYROLL_PROFESSIONAL_TAX_REPORT_EXPORT,
+    PermissionCode.PAYROLL_LWF_READ,
+    PermissionCode.PAYROLL_LWF_REPORT_VIEW,
+    PermissionCode.PAYROLL_LWF_REPORT_EXPORT,
+    PermissionCode.PAYROLL_TDS_READ,
+    PermissionCode.PAYROLL_TDS_CALCULATE,
+    PermissionCode.PAYROLL_TDS_REPORT_VIEW,
+    PermissionCode.PAYROLL_TDS_REPORT_EXPORT,
+    PermissionCode.PAYROLL_FORM16_READ,
   ],
   [RoleCode.MANAGER]: [
     PermissionCode.ORGANIZATION_READ,
@@ -877,6 +1041,15 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.PAYROLL_READ_OWN,
     PermissionCode.PAYROLL_PAYSLIP_READ,
     PermissionCode.PAYROLL_PAYSLIP_DOWNLOAD,
+    // Statutory Self-Service Permissions for EMPLOYEE
+    PermissionCode.PAYROLL_TAX_DECLARATION_READ,
+    PermissionCode.PAYROLL_TAX_DECLARATION_CREATE,
+    PermissionCode.PAYROLL_TAX_DECLARATION_SUBMIT,
+    PermissionCode.PAYROLL_INVESTMENT_PROOF_READ,
+    PermissionCode.PAYROLL_INVESTMENT_PROOF_UPLOAD,
+    PermissionCode.PAYROLL_INVESTMENT_PROOF_DOWNLOAD,
+    PermissionCode.PAYROLL_FORM16_READ,
+    PermissionCode.PAYROLL_FORM16_DOWNLOAD,
   ],
 };
 
@@ -3137,6 +3310,60 @@ export enum PayrollExceptionSeverity {
   INFO = 'INFO',
 }
 
+// Statutory Payroll & Compliance Enums (India)
+export enum StatutoryType {
+  PF = 'PF',
+  ESI = 'ESI',
+  PROFESSIONAL_TAX = 'PROFESSIONAL_TAX',
+  LWF = 'LWF',
+  TDS = 'TDS',
+}
+
+export enum TaxRegime {
+  NEW_REGIME = 'NEW_REGIME',
+  OLD_REGIME = 'OLD_REGIME',
+}
+
+export enum PanVerificationStatus {
+  UNVERIFIED = 'UNVERIFIED',
+  VERIFIED = 'VERIFIED',
+  FAILED = 'FAILED',
+}
+
+export enum DeclarationType {
+  SECTION_80C = 'SECTION_80C',
+  SECTION_80D = 'SECTION_80D',
+  SECTION_80CCD_1B = 'SECTION_80CCD_1B',
+  SECTION_24_HOME_LOAN = 'SECTION_24_HOME_LOAN',
+  HRA = 'HRA',
+  OTHER_EXEMPTION = 'OTHER_EXEMPTION',
+}
+
+export enum DeclarationStatus {
+  DRAFT = 'DRAFT',
+  SUBMITTED = 'SUBMITTED',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+
+export enum ProofVerificationStatus {
+  PENDING = 'PENDING',
+  VERIFIED = 'VERIFIED',
+  REJECTED = 'REJECTED',
+}
+
+export enum DeductionFrequency {
+  MONTHLY = 'MONTHLY',
+  HALF_YEARLY = 'HALF_YEARLY',
+  YEARLY = 'YEARLY',
+}
+
+export enum Form16Status {
+  DRAFT = 'DRAFT',
+  GENERATED = 'GENERATED',
+  PUBLISHED = 'PUBLISHED',
+}
+
 // Zod Schemas
 export const CreateSalaryComponentSchema = z.object({
   name: z.string().trim().min(2, 'Component name must be at least 2 characters').max(100),
@@ -3291,6 +3518,193 @@ export const CreatePayslipTemplateSchema = z.object({
 });
 
 export const UpdatePayslipTemplateSchema = CreatePayslipTemplateSchema.partial();
+
+// Statutory Zod Schemas (India)
+export const StatutorySettingSchema = z.object({
+  financialYear: z.string().regex(/^\d{4}-\d{4}$/, 'Format must be YYYY-YYYY (e.g. 2025-2026)'),
+  defaultTaxRegime: z.nativeEnum(TaxRegime).default(TaxRegime.NEW_REGIME),
+  panNumber: z.string().trim().toUpperCase().regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN number format').optional().nullable(),
+  tanNumber: z.string().trim().toUpperCase().regex(/^[A-Z]{4}[0-9]{5}[A-Z]{1}$/, 'Invalid TAN number format').optional().nullable(),
+  tdsCircle: z.string().trim().max(100).optional().nullable(),
+  pfEnabled: z.boolean().default(true),
+  pfEstablishmentCode: z.string().trim().max(100).optional().nullable(),
+  esiEnabled: z.boolean().default(true),
+  esiEstablishmentCode: z.string().trim().max(100).optional().nullable(),
+  ptEnabled: z.boolean().default(true),
+  lwfEnabled: z.boolean().default(true),
+  isDeclarationWindowOpen: z.boolean().default(true),
+  declarationWindowStartDate: z.string().optional().nullable(),
+  declarationWindowEndDate: z.string().optional().nullable(),
+  isProofSubmissionOpen: z.boolean().default(false),
+  proofSubmissionStartDate: z.string().optional().nullable(),
+  proofSubmissionEndDate: z.string().optional().nullable(),
+});
+
+export const UpdateStatutorySettingSchema = StatutorySettingSchema.partial();
+export type StatutorySettingInput = z.infer<typeof StatutorySettingSchema>;
+export type UpdateStatutorySettingInput = z.infer<typeof UpdateStatutorySettingSchema>;
+
+export const StatutoryComponentSchema = z.object({
+  statutoryType: z.nativeEnum(StatutoryType),
+  name: z.string().trim().min(2).max(100),
+  code: z.string().trim().min(2).max(50).toUpperCase(),
+  description: z.string().trim().max(500).optional().nullable(),
+  isActive: z.boolean().default(true),
+  deductionFrequency: z.nativeEnum(DeductionFrequency).default(DeductionFrequency.MONTHLY),
+  wageCeiling: z.number().min(0).optional().nullable(),
+  eligibilityWageLimit: z.number().min(0).optional().nullable(),
+  calculationBase: z.string().default('BASIC_DA'),
+  employeeContributionRate: z.number().min(0).max(100).default(0),
+  employerContributionRate: z.number().min(0).max(100).default(0),
+  configuration: z.record(z.any()).optional().nullable(),
+});
+
+export const UpdateStatutoryComponentSchema = StatutoryComponentSchema.partial();
+export type StatutoryComponentInput = z.infer<typeof StatutoryComponentSchema>;
+export type UpdateStatutoryComponentInput = z.infer<typeof UpdateStatutoryComponentSchema>;
+
+export const PfConfigSchema = z.object({
+  pfEnabled: z.boolean().default(true),
+  epfRateEmployee: z.number().min(0).max(100).default(12),
+  epfRateEmployer: z.number().min(0).max(100).default(3.67),
+  epsRateEmployer: z.number().min(0).max(100).default(8.33),
+  edliRate: z.number().min(0).max(100).default(0.5),
+  adminChargesRate: z.number().min(0).max(100).default(0.5),
+  wageCeiling: z.number().min(0).default(15000),
+  restrictEmployerShareToCeiling: z.boolean().default(true),
+  allowVpf: z.boolean().default(true),
+  proRatePensionBasis: z.boolean().default(true),
+});
+export const UpdatePfConfigSchema = PfConfigSchema.partial();
+export type PfConfigInput = z.infer<typeof PfConfigSchema>;
+export type UpdatePfConfigInput = z.infer<typeof UpdatePfConfigSchema>;
+
+export const EsiConfigSchema = z.object({
+  esiEnabled: z.boolean().default(true),
+  employeeContributionRate: z.number().min(0).max(100).default(0.75),
+  employerContributionRate: z.number().min(0).max(100).default(3.25),
+  wageCeiling: z.number().min(0).default(21000),
+  disabilityWageCeiling: z.number().min(0).default(25000),
+});
+export const UpdateEsiConfigSchema = EsiConfigSchema.partial();
+export type EsiConfigInput = z.infer<typeof EsiConfigSchema>;
+export type UpdateEsiConfigInput = z.infer<typeof UpdateEsiConfigSchema>;
+
+export const ProfessionalTaxRuleSchema = z.object({
+  state: z.string().trim().min(2).max(100),
+  stateCode: z.string().trim().min(2).max(10).toUpperCase(),
+  registrationNumber: z.string().trim().max(100).optional().nullable(),
+  isActive: z.boolean().default(true),
+  deductionFrequency: z.nativeEnum(DeductionFrequency).default(DeductionFrequency.MONTHLY),
+});
+export const UpdateProfessionalTaxRuleSchema = ProfessionalTaxRuleSchema.partial();
+export type ProfessionalTaxRuleInput = z.infer<typeof ProfessionalTaxRuleSchema>;
+export type UpdateProfessionalTaxRuleInput = z.infer<typeof UpdateProfessionalTaxRuleSchema>;
+
+export const ProfessionalTaxSlabSchema = z.object({
+  ruleId: z.string().uuid(),
+  minSalary: z.number().min(0).default(0),
+  maxSalary: z.number().min(0).optional().nullable(),
+  taxAmount: z.number().min(0),
+  gender: z.string().default('ALL'),
+  specificMonth: z.number().int().min(1).max(12).optional().nullable(),
+  specificMonthAmount: z.number().min(0).optional().nullable(),
+});
+export const UpdateProfessionalTaxSlabSchema = ProfessionalTaxSlabSchema.partial();
+export type ProfessionalTaxSlabInput = z.infer<typeof ProfessionalTaxSlabSchema>;
+export type UpdateProfessionalTaxSlabInput = z.infer<typeof UpdateProfessionalTaxSlabSchema>;
+
+export const LwfRuleSchema = z.object({
+  state: z.string().trim().min(2).max(100),
+  stateCode: z.string().trim().min(2).max(10).toUpperCase(),
+  isActive: z.boolean().default(true),
+  employeeContribution: z.number().min(0),
+  employerContribution: z.number().min(0),
+  deductionFrequency: z.nativeEnum(DeductionFrequency).default(DeductionFrequency.HALF_YEARLY),
+  deductionMonths: z.array(z.number().int().min(1).max(12)).default([6, 12]),
+});
+export const UpdateLwfRuleSchema = LwfRuleSchema.partial();
+export type LwfRuleInput = z.infer<typeof LwfRuleSchema>;
+export type UpdateLwfRuleInput = z.infer<typeof UpdateLwfRuleSchema>;
+
+export const EmployeeTaxProfileSchema = z.object({
+  employeeId: z.string().uuid(),
+  financialYear: z.string().regex(/^\d{4}-\d{4}$/),
+  selectedRegime: z.nativeEnum(TaxRegime).default(TaxRegime.NEW_REGIME),
+  panNumber: z.string().trim().toUpperCase().regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN format').optional().nullable(),
+  panVerificationStatus: z.nativeEnum(PanVerificationStatus).default(PanVerificationStatus.UNVERIFIED),
+  isPfEligible: z.boolean().default(true),
+  isEsiEligible: z.boolean().default(true),
+  isPtEligible: z.boolean().default(true),
+  isLwfEligible: z.boolean().default(true),
+  uanNumber: z.string().trim().max(50).optional().nullable(),
+  esiNumber: z.string().trim().max(50).optional().nullable(),
+  vpfPercentage: z.number().min(0).max(100).default(0),
+});
+export const UpdateEmployeeTaxProfileSchema = EmployeeTaxProfileSchema.partial();
+export const UpdateEmployeeTaxRegimeSchema = z.object({
+  selectedRegime: z.nativeEnum(TaxRegime),
+  financialYear: z.string().regex(/^\d{4}-\d{4}$/).optional(),
+});
+export type EmployeeTaxProfileInput = z.infer<typeof EmployeeTaxProfileSchema>;
+export type UpdateEmployeeTaxProfileInput = z.infer<typeof UpdateEmployeeTaxProfileSchema>;
+export type UpdateEmployeeTaxRegimeInput = z.infer<typeof UpdateEmployeeTaxRegimeSchema>;
+
+export const TaxDeclarationSchema = z.object({
+  financialYear: z.string().regex(/^\d{4}-\d{4}$/),
+  declarationType: z.nativeEnum(DeclarationType),
+  subCategory: z.string().trim().min(2).max(100),
+  declaredAmount: z.number().min(0),
+  particulars: z.string().trim().max(500).optional().nullable(),
+  landlordName: z.string().trim().max(100).optional().nullable(),
+  landlordPan: z.string().trim().toUpperCase().optional().nullable(),
+  landlordAddress: z.string().trim().max(300).optional().nullable(),
+});
+export const UpdateTaxDeclarationSchema = TaxDeclarationSchema.partial();
+export const ReviewTaxDeclarationSchema = z.object({
+  status: z.nativeEnum(DeclarationStatus),
+  approvedAmount: z.number().min(0).optional(),
+  rejectionReason: z.string().trim().max(500).optional().nullable(),
+});
+export type TaxDeclarationInput = z.infer<typeof TaxDeclarationSchema>;
+export type UpdateTaxDeclarationInput = z.infer<typeof UpdateTaxDeclarationSchema>;
+export type ReviewTaxDeclarationInput = z.infer<typeof ReviewTaxDeclarationSchema>;
+
+export const InvestmentProofSchema = z.object({
+  declarationId: z.string().uuid(),
+  documentName: z.string().trim().min(1).max(255),
+  documentUrl: z.string().trim().min(1),
+  fileSize: z.number().int().min(0).optional().nullable(),
+  fileType: z.string().trim().max(100).optional().nullable(),
+  amountDeclared: z.number().min(0),
+  amountSubmitted: z.number().min(0),
+  remarks: z.string().trim().max(500).optional().nullable(),
+});
+export const VerifyInvestmentProofSchema = z.object({
+  verificationStatus: z.nativeEnum(ProofVerificationStatus),
+  verifiedAmount: z.number().min(0),
+  rejectionReason: z.string().trim().max(500).optional().nullable(),
+});
+export type InvestmentProofInput = z.infer<typeof InvestmentProofSchema>;
+export type VerifyInvestmentProofInput = z.infer<typeof VerifyInvestmentProofSchema>;
+
+export const RecalculateTdsSchema = z.object({
+  employeeId: z.string().uuid().optional().nullable(),
+  financialYear: z.string().regex(/^\d{4}-\d{4}$/).optional().nullable(),
+});
+export type RecalculateTdsInput = z.infer<typeof RecalculateTdsSchema>;
+
+export const Form16PrepareSchema = z.object({
+  financialYear: z.string().regex(/^\d{4}-\d{4}$/),
+  assessmentYear: z.string().regex(/^\d{4}-\d{4}$/),
+  employeeIds: z.array(z.string().uuid()).optional(),
+});
+export const Form16PublishSchema = z.object({
+  recordIds: z.array(z.string().uuid()).optional(),
+  financialYear: z.string().regex(/^\d{4}-\d{4}$/).optional(),
+});
+export type Form16PrepareInput = z.infer<typeof Form16PrepareSchema>;
+export type Form16PublishInput = z.infer<typeof Form16PublishSchema>;
 
 // TypeScript DTOs
 export interface SalaryComponentDto {
@@ -3579,5 +3993,359 @@ export interface PayslipDto {
   lastDownloadedAt?: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+// Statutory Payroll & Compliance DTOs
+export interface StatutorySettingDto {
+  id: string;
+  organizationId: string;
+  financialYear: string;
+  defaultTaxRegime: TaxRegime;
+  panNumber?: string | null;
+  tanNumber?: string | null;
+  tdsCircle?: string | null;
+  pfEnabled: boolean;
+  pfEstablishmentCode?: string | null;
+  esiEnabled: boolean;
+  esiEstablishmentCode?: string | null;
+  ptEnabled: boolean;
+  lwfEnabled: boolean;
+  isDeclarationWindowOpen: boolean;
+  declarationWindowStartDate?: string | null;
+  declarationWindowEndDate?: string | null;
+  isProofSubmissionOpen: boolean;
+  proofSubmissionStartDate?: string | null;
+  proofSubmissionEndDate?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StatutoryComponentDto {
+  id: string;
+  organizationId: string;
+  statutoryType: StatutoryType;
+  name: string;
+  code: string;
+  description?: string | null;
+  isActive: boolean;
+  deductionFrequency: DeductionFrequency;
+  wageCeiling?: number | null;
+  eligibilityWageLimit?: number | null;
+  calculationBase: string;
+  employeeContributionRate: number;
+  employerContributionRate: number;
+  configuration?: Record<string, any> | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PfConfigDto {
+  id: string;
+  organizationId: string;
+  pfEnabled: boolean;
+  epfRateEmployee: number;
+  epfRateEmployer: number;
+  epsRateEmployer: number;
+  edliRate: number;
+  adminChargesRate: number;
+  wageCeiling: number;
+  restrictEmployerShareToCeiling: boolean;
+  allowVpf: boolean;
+  proRatePensionBasis: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EsiConfigDto {
+  id: string;
+  organizationId: string;
+  esiEnabled: boolean;
+  employeeContributionRate: number;
+  employerContributionRate: number;
+  wageCeiling: number;
+  disabilityWageCeiling: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProfessionalTaxRuleDto {
+  id: string;
+  organizationId: string;
+  state: string;
+  stateCode: string;
+  registrationNumber?: string | null;
+  isActive: boolean;
+  deductionFrequency: DeductionFrequency;
+  slabs?: ProfessionalTaxSlabDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProfessionalTaxSlabDto {
+  id: string;
+  organizationId: string;
+  ruleId: string;
+  minSalary: number;
+  maxSalary?: number | null;
+  taxAmount: number;
+  gender: string;
+  specificMonth?: number | null;
+  specificMonthAmount?: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LwfRuleDto {
+  id: string;
+  organizationId: string;
+  state: string;
+  stateCode: string;
+  isActive: boolean;
+  employeeContribution: number;
+  employerContribution: number;
+  deductionFrequency: DeductionFrequency;
+  deductionMonths: number[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeTaxProfileDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  financialYear: string;
+  selectedRegime: TaxRegime;
+  panNumber?: string | null;
+  panVerificationStatus: PanVerificationStatus;
+  isPfEligible: boolean;
+  isEsiEligible: boolean;
+  isPtEligible: boolean;
+  isLwfEligible: boolean;
+  uanNumber?: string | null;
+  esiNumber?: string | null;
+  vpfPercentage: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeTaxDeclarationDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  financialYear: string;
+  declarationType: DeclarationType;
+  subCategory: string;
+  declaredAmount: number;
+  approvedAmount?: number | null;
+  status: DeclarationStatus;
+  particulars?: string | null;
+  landlordName?: string | null;
+  landlordPan?: string | null;
+  landlordAddress?: string | null;
+  rejectionReason?: string | null;
+  reviewedBy?: string | null;
+  reviewedAt?: string | null;
+  proofs?: EmployeeInvestmentProofDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeInvestmentProofDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  declarationId: string;
+  declarationType?: DeclarationType;
+  subCategory?: string;
+  documentName: string;
+  documentUrl: string;
+  fileSize?: number | null;
+  fileType?: string | null;
+  amountDeclared: number;
+  amountSubmitted: number;
+  verifiedAmount?: number | null;
+  verificationStatus: ProofVerificationStatus;
+  rejectionReason?: string | null;
+  verifiedBy?: string | null;
+  verifiedAt?: string | null;
+  remarks?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeTdsCalculationDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  payrollRunId?: string | null;
+  financialYear: string;
+  month: number;
+  year: number;
+  selectedRegime: TaxRegime;
+  annualGrossSalary: number;
+  standardDeduction: number;
+  professionalTaxAnnual: number;
+  chapterVIAExemptions: number;
+  section80C: number;
+  section80D: number;
+  section80CCD1B: number;
+  section24HomeLoan: number;
+  hraExemption: number;
+  otherExemptions: number;
+  netTaxableIncome: number;
+  calculatedAnnualTax: number;
+  section87ARebate: number;
+  taxAfterRebate: number;
+  educationCess: number;
+  totalAnnualTaxLiability: number;
+  taxPaidYtd: number;
+  remainingTax: number;
+  remainingMonths: number;
+  monthlyTds: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Form16RecordDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  panNumber?: string | null;
+  financialYear: string;
+  assessmentYear: string;
+  selectedRegime: TaxRegime;
+  grossSalary: number;
+  exemptionsUs10: number;
+  standardDeduction: number;
+  professionalTax: number;
+  grossTotalIncome: number;
+  totalDeductionsChapterVIA: number;
+  totalTaxableIncome: number;
+  totalTaxPayable: number;
+  section87ARebate: number;
+  cess: number;
+  netTaxPayable: number;
+  totalTdsDeducted: number;
+  totalTdsDeposited: number;
+  status: Form16Status;
+  partAUrl?: string | null;
+  partBUrl?: string | null;
+  publishedAt?: string | null;
+  publishedBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StatutoryComplianceDashboardDto {
+  financialYear: string;
+  activeEmployeesCount: number;
+  regimeSelectionSummary: {
+    newRegimeCount: number;
+    oldRegimeCount: number;
+    pendingCount: number;
+  };
+  panStatusSummary: {
+    verifiedCount: number;
+    unverifiedCount: number;
+    failedCount: number;
+    missingCount: number;
+  };
+  declarationsSummary: {
+    totalSubmitted: number;
+    pendingReview: number;
+    approved: number;
+    rejected: number;
+  };
+  proofsSummary: {
+    totalUploaded: number;
+    pendingVerification: number;
+    verified: number;
+    rejected: number;
+  };
+  monthlyContributions: {
+    month: number;
+    year: number;
+    totalPfEmployee: number;
+    totalPfEmployer: number;
+    totalEsiEmployee: number;
+    totalEsiEmployer: number;
+    totalPt: number;
+    totalLwf: number;
+    totalTds: number;
+  };
+  upcomingDeadlines: Array<{
+    title: string;
+    description: string;
+    dueDate: string;
+    statutoryType: StatutoryType;
+    status: 'UPCOMING' | 'DUE_SOON' | 'OVERDUE';
+  }>;
+}
+
+export interface PfEcrReportRowDto {
+  uan: string;
+  memberCode: string;
+  memberName: string;
+  grossWages: number;
+  epfWages: number;
+  epsWages: number;
+  edliWages: number;
+  epfContributionEmployee: number;
+  epsContributionEmployer: number;
+  epfContributionEmployerDifference: number;
+  ncpDays: number;
+  refundOfAdvances: number;
+}
+
+export interface EsiRegisterReportRowDto {
+  ipNumber: string;
+  ipName: string;
+  noOfDaysWorked: number;
+  totalMonthlyWages: number;
+  employeeContribution: number;
+  employerContribution: number;
+  totalContribution: number;
+  reasonForZeroWorkingDays?: string;
+}
+
+export interface ProfessionalTaxReportRowDto {
+  employeeCode: string;
+  employeeName: string;
+  state: string;
+  locationName: string;
+  grossSalary: number;
+  ptAmount: number;
+}
+
+export interface LwfReportRowDto {
+  employeeCode: string;
+  employeeName: string;
+  state: string;
+  locationName: string;
+  employeeContribution: number;
+  employerContribution: number;
+  totalContribution: number;
+}
+
+export interface Tds24QReportRowDto {
+  pan: string;
+  employeeCode: string;
+  employeeName: string;
+  dateOfPayment: string;
+  taxableAmountPaid: number;
+  tdsDeducted: number;
+  surcharge: number;
+  educationCess: number;
+  totalTaxDeducted: number;
+  dateOfDeduction: string;
+  remarksReason?: string;
 }
 

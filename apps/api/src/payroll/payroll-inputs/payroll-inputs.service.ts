@@ -20,7 +20,7 @@ export class PayrollInputsService {
     private readonly repo: PayrollInputsRepository,
     private readonly exceptionsRepo: PayrollExceptionsRepository,
     private readonly auditService: AuditService,
-  ) {}
+  ) { }
 
   async findByRun(payrollRunId: string, organizationId: string) {
     return this.repo.findByRun(payrollRunId, organizationId);
@@ -323,10 +323,11 @@ export class PayrollInputsService {
       let paidLeaveDays = 0;
 
       for (const leave of approvedLeaves) {
+        const days = Number(leave.numberOfDays || 0);
         if (leave.leaveType?.isPaid === false) {
-          unpaidLeaveDays += leave.totalDays;
+          unpaidLeaveDays += days;
         } else {
-          paidLeaveDays += leave.totalDays;
+          paidLeaveDays += days;
         }
       }
 

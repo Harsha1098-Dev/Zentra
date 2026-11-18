@@ -15,6 +15,8 @@ import {
   PlusCircle,
   Home,
   CheckCircle2,
+  ShieldCheck,
+  Calculator,
 } from 'lucide-react';
 import { useAuth } from '../../context/auth-context';
 import { PermissionCode, RoleCode } from '@zentra/shared-types';
@@ -43,10 +45,12 @@ export function PayrollNav() {
           { label: 'Employee Salaries', href: '/payroll/employee-salary', icon: Users },
           { label: 'Payslip Templates', href: '/payroll/payslip-templates', icon: FileText },
           { label: 'All Payslips', href: '/payroll/generated-payslips', icon: CheckCircle2 },
+          { label: 'Statutory & Compliance', href: '/payroll/statutory', icon: ShieldCheck },
         ]
       : []),
     { label: 'My Payslips', href: '/my-payslips', icon: FileText },
     { label: 'My Salary', href: '/my-salary', icon: DollarSign },
+    { label: 'My Tax', href: '/my-tax', icon: Calculator },
   ];
 
   return (

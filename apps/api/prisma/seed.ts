@@ -205,6 +205,62 @@ const BASE_PERMISSIONS: { code: string; name: string; description: string }[] = 
   { code: 'payroll.template.delete', name: 'Delete Payslip Template', description: 'Deactivate payslip templates' },
   { code: 'payroll.report.view', name: 'View Payroll Reports', description: 'View payroll register and variance reports' },
   { code: 'payroll.report.export', name: 'Export Payroll Reports', description: 'Export payroll data to CSV' },
+
+  // Statutory Payroll & Compliance Permissions (India)
+  { code: 'payroll.statutory.read', name: 'Read Statutory Settings', description: 'View statutory configuration and dashboards' },
+  { code: 'payroll.statutory.configure', name: 'Configure Statutory Settings', description: 'Configure organization statutory parameters' },
+  { code: 'payroll.statutory.update', name: 'Update Statutory Settings', description: 'Update statutory compliance rules' },
+  { code: 'payroll.statutory.calculate', name: 'Calculate Statutory Deductions', description: 'Run statutory calculation engine' },
+  { code: 'payroll.statutory.report.view', name: 'View Statutory Reports', description: 'View compliance reports and registers' },
+  { code: 'payroll.statutory.report.export', name: 'Export Statutory Reports', description: 'Export ECR, ESI, PT, and 24Q reports' },
+
+  { code: 'payroll.pf.read', name: 'Read PF Configuration', description: 'View EPF and EPS contribution rates' },
+  { code: 'payroll.pf.configure', name: 'Configure PF', description: 'Update EPF contribution rules and wage ceilings' },
+  { code: 'payroll.pf.calculate', name: 'Calculate PF', description: 'Calculate employee and employer PF shares' },
+  { code: 'payroll.pf.report.view', name: 'View PF Reports', description: 'View monthly PF ECR data' },
+  { code: 'payroll.pf.report.export', name: 'Export PF ECR', description: 'Export monthly PF Electronic Challan cum Return text file' },
+
+  { code: 'payroll.esi.read', name: 'Read ESI Configuration', description: 'View ESI contribution rates and thresholds' },
+  { code: 'payroll.esi.configure', name: 'Configure ESI', description: 'Update ESI wage limits and contribution rates' },
+  { code: 'payroll.esi.calculate', name: 'Calculate ESI', description: 'Calculate employee and employer ESI amounts' },
+  { code: 'payroll.esi.report.view', name: 'View ESI Register', description: 'View monthly ESI contribution register' },
+  { code: 'payroll.esi.report.export', name: 'Export ESI Register', description: 'Export monthly ESI register to CSV' },
+
+  { code: 'payroll.professional_tax.read', name: 'Read Professional Tax', description: 'View state-wise professional tax slabs' },
+  { code: 'payroll.professional_tax.configure', name: 'Configure Professional Tax', description: 'Manage state PT rules and slab thresholds' },
+  { code: 'payroll.professional_tax.calculate', name: 'Calculate Professional Tax', description: 'Evaluate PT deductions across employee locations' },
+  { code: 'payroll.professional_tax.report.view', name: 'View PT Reports', description: 'View state-wise PT monthly summaries' },
+  { code: 'payroll.professional_tax.report.export', name: 'Export PT Reports', description: 'Export state-wise PT statements' },
+
+  { code: 'payroll.lwf.read', name: 'Read LWF Configuration', description: 'View state Labour Welfare Fund rules' },
+  { code: 'payroll.lwf.configure', name: 'Configure LWF', description: 'Configure state LWF contribution amounts and schedule' },
+  { code: 'payroll.lwf.calculate', name: 'Calculate LWF', description: 'Compute periodic LWF deductions' },
+  { code: 'payroll.lwf.report.view', name: 'View LWF Reports', description: 'View state-specific LWF schedules' },
+  { code: 'payroll.lwf.report.export', name: 'Export LWF Reports', description: 'Export state LWF filing reports' },
+
+  { code: 'payroll.tds.read', name: 'Read TDS Calculation', description: 'View projected annual tax liability and slab evaluation' },
+  { code: 'payroll.tds.configure', name: 'Configure TDS', description: 'Configure TDS rules, tax slabs, and declaration windows' },
+  { code: 'payroll.tds.calculate', name: 'Calculate TDS', description: 'Execute automated TDS monthly computations' },
+  { code: 'payroll.tds.report.view', name: 'View TDS 24Q Report', description: 'View quarterly 24Q Annexure details' },
+  { code: 'payroll.tds.report.export', name: 'Export TDS 24Q Report', description: 'Export Form 24Q quarterly returns' },
+
+  { code: 'payroll.tax_declaration.read', name: 'Read Tax Declarations', description: 'View employee investment declarations' },
+  { code: 'payroll.tax_declaration.create', name: 'Create Tax Declaration', description: 'Create and edit provisional tax declarations' },
+  { code: 'payroll.tax_declaration.submit', name: 'Submit Tax Declaration', description: 'Submit declarations for verification' },
+  { code: 'payroll.tax_declaration.review', name: 'Review Tax Declarations', description: 'Review declared Chapter VI-A investments' },
+  { code: 'payroll.tax_declaration.approve', name: 'Approve Tax Declarations', description: 'Approve submitted tax declarations' },
+  { code: 'payroll.tax_declaration.reject', name: 'Reject Tax Declarations', description: 'Reject invalid tax declarations' },
+
+  { code: 'payroll.investment_proof.read', name: 'Read Investment Proofs', description: 'View submitted proof documents' },
+  { code: 'payroll.investment_proof.upload', name: 'Upload Investment Proofs', description: 'Upload investment proof attachments' },
+  { code: 'payroll.investment_proof.verify', name: 'Verify Investment Proofs', description: 'Approve verified investment proof amounts' },
+  { code: 'payroll.investment_proof.reject', name: 'Reject Investment Proofs', description: 'Reject invalid proof documentation' },
+  { code: 'payroll.investment_proof.download', name: 'Download Investment Proofs', description: 'Download uploaded proof attachments' },
+
+  { code: 'payroll.form16.read', name: 'Read Form 16', description: 'View Form 16 Part A and Part B records' },
+  { code: 'payroll.form16.prepare', name: 'Prepare Form 16', description: 'Compile annual income and TDS computation data for Form 16' },
+  { code: 'payroll.form16.publish', name: 'Publish Form 16', description: 'Release signed Form 16 certificates to employees' },
+  { code: 'payroll.form16.download', name: 'Download Form 16', description: 'Download employee Form 16 certificate' },
 ];
 
 const BASE_ROLES = [
