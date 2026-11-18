@@ -619,6 +619,52 @@ export enum PermissionCode {
 
   HELPDESK_REPORT_VIEW = 'helpdesk.report.view',
   HELPDESK_REPORT_EXPORT = 'helpdesk.report.export',
+
+  // Employee Engagement Permissions
+  ENGAGEMENT_READ = 'engagement.read',
+  ENGAGEMENT_MANAGE = 'engagement.manage',
+
+  SURVEY_READ = 'survey.read',
+  SURVEY_CREATE = 'survey.create',
+  SURVEY_UPDATE = 'survey.update',
+  SURVEY_DELETE = 'survey.delete',
+  SURVEY_PUBLISH = 'survey.publish',
+  SURVEY_CLOSE = 'survey.close',
+  SURVEY_RESPOND = 'survey.respond',
+  SURVEY_RESULTS_VIEW = 'survey.results.view',
+
+  POLL_READ = 'poll.read',
+  POLL_CREATE = 'poll.create',
+  POLL_UPDATE = 'poll.update',
+  POLL_DELETE = 'poll.delete',
+  POLL_VOTE = 'poll.vote',
+  POLL_CLOSE = 'poll.close',
+
+  RECOGNITION_READ = 'recognition.read',
+  RECOGNITION_GIVE = 'recognition.give',
+  RECOGNITION_APPROVE = 'recognition.approve',
+  RECOGNITION_MANAGE = 'recognition.manage',
+
+  REWARD_READ = 'reward.read',
+  REWARD_MANAGE = 'reward.manage',
+  REWARD_REDEEM = 'reward.redeem',
+  REWARD_APPROVE = 'reward.approve',
+
+  BADGE_READ = 'badge.read',
+  BADGE_MANAGE = 'badge.manage',
+  BADGE_AWARD = 'badge.award',
+
+  CELEBRATION_READ = 'celebration.read',
+  CELEBRATION_MANAGE = 'celebration.manage',
+  CELEBRATION_WISH = 'celebration.wish',
+
+  WELLNESS_READ = 'wellness.read',
+  WELLNESS_MANAGE = 'wellness.manage',
+  WELLNESS_JOIN = 'wellness.join',
+  WELLNESS_COMPLETE = 'wellness.complete',
+
+  ENGAGEMENT_REPORT_VIEW = 'engagement.report.view',
+  ENGAGEMENT_REPORT_EXPORT = 'engagement.report.export',
 }
 
 export enum InvitationStatus {
@@ -1095,6 +1141,32 @@ export enum AuditAction {
   FAQ_UPDATE = 'FAQ_UPDATE',
   TICKET_FEEDBACK_SUBMIT = 'TICKET_FEEDBACK_SUBMIT',
   HELPDESK_REPORT_EXPORT = 'HELPDESK_REPORT_EXPORT',
+
+  // Employee Engagement Audit Actions
+  SURVEY_CREATE = 'SURVEY_CREATE',
+  SURVEY_UPDATE = 'SURVEY_UPDATE',
+  SURVEY_PUBLISH = 'SURVEY_PUBLISH',
+  SURVEY_CLOSE = 'SURVEY_CLOSE',
+  SURVEY_RESPONSE_SUBMIT = 'SURVEY_RESPONSE_SUBMIT',
+  POLL_CREATE = 'POLL_CREATE',
+  POLL_VOTE = 'POLL_VOTE',
+  POLL_CLOSE = 'POLL_CLOSE',
+  RECOGNITION_GIVE = 'RECOGNITION_GIVE',
+  RECOGNITION_APPROVE = 'RECOGNITION_APPROVE',
+  RECOGNITION_REJECT = 'RECOGNITION_REJECT',
+  REWARD_CREATE = 'REWARD_CREATE',
+  REWARD_UPDATE = 'REWARD_UPDATE',
+  REWARD_REDEEM = 'REWARD_REDEEM',
+  REWARD_REDEMPTION_APPROVE = 'REWARD_REDEMPTION_APPROVE',
+  REWARD_REDEMPTION_FULFILL = 'REWARD_REDEMPTION_FULFILL',
+  BADGE_CREATE = 'BADGE_CREATE',
+  BADGE_AWARD = 'BADGE_AWARD',
+  CELEBRATION_CREATE = 'CELEBRATION_CREATE',
+  CELEBRATION_SYNC = 'CELEBRATION_SYNC',
+  WELLNESS_ACTIVITY_CREATE = 'WELLNESS_ACTIVITY_CREATE',
+  WELLNESS_ACTIVITY_JOIN = 'WELLNESS_ACTIVITY_JOIN',
+  WELLNESS_ACTIVITY_COMPLETE = 'WELLNESS_ACTIVITY_COMPLETE',
+  ENGAGEMENT_REPORT_EXPORT = 'ENGAGEMENT_REPORT_EXPORT',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -1513,6 +1585,43 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.TICKET_FEEDBACK_READ,
     PermissionCode.HELPDESK_REPORT_VIEW,
     PermissionCode.HELPDESK_REPORT_EXPORT,
+    // Engagement Permissions for HR_ADMIN
+    PermissionCode.ENGAGEMENT_READ,
+    PermissionCode.ENGAGEMENT_MANAGE,
+    PermissionCode.SURVEY_READ,
+    PermissionCode.SURVEY_CREATE,
+    PermissionCode.SURVEY_UPDATE,
+    PermissionCode.SURVEY_DELETE,
+    PermissionCode.SURVEY_PUBLISH,
+    PermissionCode.SURVEY_CLOSE,
+    PermissionCode.SURVEY_RESPOND,
+    PermissionCode.SURVEY_RESULTS_VIEW,
+    PermissionCode.POLL_READ,
+    PermissionCode.POLL_CREATE,
+    PermissionCode.POLL_UPDATE,
+    PermissionCode.POLL_DELETE,
+    PermissionCode.POLL_VOTE,
+    PermissionCode.POLL_CLOSE,
+    PermissionCode.RECOGNITION_READ,
+    PermissionCode.RECOGNITION_GIVE,
+    PermissionCode.RECOGNITION_APPROVE,
+    PermissionCode.RECOGNITION_MANAGE,
+    PermissionCode.REWARD_READ,
+    PermissionCode.REWARD_MANAGE,
+    PermissionCode.REWARD_REDEEM,
+    PermissionCode.REWARD_APPROVE,
+    PermissionCode.BADGE_READ,
+    PermissionCode.BADGE_MANAGE,
+    PermissionCode.BADGE_AWARD,
+    PermissionCode.CELEBRATION_READ,
+    PermissionCode.CELEBRATION_MANAGE,
+    PermissionCode.CELEBRATION_WISH,
+    PermissionCode.WELLNESS_READ,
+    PermissionCode.WELLNESS_MANAGE,
+    PermissionCode.WELLNESS_JOIN,
+    PermissionCode.WELLNESS_COMPLETE,
+    PermissionCode.ENGAGEMENT_REPORT_VIEW,
+    PermissionCode.ENGAGEMENT_REPORT_EXPORT,
   ],
   [RoleCode.PAYROLL_ADMIN]: Object.values(PermissionCode),
   [RoleCode.FINANCE]: [
@@ -1678,6 +1787,26 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.KNOWLEDGE_BASE_READ,
     PermissionCode.FAQ_READ,
     PermissionCode.TICKET_FEEDBACK_SUBMIT,
+    // Engagement Permissions for MANAGER
+    PermissionCode.ENGAGEMENT_READ,
+    PermissionCode.SURVEY_READ,
+    PermissionCode.SURVEY_RESPOND,
+    PermissionCode.SURVEY_RESULTS_VIEW,
+    PermissionCode.POLL_READ,
+    PermissionCode.POLL_VOTE,
+    PermissionCode.RECOGNITION_READ,
+    PermissionCode.RECOGNITION_GIVE,
+    PermissionCode.RECOGNITION_APPROVE,
+    PermissionCode.REWARD_READ,
+    PermissionCode.REWARD_REDEEM,
+    PermissionCode.BADGE_READ,
+    PermissionCode.BADGE_AWARD,
+    PermissionCode.CELEBRATION_READ,
+    PermissionCode.CELEBRATION_WISH,
+    PermissionCode.WELLNESS_READ,
+    PermissionCode.WELLNESS_JOIN,
+    PermissionCode.WELLNESS_COMPLETE,
+    PermissionCode.ENGAGEMENT_REPORT_VIEW,
   ],
   [RoleCode.EMPLOYEE]: [
     PermissionCode.ORGANIZATION_READ,
@@ -1750,6 +1879,22 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.KNOWLEDGE_BASE_READ,
     PermissionCode.FAQ_READ,
     PermissionCode.TICKET_FEEDBACK_SUBMIT,
+    // Engagement Permissions for EMPLOYEE
+    PermissionCode.ENGAGEMENT_READ,
+    PermissionCode.SURVEY_READ,
+    PermissionCode.SURVEY_RESPOND,
+    PermissionCode.POLL_READ,
+    PermissionCode.POLL_VOTE,
+    PermissionCode.RECOGNITION_READ,
+    PermissionCode.RECOGNITION_GIVE,
+    PermissionCode.REWARD_READ,
+    PermissionCode.REWARD_REDEEM,
+    PermissionCode.BADGE_READ,
+    PermissionCode.CELEBRATION_READ,
+    PermissionCode.CELEBRATION_WISH,
+    PermissionCode.WELLNESS_READ,
+    PermissionCode.WELLNESS_JOIN,
+    PermissionCode.WELLNESS_COMPLETE,
   ],
   [RoleCode.RECRUITER]: [
     PermissionCode.ORGANIZATION_READ,
@@ -1881,6 +2026,43 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.TICKET_FEEDBACK_READ,
     PermissionCode.HELPDESK_REPORT_VIEW,
     PermissionCode.HELPDESK_REPORT_EXPORT,
+    // Engagement Permissions for HR_ADMIN
+    PermissionCode.ENGAGEMENT_READ,
+    PermissionCode.ENGAGEMENT_MANAGE,
+    PermissionCode.SURVEY_READ,
+    PermissionCode.SURVEY_CREATE,
+    PermissionCode.SURVEY_UPDATE,
+    PermissionCode.SURVEY_DELETE,
+    PermissionCode.SURVEY_PUBLISH,
+    PermissionCode.SURVEY_CLOSE,
+    PermissionCode.SURVEY_RESPOND,
+    PermissionCode.SURVEY_RESULTS_VIEW,
+    PermissionCode.POLL_READ,
+    PermissionCode.POLL_CREATE,
+    PermissionCode.POLL_UPDATE,
+    PermissionCode.POLL_DELETE,
+    PermissionCode.POLL_VOTE,
+    PermissionCode.POLL_CLOSE,
+    PermissionCode.RECOGNITION_READ,
+    PermissionCode.RECOGNITION_GIVE,
+    PermissionCode.RECOGNITION_APPROVE,
+    PermissionCode.RECOGNITION_MANAGE,
+    PermissionCode.REWARD_READ,
+    PermissionCode.REWARD_MANAGE,
+    PermissionCode.REWARD_REDEEM,
+    PermissionCode.REWARD_APPROVE,
+    PermissionCode.BADGE_READ,
+    PermissionCode.BADGE_MANAGE,
+    PermissionCode.BADGE_AWARD,
+    PermissionCode.CELEBRATION_READ,
+    PermissionCode.CELEBRATION_MANAGE,
+    PermissionCode.CELEBRATION_WISH,
+    PermissionCode.WELLNESS_READ,
+    PermissionCode.WELLNESS_MANAGE,
+    PermissionCode.WELLNESS_JOIN,
+    PermissionCode.WELLNESS_COMPLETE,
+    PermissionCode.ENGAGEMENT_REPORT_VIEW,
+    PermissionCode.ENGAGEMENT_REPORT_EXPORT,
   ],
 };
 
@@ -7762,5 +7944,454 @@ export interface AgentWorkbenchSummaryDto {
   slaBreachWarningCount: number;
   resolvedTodayCount: number;
 }
+
+// ==========================================
+// EMPLOYEE ENGAGEMENT ENUMS & TYPES
+// ==========================================
+
+export enum SurveyType {
+  ENPS = 'ENPS',
+  PULSE = 'PULSE',
+  ENGAGEMENT = 'ENGAGEMENT',
+  CUSTOM = 'CUSTOM',
+}
+
+export enum SurveyStatus {
+  DRAFT = 'DRAFT',
+  SCHEDULED = 'SCHEDULED',
+  ACTIVE = 'ACTIVE',
+  CLOSED = 'CLOSED',
+  ARCHIVED = 'ARCHIVED',
+}
+
+export enum SurveyAudienceType {
+  ALL = 'ALL',
+  SPECIFIC_EMPLOYEES = 'SPECIFIC_EMPLOYEES',
+  DEPARTMENT = 'DEPARTMENT',
+  LOCATION = 'LOCATION',
+  DESIGNATION = 'DESIGNATION',
+  GRADE = 'GRADE',
+  EMPLOYMENT_TYPE = 'EMPLOYMENT_TYPE',
+  ROLE = 'ROLE',
+  DIRECT_REPORTEES = 'DIRECT_REPORTEES',
+}
+
+export enum SurveyQuestionType {
+  SHORT_TEXT = 'SHORT_TEXT',
+  LONG_TEXT = 'LONG_TEXT',
+  SINGLE_CHOICE = 'SINGLE_CHOICE',
+  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
+  DROPDOWN = 'DROPDOWN',
+  RATING_SCALE = 'RATING_SCALE',
+  ENPS_SCALE = 'ENPS_SCALE',
+  YES_NO = 'YES_NO',
+  DATE = 'DATE',
+  NUMBER = 'NUMBER',
+  FILE_UPLOAD = 'FILE_UPLOAD',
+  NPS_FOLLOW_UP_COMMENT = 'NPS_FOLLOW_UP_COMMENT',
+}
+
+export enum PollType {
+  SINGLE_CHOICE = 'SINGLE_CHOICE',
+  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
+  YES_NO = 'YES_NO',
+  RATING = 'RATING',
+}
+
+export enum PollStatus {
+  DRAFT = 'DRAFT',
+  ACTIVE = 'ACTIVE',
+  CLOSED = 'CLOSED',
+}
+
+export enum RecognitionCategory {
+  TEAMWORK = 'TEAMWORK',
+  LEADERSHIP = 'LEADERSHIP',
+  INNOVATION = 'INNOVATION',
+  CUSTOMER_FOCUS = 'CUSTOMER_FOCUS',
+  OWNERSHIP = 'OWNERSHIP',
+  QUALITY = 'QUALITY',
+  COLLABORATION = 'COLLABORATION',
+  GOING_ABOVE_AND_BEYOND = 'GOING_ABOVE_AND_BEYOND',
+  VALUES_ALIGNMENT = 'VALUES_ALIGNMENT',
+}
+
+export enum RecognitionType {
+  PEER_TO_PEER = 'PEER_TO_PEER',
+  MANAGER_TO_EMPLOYEE = 'MANAGER_TO_EMPLOYEE',
+  TEAM = 'TEAM',
+  LEADERSHIP = 'LEADERSHIP',
+}
+
+export enum RecognitionStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+
+export enum RewardType {
+  GIFT_CARD = 'GIFT_CARD',
+  VOUCHER = 'VOUCHER',
+  MERCHANDISE = 'MERCHANDISE',
+  CASH = 'CASH',
+  EXTRA_LEAVE = 'EXTRA_LEAVE',
+  OTHER = 'OTHER',
+}
+
+export enum RewardRedemptionStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  FULFILLED = 'FULFILLED',
+  REJECTED = 'REJECTED',
+}
+
+export enum CelebrationType {
+  BIRTHDAY = 'BIRTHDAY',
+  WORK_ANNIVERSARY = 'WORK_ANNIVERSARY',
+  PROMOTION = 'PROMOTION',
+  NEW_JOINER = 'NEW_JOINER',
+  RETIREMENT = 'RETIREMENT',
+  OTHER = 'OTHER',
+}
+
+export enum CelebrationVisibility {
+  ORGANIZATION = 'ORGANIZATION',
+  DEPARTMENT = 'DEPARTMENT',
+  LOCATION = 'LOCATION',
+  TEAM = 'TEAM',
+}
+
+export enum WellnessCategory {
+  FITNESS_CHALLENGE = 'FITNESS_CHALLENGE',
+  YOGA_SESSION = 'YOGA_SESSION',
+  MENTAL_WELLNESS = 'MENTAL_WELLNESS',
+  WEBINAR = 'WEBINAR',
+  TEAM_ACTIVITY = 'TEAM_ACTIVITY',
+  OTHER = 'OTHER',
+}
+
+export enum WellnessParticipationStatus {
+  REGISTERED = 'REGISTERED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+// ------------------------------------------
+// ENGAGEMENT INTERFACES & DTOS
+// ------------------------------------------
+
+export interface SurveyQuestionOption {
+  label: string;
+  value: string;
+}
+
+export interface SurveyQuestionDto {
+  id: string;
+  organizationId: string;
+  surveyId: string;
+  sectionName: string;
+  questionText: string;
+  description?: string | null;
+  questionType: SurveyQuestionType;
+  options?: SurveyQuestionOption[] | null;
+  ratingScaleMin: number;
+  ratingScaleMax: number;
+  ratingScaleMinLabel?: string | null;
+  ratingScaleMaxLabel?: string | null;
+  isRequired: boolean;
+  displayOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EngagementSurveyDto {
+  id: string;
+  organizationId: string;
+  title: string;
+  description?: string | null;
+  surveyType: SurveyType;
+  status: SurveyStatus;
+  startDate?: string | null;
+  endDate?: string | null;
+  isAnonymous: boolean;
+  audienceType: SurveyAudienceType;
+  audienceFilter?: any;
+  recurrenceFrequency: string;
+  allowAnonymousComments: boolean;
+  totalEligibleCount: number;
+  totalResponsesCount: number;
+  createdBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  questions?: SurveyQuestionDto[];
+  hasResponded?: boolean;
+}
+
+export interface SurveyAnswerDto {
+  id: string;
+  organizationId: string;
+  surveyResponseId: string;
+  surveyQuestionId: string;
+  textValue?: string | null;
+  numberValue?: number | null;
+  selectedOptions?: string[] | null;
+  booleanValue?: boolean | null;
+  dateValue?: string | null;
+  fileUrl?: string | null;
+}
+
+export interface SurveyResponseDto {
+  id: string;
+  organizationId: string;
+  surveyId: string;
+  employeeId?: string | null;
+  submittedAt: string;
+  status: string;
+  answers?: SurveyAnswerDto[];
+}
+
+export interface PollOptionDto {
+  id: string;
+  organizationId: string;
+  pollId: string;
+  optionText: string;
+  displayOrder: number;
+  votesCount: number;
+  percentage?: number;
+}
+
+export interface PollDto {
+  id: string;
+  organizationId: string;
+  title: string;
+  question: string;
+  pollType: PollType;
+  status: PollStatus;
+  startDate?: string | null;
+  endDate?: string | null;
+  isAnonymous: boolean;
+  audienceType: string;
+  audienceFilter?: any;
+  totalVotesCount: number;
+  createdBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  options: PollOptionDto[];
+  hasVoted?: boolean;
+  userVotedOptionId?: string | null;
+}
+
+export interface RecognitionProgramDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  isActive: boolean;
+  defaultPoints: number;
+  requiresApproval: boolean;
+  allowPeerToPeer: boolean;
+  allowManagerToEmployee: boolean;
+  monthlyPointsBudget: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RecognitionDto {
+  id: string;
+  organizationId: string;
+  senderId: string;
+  sender?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    workEmail: string;
+    designation?: { name: string } | null;
+    department?: { name: string } | null;
+  };
+  receiverId: string;
+  receiver?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    workEmail: string;
+    designation?: { name: string } | null;
+    department?: { name: string } | null;
+  };
+  programId?: string | null;
+  program?: RecognitionProgramDto | null;
+  badgeId?: string | null;
+  badge?: BadgeDto | null;
+  category: RecognitionCategory;
+  recognitionType: RecognitionType;
+  message: string;
+  pointsAwarded: number;
+  status: RecognitionStatus;
+  approvedById?: string | null;
+  approvedAt?: string | null;
+  likesCount: number;
+  commentsCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RewardDto {
+  id: string;
+  organizationId: string;
+  title: string;
+  description?: string | null;
+  pointsCost: number;
+  rewardType: RewardType;
+  quantityAvailable: number;
+  maxRedemptionsPerEmployee: number;
+  imageUrl?: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RewardRedemptionDto {
+  id: string;
+  organizationId: string;
+  rewardId: string;
+  reward?: RewardDto;
+  employeeId: string;
+  employee?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    workEmail: string;
+  };
+  pointsSpent: number;
+  status: RewardRedemptionStatus;
+  notes?: string | null;
+  approvedById?: string | null;
+  approvedAt?: string | null;
+  fulfilledAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BadgeDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  category: string;
+  icon: string;
+  color: string;
+  pointsAward: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeBadgeDto {
+  id: string;
+  organizationId: string;
+  badgeId: string;
+  badge?: BadgeDto;
+  employeeId: string;
+  employee?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  recognitionId?: string | null;
+  awardedAt: string;
+  reason?: string | null;
+}
+
+export interface CelebrationDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    workEmail: string;
+    designation?: { name: string } | null;
+    department?: { name: string } | null;
+  };
+  celebrationType: CelebrationType;
+  eventDate: string;
+  title: string;
+  message?: string | null;
+  yearsCount?: number | null;
+  visibility: CelebrationVisibility;
+  wishesCount: number;
+  isAutoGenerated: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WellnessActivityDto {
+  id: string;
+  organizationId: string;
+  title: string;
+  description?: string | null;
+  category: WellnessCategory;
+  startDate: string;
+  endDate: string;
+  maxParticipants: number;
+  pointsReward: number;
+  locationOrLink?: string | null;
+  status: string;
+  enrolledCount: number;
+  completedCount: number;
+  isEnrolled?: boolean;
+  isCompleted?: boolean;
+  createdBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WellnessParticipationDto {
+  id: string;
+  organizationId: string;
+  wellnessActivityId: string;
+  wellnessActivity?: WellnessActivityDto;
+  employeeId: string;
+  status: WellnessParticipationStatus;
+  joinedAt: string;
+  completedAt?: string | null;
+  pointsAwarded: number;
+}
+
+export interface EnpsCalculationDto {
+  totalResponses: number;
+  promotersCount: number;
+  passivesCount: number;
+  detractorsCount: number;
+  promoterPercentage: number;
+  passivePercentage: number;
+  detractorPercentage: number;
+  enpsScore: number;
+  distribution: { score: number; count: number; percentage: number }[];
+  comments?: { score: number; comment: string; date: string }[];
+}
+
+export interface EngagementSummaryDto {
+  totalSurveysCount: number;
+  activeSurveysCount: number;
+  overallEnpsScore: number;
+  activePollsCount: number;
+  totalRecognitionsGiven: number;
+  totalPointsAwarded: number;
+  upcomingCelebrationsCount: number;
+  activeWellnessActivitiesCount: number;
+  enpsTrend?: { surveyTitle: string; score: number; date: string }[];
+}
+
+export interface EmployeeHubDto {
+  pointsBalance: number;
+  earnedBadgesCount: number;
+  pendingSurveysCount: number;
+  activePollsCount: number;
+  recentRecognitions: RecognitionDto[];
+  upcomingCelebrations: CelebrationDto[];
+  joinedWellness: WellnessActivityDto[];
+}
+
 
 

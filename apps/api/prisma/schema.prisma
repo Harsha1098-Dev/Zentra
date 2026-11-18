@@ -163,6 +163,22 @@ model Organization {
   knowledgeBaseArticles   KnowledgeBaseArticle[]
   faqs                    Faq[]
   ticketFeedbacks         TicketFeedback[]
+  engagementSurveys       EngagementSurvey[]
+  surveyQuestions         SurveyQuestion[]
+  surveyResponses         SurveyResponse[]
+  surveyAnswers           SurveyAnswer[]
+  polls                   Poll[]
+  pollOptions             PollOption[]
+  pollVotes               PollVote[]
+  recognitionPrograms     RecognitionProgram[]
+  recognitions            Recognition[]
+  rewards                 Reward[]
+  rewardRedemptions       RewardRedemption[]
+  badges                  Badge[]
+  employeeBadges          EmployeeBadge[]
+  celebrations            Celebration[]
+  wellnessActivities      WellnessActivity[]
+  wellnessParticipations  WellnessParticipation[]
 
   @@index([slug])
   @@map("organizations")
@@ -670,6 +686,14 @@ model Employee {
   employeeReferrals       EmployeeReferral[]  @relation("ReferringEmployee")
   tickets                 Ticket[]            @relation("EmployeeTickets")
   ticketFeedbacks         TicketFeedback[]    @relation("EmployeeTicketFeedbacks")
+  surveyResponses         SurveyResponse[]         @relation("EmployeeSurveyResponses")
+  pollVotes               PollVote[]               @relation("EmployeePollVotes")
+  sentRecognitions        Recognition[]            @relation("SentRecognitions")
+  receivedRecognitions    Recognition[]            @relation("ReceivedRecognitions")
+  rewardRedemptions       RewardRedemption[]       @relation("EmployeeRewardRedemptions")
+  badgesAwarded           EmployeeBadge[]          @relation("EmployeeBadgesAwarded")
+  celebrations            Celebration[]            @relation("EmployeeCelebrations")
+  wellnessParticipations  WellnessParticipation[]  @relation("EmployeeWellnessParticipations")
 
   @@unique([organizationId, employeeCode])
   @@unique([organizationId, workEmail])
@@ -4016,4 +4040,384 @@ model TicketFeedback {
   @@index([employeeId])
   @@map("ticket_feedbacks")
 }
+
+// ==========================================
+// EMPLOYEE ENGAGEMENT MODELS
+// ==========================================
+
+model EngagementSurvey {
+  id                     String    @id @default(uuid())
+  organizationId         String    @map("organization_id")
+  title                  String
+  description            String?
+  surveyType             String    @default("ENGAGEMENT") @map("survey_type") // ENPS, PULSE, ENGAGEMENT, CUSTOM
+  status                 String    @default("DRAFT") // DRAFT, SCHEDULED, ACTIVE, CLOSED, ARCHIVED
+  startDate              DateTime? @map("start_date")
+  endDate                DateTime? @map("end_date")
+  isAnonymous            Boolean   @default(false) @map("is_anonymous")
+  audienceType           String    @default("ALL") @map("audience_type") // ALL, SPECIFIC_EMPLOYEES, DEPARTMENT, LOCATION, DESIGNATION, GRADE, EMPLOYMENT_TYPE, ROLE, DIRECT_REPORTEES
+  audienceFilter         Json?     @map("audience_filter")
+  recurrenceFrequency    String    @default("NONE") @map("recurrence_frequency") // NONE, WEEKLY, BIWEEKLY, MONTHLY, QUARTERLY, YEARLY
+  allowAnonymousComments Boolean   @default(true) @map("allow_anonymous_comments")
+  totalEligibleCount     Int       @default(0) @map("total_eligible_count")
+  totalResponsesCount    Int       @default(0) @map("total_responses_count")
+  createdBy              String?   @map("created_by")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  questions    SurveyQuestion[]
+  responses    SurveyResponse[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("engagement_surveys")
+}
+
+model SurveyQuestion {
+  id                  String   @id @default(uuid())
+  organizationId      String   @map("organization_id")
+  surveyId            String   @map("survey_id")
+  sectionName         String   @default("General") @map("section_name")
+  questionText        String   @map("question_text")
+  description         String?
+  questionType        String   @map("question_type") // SHORT_TEXT, LONG_TEXT, SINGLE_CHOICE, MULTIPLE_CHOICE, DROPDOWN, RATING_SCALE, ENPS_SCALE, YES_NO, DATE, NUMBER, FILE_UPLOAD, NPS_FOLLOW_UP_COMMENT
+  options             Json?
+  ratingScaleMin      Int      @default(1) @map("rating_scale_min")
+  ratingScaleMax      Int      @default(5) @map("rating_scale_max")
+  ratingScaleMinLabel String?  @default("Strongly Disagree") @map("rating_scale_min_label")
+  ratingScaleMaxLabel String?  @default("Strongly Agree") @map("rating_scale_max_label")
+  isRequired          Boolean  @default(true) @map("is_required")
+  displayOrder        Int      @default(0) @map("display_order")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  survey       EngagementSurvey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  answers      SurveyAnswer[]
+
+  @@index([organizationId])
+  @@index([surveyId])
+  @@map("survey_questions")
+}
+
+model SurveyResponse {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  surveyId       String   @map("survey_id")
+  employeeId     String?  @map("employee_id")
+  submittedAt    DateTime @default(now()) @map("submitted_at")
+  status         String   @default("SUBMITTED") // IN_PROGRESS, SUBMITTED
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  survey       EngagementSurvey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  employee     Employee?        @relation("EmployeeSurveyResponses", fields: [employeeId], references: [id], onDelete: SetNull)
+  answers      SurveyAnswer[]
+
+  @@unique([organizationId, surveyId, employeeId], map: "uq_survey_response_emp")
+  @@index([organizationId])
+  @@index([surveyId])
+  @@index([employeeId])
+  @@map("survey_responses")
+}
+
+model SurveyAnswer {
+  id               String    @id @default(uuid())
+  organizationId   String    @map("organization_id")
+  surveyResponseId String    @map("survey_response_id")
+  surveyQuestionId String    @map("survey_question_id")
+  textValue        String?   @map("text_value")
+  numberValue      Float?    @map("number_value")
+  selectedOptions  Json?     @map("selected_options")
+  booleanValue     Boolean?  @map("boolean_value")
+  dateValue        DateTime? @map("date_value")
+  fileUrl          String?   @map("file_url")
+
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  surveyResponse SurveyResponse @relation(fields: [surveyResponseId], references: [id], onDelete: Cascade)
+  surveyQuestion SurveyQuestion @relation(fields: [surveyQuestionId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([surveyResponseId])
+  @@index([surveyQuestionId])
+  @@map("survey_answers")
+}
+
+model Poll {
+  id              String    @id @default(uuid())
+  organizationId  String    @map("organization_id")
+  title           String
+  question        String
+  pollType        String    @default("SINGLE_CHOICE") @map("poll_type") // SINGLE_CHOICE, MULTIPLE_CHOICE, YES_NO, RATING
+  status          String    @default("ACTIVE") // DRAFT, ACTIVE, CLOSED
+  startDate       DateTime? @map("start_date")
+  endDate         DateTime? @map("end_date")
+  isAnonymous     Boolean   @default(true) @map("is_anonymous")
+  audienceType    String    @default("ALL") @map("audience_type")
+  audienceFilter  Json?     @map("audience_filter")
+  totalVotesCount Int       @default(0) @map("total_votes_count")
+  createdBy       String?   @map("created_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  options      PollOption[]
+  votes        PollVote[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("polls")
+}
+
+model PollOption {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  pollId         String   @map("poll_id")
+  optionText     String   @map("option_text")
+  displayOrder   Int      @default(0) @map("display_order")
+  votesCount     Int      @default(0) @map("votes_count")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  poll         Poll         @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes        PollVote[]
+
+  @@index([organizationId])
+  @@index([pollId])
+  @@map("poll_options")
+}
+
+model PollVote {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  pollId         String   @map("poll_id")
+  pollOptionId   String?  @map("poll_option_id")
+  employeeId     String?  @map("employee_id")
+  ratingValue    Int?     @map("rating_value")
+  votedAt        DateTime @default(now()) @map("voted_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  poll         Poll         @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  pollOption   PollOption?  @relation(fields: [pollOptionId], references: [id], onDelete: SetNull)
+  employee     Employee?    @relation("EmployeePollVotes", fields: [employeeId], references: [id], onDelete: SetNull)
+
+  @@unique([organizationId, pollId, employeeId], map: "uq_poll_vote_emp")
+  @@index([organizationId])
+  @@index([pollId])
+  @@index([employeeId])
+  @@map("poll_votes")
+}
+
+model RecognitionProgram {
+  id                     String   @id @default(uuid())
+  organizationId         String   @map("organization_id")
+  name                   String
+  description            String?
+  isActive               Boolean  @default(true) @map("is_active")
+  defaultPoints          Int      @default(50) @map("default_points")
+  requiresApproval       Boolean  @default(false) @map("requires_approval")
+  allowPeerToPeer        Boolean  @default(true) @map("allow_peer_to_peer")
+  allowManagerToEmployee Boolean  @default(true) @map("allow_manager_to_employee")
+  monthlyPointsBudget    Int      @default(200) @map("monthly_points_budget")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  recognitions Recognition[]
+
+  @@index([organizationId])
+  @@map("recognition_programs")
+}
+
+model Recognition {
+  id              String    @id @default(uuid())
+  organizationId  String    @map("organization_id")
+  senderId        String    @map("sender_id")
+  receiverId      String    @map("receiver_id")
+  programId       String?   @map("program_id")
+  badgeId         String?   @map("badge_id")
+  category        String    @map("category") // TEAMWORK, LEADERSHIP, INNOVATION, CUSTOMER_FOCUS, OWNERSHIP, QUALITY, COLLABORATION, GOING_ABOVE_AND_BEYOND, VALUES_ALIGNMENT
+  recognitionType String    @default("PEER_TO_PEER") @map("recognition_type") // PEER_TO_PEER, MANAGER_TO_EMPLOYEE, TEAM, LEADERSHIP
+  message         String
+  pointsAwarded   Int       @default(0) @map("points_awarded")
+  status          String    @default("APPROVED") // PENDING, APPROVED, REJECTED
+  approvedById    String?   @map("approved_by_id")
+  approvedAt      DateTime? @map("approved_at")
+  likesCount      Int       @default(0) @map("likes_count")
+  commentsCount   Int       @default(0) @map("comments_count")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  sender         Employee            @relation("SentRecognitions", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver       Employee            @relation("ReceivedRecognitions", fields: [receiverId], references: [id], onDelete: Cascade)
+  program        RecognitionProgram? @relation(fields: [programId], references: [id], onDelete: SetNull)
+  badge          Badge?              @relation(fields: [badgeId], references: [id], onDelete: SetNull)
+  employeeBadges EmployeeBadge[]
+
+  @@index([organizationId])
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([category])
+  @@map("recognitions")
+}
+
+model Reward {
+  id                        String   @id @default(uuid())
+  organizationId            String   @map("organization_id")
+  title                     String
+  description               String?
+  pointsCost                Int      @map("points_cost")
+  rewardType                String   @default("VOUCHER") @map("reward_type") // GIFT_CARD, VOUCHER, MERCHANDISE, CASH, EXTRA_LEAVE, OTHER
+  quantityAvailable         Int      @default(-1) @map("quantity_available") // -1 = unlimited
+  maxRedemptionsPerEmployee Int      @default(1) @map("max_redemptions_per_employee")
+  imageUrl                  String?  @map("image_url")
+  isActive                  Boolean  @default(true) @map("is_active")
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
+
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  redemptions  RewardRedemption[]
+
+  @@index([organizationId])
+  @@map("rewards")
+}
+
+model RewardRedemption {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  rewardId       String    @map("reward_id")
+  employeeId     String    @map("employee_id")
+  pointsSpent    Int       @map("points_spent")
+  status         String    @default("PENDING") // PENDING, APPROVED, FULFILLED, REJECTED
+  notes          String?
+  approvedById   String?   @map("approved_by_id")
+  approvedAt     DateTime? @map("approved_at")
+  fulfilledAt    DateTime? @map("fulfilled_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  reward       Reward       @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation("EmployeeRewardRedemptions", fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([rewardId])
+  @@index([status])
+  @@map("reward_redemptions")
+}
+
+model Badge {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  name           String
+  description    String?
+  category       String   @default("GENERAL") // GENERAL, VALUES, PERFORMANCE, TEAMWORK, INNOVATION
+  icon           String   @default("Award")
+  color          String   @default("#1E3A8A")
+  pointsAward    Int      @default(50) @map("points_award")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  recognitions   Recognition[]
+  employeeBadges EmployeeBadge[]
+
+  @@unique([organizationId, name], map: "uq_badge_name")
+  @@index([organizationId])
+  @@map("badges")
+}
+
+model EmployeeBadge {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  badgeId        String   @map("badge_id")
+  employeeId     String   @map("employee_id")
+  recognitionId  String?  @map("recognition_id")
+  awardedAt      DateTime @default(now()) @map("awarded_at")
+  reason         String?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  badge        Badge        @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation("EmployeeBadgesAwarded", fields: [employeeId], references: [id], onDelete: Cascade)
+  recognition  Recognition? @relation(fields: [recognitionId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([badgeId])
+  @@map("employee_badges")
+}
+
+model Celebration {
+  id              String   @id @default(uuid())
+  organizationId  String   @map("organization_id")
+  employeeId      String   @map("employee_id")
+  celebrationType String   @map("celebration_type") // BIRTHDAY, WORK_ANNIVERSARY, PROMOTION, NEW_JOINER, RETIREMENT, OTHER
+  eventDate       DateTime @map("event_date")
+  title           String
+  message         String?
+  yearsCount      Int?     @map("years_count")
+  visibility      String   @default("ORGANIZATION") // ORGANIZATION, DEPARTMENT, LOCATION, TEAM
+  wishesCount     Int      @default(0) @map("wishes_count")
+  isAutoGenerated Boolean  @default(false) @map("is_auto_generated")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation("EmployeeCelebrations", fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([eventDate])
+  @@map("celebrations")
+}
+
+model WellnessActivity {
+  id              String    @id @default(uuid())
+  organizationId  String    @map("organization_id")
+  title           String
+  description     String?
+  category        String    @map("category") // FITNESS_CHALLENGE, YOGA_SESSION, MENTAL_WELLNESS, WEBINAR, TEAM_ACTIVITY, OTHER
+  startDate       DateTime  @map("start_date")
+  endDate         DateTime  @map("end_date")
+  maxParticipants Int       @default(0) @map("max_participants") // 0 = unlimited
+  pointsReward    Int       @default(100) @map("points_reward")
+  locationOrLink  String?   @map("location_or_link")
+  status          String    @default("ACTIVE") // SCHEDULED, ACTIVE, COMPLETED, CANCELLED
+  enrolledCount   Int       @default(0) @map("enrolled_count")
+  completedCount  Int       @default(0) @map("completed_count")
+  createdBy       String?   @map("created_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  participations WellnessParticipation[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("wellness_activities")
+}
+
+model WellnessParticipation {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  wellnessActivityId String    @map("wellness_activity_id")
+  employeeId         String    @map("employee_id")
+  status             String    @default("REGISTERED") // REGISTERED, COMPLETED, CANCELLED
+  joinedAt           DateTime  @default(now()) @map("joined_at")
+  completedAt        DateTime? @map("completed_at")
+  pointsAwarded      Int       @default(0) @map("points_awarded")
+
+  organization     Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  wellnessActivity WellnessActivity @relation(fields: [wellnessActivityId], references: [id], onDelete: Cascade)
+  employee         Employee         @relation("EmployeeWellnessParticipations", fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, wellnessActivityId, employeeId], map: "uq_wellness_part_emp")
+  @@index([organizationId])
+  @@index([wellnessActivityId])
+  @@index([employeeId])
+  @@map("wellness_participations")
+}
+
 

@@ -26,6 +26,7 @@ import {
   Target,
   Briefcase,
   LifeBuoy,
+  Heart,
 } from 'lucide-react';
 import { PermissionCode, RoleCode } from '@zentra/shared-types';
 
@@ -310,6 +311,14 @@ export default function DashboardPage() {
             </Link>
 
             <Link
+              href="/engagement"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-pink-50 text-pink-800 border border-pink-200 hover:bg-pink-100 rounded-lg text-xs font-semibold transition-colors shadow-sm"
+            >
+              <Heart className="w-3.5 h-3.5 text-pink-600 fill-current" />
+              <span>Engagement</span>
+            </Link>
+
+            <Link
               href="/settings/workflows"
               className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
             >
@@ -528,6 +537,13 @@ export default function DashboardPage() {
                   >
                     <LifeBuoy className="w-3 h-3 text-emerald-700" />
                     <span>HR Helpdesk</span>
+                  </Link>
+                  <Link
+                    href="/engagement"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 bg-pink-50 text-pink-800 hover:bg-pink-100 rounded text-xs font-semibold border border-pink-200"
+                  >
+                    <Heart className="w-3 h-3 text-pink-600 fill-current" />
+                    <span>Engagement</span>
                   </Link>
                 </div>
 
