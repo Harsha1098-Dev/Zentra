@@ -72,6 +72,15 @@ model Organization {
   leaveBalances           LeaveBalance[]
   leaveRequests           LeaveRequest[]
   compOffRequests         CompOffRequest[]
+  attendancePolicies      AttendancePolicy[]
+  shifts                  Shift[]
+  rosters                 Roster[]
+  shiftAssignments        ShiftAssignment[]
+  attendanceRecords       AttendanceRecord[]
+  attendanceRegularisations AttendanceRegularisation[]
+  overtimeRequests        OvertimeRequest[]
+  attendanceRequests      AttendanceRequest[]
+  attendanceLocks         AttendanceLock[]
 
   @@index([slug])
   @@map("organizations")
@@ -521,6 +530,11 @@ model Employee {
   leaveRequests         LeaveRequest[]           @relation("EmployeeLeaveRequests")
   coveringLeaveRequests LeaveRequest[]           @relation("CoveringEmployeeRequests")
   compOffRequests       CompOffRequest[]
+  shiftAssignments          ShiftAssignment[]
+  attendanceRecords         AttendanceRecord[]
+  attendanceRegularisations AttendanceRegularisation[]
+  overtimeRequests          OvertimeRequest[]
+  attendanceRequests        AttendanceRequest[]
 
   @@unique([organizationId, employeeCode])
   @@unique([organizationId, workEmail])
@@ -1131,4 +1145,300 @@ model CompOffRequest {
   @@index([workedDate])
   @@index([approvalFlowId])
   @@map("comp_off_requests")
+}
+
+// ==========================================
+// ATTENDANCE & TIME TRACKING MODELS
+// ==========================================
+
+model AttendancePolicy {
+  id                               String    @id @default(uuid())
+  organizationId                   String    @map("organization_id")
+  name                             String
+  code                             String
+  description                      String?
+  isDefault                        Boolean   @default(false) @map("is_default")
+  mode                             String    @default("STRICT") @map("mode") // STRICT, LENIENT
+  workHoursPerDay                  Decimal   @default(8.0) @map("work_hours_per_day") @db.Decimal(4, 2)
+  minHoursHalfDay                  Decimal   @default(4.0) @map("min_hours_half_day") @db.Decimal(4, 2)
+  minHoursFullDay                  Decimal   @default(8.0) @map("min_hours_full_day") @db.Decimal(4, 2)
+  gracePeriodLateCheckIn           Int       @default(15) @map("grace_period_late_check_in")
+  gracePeriodEarlyCheckOut         Int       @default(15) @map("grace_period_early_check_out")
+  maxGraceOccurrencesPerMonth      Int       @default(3) @map("max_grace_occurrences_per_month")
+  lateCheckInPenaltyType           String    @default("HALF_DAY") @map("late_check_in_penalty_type") // NONE, HALF_DAY, FULL_DAY, LEAVE_DEDUCTION
+  lateCheckInPenaltyDeductionDays  Decimal   @default(0.5) @map("late_check_in_penalty_deduction_days") @db.Decimal(4, 2)
+  allowOvertime                    Boolean   @default(false) @map("allow_overtime")
+  minOvertimeMinutes               Int       @default(30) @map("min_overtime_minutes")
+  maxOvertimeMinutesPerDay         Int       @default(240) @map("max_overtime_minutes_per_day")
+  overtimeRequiresApproval         Boolean   @default(true) @map("overtime_requires_approval")
+  allowRegularisation              Boolean   @default(true) @map("allow_regularisation")
+  regularisationDeadlineDays       Int       @default(7) @map("regularisation_deadline_days")
+  maxRegularisationsPerMonth       Int       @default(3) @map("max_regularisations_per_month")
+  allowSelfCheckIn                 Boolean   @default(true) @map("allow_self_check_in")
+  allowWebPunch                    Boolean   @default(true) @map("allow_web_punch")
+  allowMobilePunch                 Boolean   @default(false) @map("allow_mobile_punch")
+  ipRestrictions                   Json?     @default("[]") @map("ip_restrictions")
+  geofencingEnabled                Boolean   @default(false) @map("geofencing_enabled")
+  geofenceRadiusMeters             Int?      @map("geofence_radius_meters")
+  autoCheckoutEnabled              Boolean   @default(false) @map("auto_checkout_enabled")
+  autoCheckoutTime                 String?   @map("auto_checkout_time")
+  effectiveFrom                    DateTime  @default(now()) @map("effective_from")
+  effectiveTo                      DateTime? @map("effective_to")
+  createdAt                        DateTime  @default(now()) @map("created_at")
+  updatedAt                        DateTime  @updatedAt @map("updated_at")
+
+  organization      Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  shifts            Shift[]
+  attendanceRecords AttendanceRecord[]
+
+  @@unique([organizationId, code])
+  @@index([organizationId])
+  @@index([isDefault])
+  @@map("attendance_policies")
+}
+
+model Shift {
+  id                         String    @id @default(uuid())
+  organizationId             String    @map("organization_id")
+  policyId                   String?   @map("policy_id")
+  name                       String
+  code                       String
+  startTime                  String    @map("start_time") // HH:mm
+  endTime                    String    @map("end_time") // HH:mm
+  isOvernight                Boolean   @default(false) @map("is_overnight")
+  breakDurationMinutes       Int       @default(60) @map("break_duration_minutes")
+  isPaidBreak                Boolean   @default(false) @map("is_paid_break")
+  checkInMarginBeforeMinutes Int       @default(60) @map("check_in_margin_before_minutes")
+  checkOutMarginAfterMinutes Int       @default(120) @map("check_out_margin_after_minutes")
+  colorCode                  String    @default("#3B82F6") @map("color_code")
+  isDefault                  Boolean   @default(false) @map("is_default")
+  status                     String    @default("ACTIVE") // ACTIVE, INACTIVE
+  createdAt                  DateTime  @default(now()) @map("created_at")
+  updatedAt                  DateTime  @updatedAt @map("updated_at")
+
+  organization      Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  policy            AttendancePolicy?  @relation(fields: [policyId], references: [id], onDelete: SetNull)
+  shiftAssignments  ShiftAssignment[]
+  attendanceRecords AttendanceRecord[]
+
+  @@unique([organizationId, code])
+  @@index([organizationId])
+  @@index([policyId])
+  @@index([status])
+  @@map("shifts")
+}
+
+model Roster {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  name           String
+  code           String
+  startDate      DateTime  @map("start_date")
+  endDate        DateTime  @map("end_date")
+  status         String    @default("DRAFT") // DRAFT, PUBLISHED, ARCHIVED
+  publishedAt    DateTime? @map("published_at")
+  publishedBy    String?   @map("published_by")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  organization     Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  shiftAssignments ShiftAssignment[]
+
+  @@unique([organizationId, code])
+  @@index([organizationId])
+  @@index([startDate])
+  @@index([endDate])
+  @@index([status])
+  @@map("rosters")
+}
+
+model ShiftAssignment {
+  id                String    @id @default(uuid())
+  organizationId    String    @map("organization_id")
+  employeeId        String    @map("employee_id")
+  shiftId           String    @map("shift_id")
+  rosterId          String?   @map("roster_id")
+  startDate         DateTime  @map("start_date")
+  endDate           DateTime? @map("end_date")
+  isRecurring       Boolean   @default(false) @map("is_recurring")
+  recurrencePattern String?   @map("recurrence_pattern") // DAILY, WEEKLY, ROTATING
+  isOverride        Boolean   @default(false) @map("is_override")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  shift        Shift        @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  roster       Roster?      @relation(fields: [rosterId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([shiftId])
+  @@index([rosterId])
+  @@index([startDate])
+  @@index([endDate])
+  @@map("shift_assignments")
+}
+
+model AttendanceRecord {
+  id                      String    @id @default(uuid())
+  organizationId          String    @map("organization_id")
+  employeeId              String    @map("employee_id")
+  attendanceDate          DateTime  @map("attendance_date")
+  shiftId                 String?   @map("shift_id")
+  policyId                String?   @map("policy_id")
+  status                  String    @default("ABSENT") // PRESENT, ABSENT, HALF_DAY, ON_LEAVE, HOLIDAY, WEEKEND, ON_DUTY, WORK_FROM_HOME, REST_DAY
+  checkInTime             DateTime? @map("check_in_time")
+  checkOutTime            DateTime? @map("check_out_time")
+  checkInSource           String?   @map("check_in_source") // WEB, MOBILE, BIOMETRIC, MANUAL, SYSTEM
+  checkOutSource          String?   @map("check_out_source")
+  checkInIp               String?   @map("check_in_ip")
+  checkOutIp              String?   @map("check_out_ip")
+  checkInLocation         String?   @map("check_in_location")
+  checkOutLocation        String?   @map("check_out_location")
+  workedMinutes           Int       @default(0) @map("worked_minutes")
+  breakMinutes            Int       @default(0) @map("break_minutes")
+  payableMinutes          Int       @default(0) @map("payable_minutes")
+  overtimeMinutes         Int       @default(0) @map("overtime_minutes")
+  approvedOvertimeMinutes Int       @default(0) @map("approved_overtime_minutes")
+  lateMinutes             Int       @default(0) @map("late_minutes")
+  earlyMinutes            Int       @default(0) @map("early_minutes")
+  deviationMinutes        Int       @default(0) @map("deviation_minutes")
+  isLate                  Boolean   @default(false) @map("is_late")
+  isEarlyExit             Boolean   @default(false) @map("is_early_exit")
+  isRegularised           Boolean   @default(false) @map("is_regularised")
+  isLocked                Boolean   @default(false) @map("is_locked")
+  remarks                 String?
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+
+  organization        Organization               @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee            Employee                   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  shift               Shift?                     @relation(fields: [shiftId], references: [id], onDelete: SetNull)
+  policy              AttendancePolicy?          @relation(fields: [policyId], references: [id], onDelete: SetNull)
+  regularisations     AttendanceRegularisation[]
+  overtimeRequests    OvertimeRequest[]
+
+  @@unique([organizationId, employeeId, attendanceDate])
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([attendanceDate])
+  @@index([status])
+  @@index([shiftId])
+  @@index([policyId])
+  @@map("attendance_records")
+}
+
+model AttendanceRegularisation {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  attendanceRecordId String    @map("attendance_record_id")
+  employeeId         String    @map("employee_id")
+  requestedCheckIn   DateTime? @map("requested_check_in")
+  requestedCheckOut  DateTime? @map("requested_check_out")
+  reason             String    // MISSED_PUNCH, SYSTEM_ERROR, ON_DUTY, WORK_FROM_HOME, PERSONAL_EMERGENCY, TRANSIT_DELAY, OTHER
+  explanation        String
+  status             String    @default("PENDING_APPROVAL") // PENDING_APPROVAL, APPROVED, REJECTED, CANCELLED
+  approvalFlowId     String?   @map("approval_flow_id")
+  approvedBy         String?   @map("approved_by")
+  approvedAt         DateTime? @map("approved_at")
+  rejectedBy         String?   @map("rejected_by")
+  rejectedAt         DateTime? @map("rejected_at")
+  rejectionReason    String?   @map("rejection_reason")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization     Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  attendanceRecord AttendanceRecord @relation(fields: [attendanceRecordId], references: [id], onDelete: Cascade)
+  employee         Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([attendanceRecordId])
+  @@index([employeeId])
+  @@index([status])
+  @@index([approvalFlowId])
+  @@map("attendance_regularisations")
+}
+
+model OvertimeRequest {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  employeeId         String    @map("employee_id")
+  attendanceRecordId String?   @map("attendance_record_id")
+  date               DateTime
+  overtimeMinutes    Int       @map("overtime_minutes")
+  overtimeType       String    @default("DAILY") @map("overtime_type") // DAILY, REST_DAY, HOLIDAY
+  reason             String
+  status             String    @default("PENDING_APPROVAL") // PENDING_APPROVAL, APPROVED, REJECTED, CANCELLED
+  approvedBy         String?   @map("approved_by")
+  approvedAt         DateTime? @map("approved_at")
+  rejectedBy         String?   @map("rejected_by")
+  rejectedAt         DateTime? @map("rejected_at")
+  rejectionReason    String?   @map("rejection_reason")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization     Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee         Employee          @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  attendanceRecord AttendanceRecord? @relation(fields: [attendanceRecordId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([attendanceRecordId])
+  @@index([date])
+  @@index([status])
+  @@map("overtime_requests")
+}
+
+model AttendanceRequest {
+  id              String    @id @default(uuid())
+  organizationId  String    @map("organization_id")
+  employeeId      String    @map("employee_id")
+  requestType     String    @map("request_type") // ON_DUTY, WORK_FROM_HOME
+  fromDate        DateTime  @map("from_date")
+  toDate          DateTime  @map("to_date")
+  reason          String
+  status          String    @default("PENDING_APPROVAL") // PENDING_APPROVAL, APPROVED, REJECTED, CANCELLED
+  approvedBy      String?   @map("approved_by")
+  approvedAt      DateTime? @map("approved_at")
+  rejectedBy      String?   @map("rejected_by")
+  rejectedAt      DateTime? @map("rejected_at")
+  rejectionReason String?   @map("rejection_reason")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([requestType])
+  @@index([fromDate])
+  @@index([toDate])
+  @@index([status])
+  @@map("attendance_requests")
+}
+
+model AttendanceLock {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  name           String
+  startDate      DateTime  @map("start_date")
+  endDate        DateTime  @map("end_date")
+  status         String    @default("LOCKED") // LOCKED, UNLOCKED
+  lockedBy       String    @map("locked_by")
+  lockedAt       DateTime  @default(now()) @map("locked_at")
+  unlockedBy     String?   @map("unlocked_by")
+  unlockedAt     DateTime? @map("unlocked_at")
+  remarks        String?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([startDate])
+  @@index([endDate])
+  @@index([status])
+  @@map("attendance_locks")
 }

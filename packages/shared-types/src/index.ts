@@ -247,6 +247,40 @@ export enum PermissionCode {
   LEAVE_COMPOFF_APPROVE = 'leave.compoff.approve',
   LEAVE_REPORT_VIEW = 'leave.report.view',
   LEAVE_REPORT_EXPORT = 'leave.report.export',
+
+  // Attendance & Time Tracking Permissions
+  ATTENDANCE_READ = 'attendance.read',
+  ATTENDANCE_READ_OWN = 'attendance.read_own',
+  ATTENDANCE_READ_TEAM = 'attendance.read_team',
+  ATTENDANCE_READ_ALL = 'attendance.read_all',
+  ATTENDANCE_CHECK_IN = 'attendance.check_in',
+  ATTENDANCE_CHECK_OUT = 'attendance.check_out',
+  ATTENDANCE_REGULARISE = 'attendance.regularise',
+  ATTENDANCE_REGULARISE_APPROVE = 'attendance.regularise_approve',
+  ATTENDANCE_REGULARISE_OVERRIDE = 'attendance.regularise_override',
+  ATTENDANCE_OVERTIME_READ = 'attendance.overtime.read',
+  ATTENDANCE_OVERTIME_APPLY = 'attendance.overtime.apply',
+  ATTENDANCE_OVERTIME_APPROVE = 'attendance.overtime.approve',
+  ATTENDANCE_OVERTIME_OVERRIDE = 'attendance.overtime.override',
+  ATTENDANCE_ONDUTY_APPLY = 'attendance.onduty.apply',
+  ATTENDANCE_ONDUTY_APPROVE = 'attendance.onduty.approve',
+  ATTENDANCE_WFH_APPLY = 'attendance.wfh.apply',
+  ATTENDANCE_WFH_APPROVE = 'attendance.wfh.approve',
+  ATTENDANCE_POLICY_READ = 'attendance.policy.read',
+  ATTENDANCE_POLICY_CREATE = 'attendance.policy.create',
+  ATTENDANCE_POLICY_UPDATE = 'attendance.policy.update',
+  ATTENDANCE_POLICY_DELETE = 'attendance.policy.delete',
+  ATTENDANCE_SHIFT_READ = 'attendance.shift.read',
+  ATTENDANCE_SHIFT_CREATE = 'attendance.shift.create',
+  ATTENDANCE_SHIFT_UPDATE = 'attendance.shift.update',
+  ATTENDANCE_SHIFT_DELETE = 'attendance.shift.delete',
+  ATTENDANCE_ROSTER_READ = 'attendance.roster.read',
+  ATTENDANCE_ROSTER_CREATE = 'attendance.roster.create',
+  ATTENDANCE_ROSTER_UPDATE = 'attendance.roster.update',
+  ATTENDANCE_ROSTER_DELETE = 'attendance.roster.delete',
+  ATTENDANCE_LOCK = 'attendance.lock',
+  ATTENDANCE_REPORT_VIEW = 'attendance.report.view',
+  ATTENDANCE_REPORT_EXPORT = 'attendance.report.export',
 }
 
 export enum InvitationStatus {
@@ -374,6 +408,68 @@ export enum AuditAction {
   COMP_OFF_REQUEST_APPROVE = 'COMP_OFF_REQUEST_APPROVE',
   COMP_OFF_REQUEST_REJECT = 'COMP_OFF_REQUEST_REJECT',
   LEAVE_REPORT_EXPORT = 'LEAVE_REPORT_EXPORT',
+
+  // Attendance & Time Tracking Audit Actions
+  ATTENDANCE_POLICY_CREATE = 'ATTENDANCE_POLICY_CREATE',
+  ATTENDANCE_POLICY_CREATED = 'ATTENDANCE_POLICY_CREATE',
+  ATTENDANCE_POLICY_UPDATE = 'ATTENDANCE_POLICY_UPDATE',
+  ATTENDANCE_POLICY_UPDATED = 'ATTENDANCE_POLICY_UPDATE',
+  ATTENDANCE_POLICY_DELETE = 'ATTENDANCE_POLICY_DELETE',
+  ATTENDANCE_POLICY_DELETED = 'ATTENDANCE_POLICY_DELETE',
+  ATTENDANCE_POLICY_ACTIVATE = 'ATTENDANCE_POLICY_ACTIVATE',
+  ATTENDANCE_POLICY_DEACTIVATE = 'ATTENDANCE_POLICY_DEACTIVATE',
+  SHIFT_CREATE = 'SHIFT_CREATE',
+  SHIFT_CREATED = 'SHIFT_CREATE',
+  SHIFT_UPDATE = 'SHIFT_UPDATE',
+  SHIFT_UPDATED = 'SHIFT_UPDATE',
+  SHIFT_DELETE = 'SHIFT_DELETE',
+  SHIFT_DELETED = 'SHIFT_DELETE',
+  SHIFT_DEACTIVATE = 'SHIFT_DEACTIVATE',
+  ROSTER_CREATE = 'ROSTER_CREATE',
+  ROSTER_CREATED = 'ROSTER_CREATE',
+  ROSTER_UPDATE = 'ROSTER_UPDATE',
+  ROSTER_UPDATED = 'ROSTER_UPDATE',
+  ROSTER_DELETE = 'ROSTER_DELETE',
+  ROSTER_DELETED = 'ROSTER_DELETE',
+  ROSTER_PUBLISH = 'ROSTER_PUBLISH',
+  ROSTER_PUBLISHED = 'ROSTER_PUBLISH',
+  SHIFT_ASSIGN = 'SHIFT_ASSIGN',
+  SHIFT_ASSIGNED = 'SHIFT_ASSIGN',
+  SHIFT_ASSIGN_UPDATE = 'SHIFT_ASSIGN_UPDATE',
+  SHIFT_ASSIGN_UPDATED = 'SHIFT_ASSIGN_UPDATE',
+  SHIFT_ASSIGN_DELETE = 'SHIFT_ASSIGN_DELETE',
+  SHIFT_ASSIGN_DELETED = 'SHIFT_ASSIGN_DELETE',
+  ATTENDANCE_CHECK_IN = 'ATTENDANCE_CHECK_IN',
+  ATTENDANCE_CHECK_OUT = 'ATTENDANCE_CHECK_OUT',
+  ATTENDANCE_MANUAL_ENTRY = 'ATTENDANCE_MANUAL_ENTRY',
+  ATTENDANCE_MANUAL_CREATE = 'ATTENDANCE_MANUAL_CREATE',
+  ATTENDANCE_MANUAL_UPDATE = 'ATTENDANCE_MANUAL_UPDATE',
+  ATTENDANCE_REGULARISATION_REQUEST = 'ATTENDANCE_REGULARISATION_REQUEST',
+  ATTENDANCE_REGULARISATION_REQUESTED = 'ATTENDANCE_REGULARISATION_REQUEST',
+  ATTENDANCE_REGULARISATION_CREATE = 'ATTENDANCE_REGULARISATION_CREATE',
+  ATTENDANCE_REGULARISATION_APPROVE = 'ATTENDANCE_REGULARISATION_APPROVE',
+  ATTENDANCE_REGULARISATION_APPROVED = 'ATTENDANCE_REGULARISATION_APPROVE',
+  ATTENDANCE_REGULARISATION_REJECT = 'ATTENDANCE_REGULARISATION_REJECT',
+  ATTENDANCE_REGULARISATION_REJECTED = 'ATTENDANCE_REGULARISATION_REJECT',
+  OVERTIME_REQUEST_CREATE = 'OVERTIME_REQUEST_CREATE',
+  OVERTIME_REQUESTED = 'OVERTIME_REQUEST_CREATE',
+  OVERTIME_APPROVED = 'OVERTIME_REQUEST_APPROVE',
+  OVERTIME_REQUEST_APPROVE = 'OVERTIME_REQUEST_APPROVE',
+  OVERTIME_REJECTED = 'OVERTIME_REQUEST_REJECT',
+  OVERTIME_REQUEST_REJECT = 'OVERTIME_REQUEST_REJECT',
+  ATTENDANCE_REQUEST_CREATE = 'ATTENDANCE_REQUEST_CREATE',
+  ATTENDANCE_REQUEST_ONDUTY_APPLIED = 'ATTENDANCE_REQUEST_ONDUTY_APPLIED',
+  ATTENDANCE_REQUEST_ONDUTY_APPROVED = 'ATTENDANCE_REQUEST_ONDUTY_APPROVED',
+  ATTENDANCE_REQUEST_ONDUTY_REJECTED = 'ATTENDANCE_REQUEST_ONDUTY_REJECTED',
+  ATTENDANCE_REQUEST_WFH_APPLIED = 'ATTENDANCE_REQUEST_WFH_APPLIED',
+  ATTENDANCE_REQUEST_WFH_APPROVED = 'ATTENDANCE_REQUEST_WFH_APPROVED',
+  ATTENDANCE_REQUEST_WFH_REJECTED = 'ATTENDANCE_REQUEST_WFH_REJECTED',
+  ATTENDANCE_REQUEST_APPROVE = 'ATTENDANCE_REQUEST_APPROVE',
+  ATTENDANCE_REQUEST_REJECT = 'ATTENDANCE_REQUEST_REJECT',
+  ATTENDANCE_LOCK = 'ATTENDANCE_LOCK',
+  ATTENDANCE_UNLOCK = 'ATTENDANCE_UNLOCK',
+  ATTENDANCE_REPORT_EXPORT = 'ATTENDANCE_REPORT_EXPORT',
+  ATTENDANCE_REPORT_EXPORTED = 'ATTENDANCE_REPORT_EXPORT',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -480,6 +576,39 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.LEAVE_COMPOFF_APPROVE,
     PermissionCode.LEAVE_REPORT_VIEW,
     PermissionCode.LEAVE_REPORT_EXPORT,
+    // Attendance & Time Tracking Permissions
+    PermissionCode.ATTENDANCE_READ,
+    PermissionCode.ATTENDANCE_READ_OWN,
+    PermissionCode.ATTENDANCE_READ_TEAM,
+    PermissionCode.ATTENDANCE_READ_ALL,
+    PermissionCode.ATTENDANCE_CHECK_IN,
+    PermissionCode.ATTENDANCE_CHECK_OUT,
+    PermissionCode.ATTENDANCE_REGULARISE,
+    PermissionCode.ATTENDANCE_REGULARISE_APPROVE,
+    PermissionCode.ATTENDANCE_REGULARISE_OVERRIDE,
+    PermissionCode.ATTENDANCE_OVERTIME_READ,
+    PermissionCode.ATTENDANCE_OVERTIME_APPLY,
+    PermissionCode.ATTENDANCE_OVERTIME_APPROVE,
+    PermissionCode.ATTENDANCE_OVERTIME_OVERRIDE,
+    PermissionCode.ATTENDANCE_ONDUTY_APPLY,
+    PermissionCode.ATTENDANCE_ONDUTY_APPROVE,
+    PermissionCode.ATTENDANCE_WFH_APPLY,
+    PermissionCode.ATTENDANCE_WFH_APPROVE,
+    PermissionCode.ATTENDANCE_POLICY_READ,
+    PermissionCode.ATTENDANCE_POLICY_CREATE,
+    PermissionCode.ATTENDANCE_POLICY_UPDATE,
+    PermissionCode.ATTENDANCE_POLICY_DELETE,
+    PermissionCode.ATTENDANCE_SHIFT_READ,
+    PermissionCode.ATTENDANCE_SHIFT_CREATE,
+    PermissionCode.ATTENDANCE_SHIFT_UPDATE,
+    PermissionCode.ATTENDANCE_SHIFT_DELETE,
+    PermissionCode.ATTENDANCE_ROSTER_READ,
+    PermissionCode.ATTENDANCE_ROSTER_CREATE,
+    PermissionCode.ATTENDANCE_ROSTER_UPDATE,
+    PermissionCode.ATTENDANCE_ROSTER_DELETE,
+    PermissionCode.ATTENDANCE_LOCK,
+    PermissionCode.ATTENDANCE_REPORT_VIEW,
+    PermissionCode.ATTENDANCE_REPORT_EXPORT,
   ],
   [RoleCode.MANAGER]: [
     PermissionCode.ORGANIZATION_READ,
@@ -509,6 +638,23 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.LEAVE_CANCEL,
     PermissionCode.LEAVE_COMPOFF_APPROVE,
     PermissionCode.LEAVE_REPORT_VIEW,
+    PermissionCode.ATTENDANCE_READ,
+    PermissionCode.ATTENDANCE_READ_OWN,
+    PermissionCode.ATTENDANCE_READ_TEAM,
+    PermissionCode.ATTENDANCE_CHECK_IN,
+    PermissionCode.ATTENDANCE_CHECK_OUT,
+    PermissionCode.ATTENDANCE_REGULARISE,
+    PermissionCode.ATTENDANCE_REGULARISE_APPROVE,
+    PermissionCode.ATTENDANCE_OVERTIME_READ,
+    PermissionCode.ATTENDANCE_OVERTIME_APPLY,
+    PermissionCode.ATTENDANCE_OVERTIME_APPROVE,
+    PermissionCode.ATTENDANCE_ONDUTY_APPLY,
+    PermissionCode.ATTENDANCE_ONDUTY_APPROVE,
+    PermissionCode.ATTENDANCE_WFH_APPLY,
+    PermissionCode.ATTENDANCE_WFH_APPROVE,
+    PermissionCode.ATTENDANCE_SHIFT_READ,
+    PermissionCode.ATTENDANCE_ROSTER_READ,
+    PermissionCode.ATTENDANCE_REPORT_VIEW,
   ],
   [RoleCode.EMPLOYEE]: [
     PermissionCode.ORGANIZATION_READ,
@@ -523,6 +669,14 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.LEAVE_APPLY,
     PermissionCode.LEAVE_CANCEL,
     PermissionCode.LEAVE_COMPOFF_APPLY,
+    PermissionCode.ATTENDANCE_READ_OWN,
+    PermissionCode.ATTENDANCE_CHECK_IN,
+    PermissionCode.ATTENDANCE_CHECK_OUT,
+    PermissionCode.ATTENDANCE_REGULARISE,
+    PermissionCode.ATTENDANCE_OVERTIME_APPLY,
+    PermissionCode.ATTENDANCE_ONDUTY_APPLY,
+    PermissionCode.ATTENDANCE_WFH_APPLY,
+    PermissionCode.ATTENDANCE_SHIFT_READ,
   ],
 };
 
@@ -2082,3 +2236,603 @@ export interface LeaveCalendarItemDto {
   isHalfDay?: boolean;
 }
 
+
+// ==========================================
+// ATTENDANCE & TIME TRACKING ENUMS & SCHEMAS
+// ==========================================
+
+export enum AttendanceStatus {
+  NOT_MARKED = 'NOT_MARKED',
+  PRESENT = 'PRESENT',
+  ABSENT = 'ABSENT',
+  HALF_DAY = 'HALF_DAY',
+  ON_LEAVE = 'ON_LEAVE',
+  HOLIDAY = 'HOLIDAY',
+  WEEKEND = 'WEEKEND',
+  ON_DUTY = 'ON_DUTY',
+  WORK_FROM_HOME = 'WORK_FROM_HOME',
+  REGULARIZED = 'REGULARIZED',
+  PENDING_REGULARIZATION = 'PENDING_REGULARIZATION',
+}
+
+export enum CheckInSource {
+  WEB = 'WEB',
+  MOBILE = 'MOBILE',
+  MANUAL = 'MANUAL',
+  MANUAL_HR = 'MANUAL_HR',
+  BIOMETRIC = 'BIOMETRIC',
+  SYSTEM = 'SYSTEM',
+  GEOLOCATION = 'GEOLOCATION',
+  IP_RESTRICTED = 'IP_RESTRICTED',
+  QR_CODE = 'QR_CODE',
+}
+
+export enum AttendanceRegularisationReason {
+  MISSED_CHECK_IN = 'MISSED_CHECK_IN',
+  MISSED_CHECK_OUT = 'MISSED_CHECK_OUT',
+  MISSED_PUNCH = 'MISSED_PUNCH',
+  INCORRECT_CHECK_IN = 'INCORRECT_CHECK_IN',
+  INCORRECT_CHECK_OUT = 'INCORRECT_CHECK_OUT',
+  INCORRECT_BREAK = 'INCORRECT_BREAK',
+  MISSING_ENTRY = 'MISSING_ENTRY',
+  WORK_FROM_HOME = 'WORK_FROM_HOME',
+  ON_DUTY = 'ON_DUTY',
+  SYSTEM_ERROR = 'SYSTEM_ERROR',
+  TRANSIT_DELAY = 'TRANSIT_DELAY',
+  PERSONAL_EMERGENCY = 'PERSONAL_EMERGENCY',
+  OTHER = 'OTHER',
+}
+
+export enum OvertimeType {
+  DAILY = 'daily',
+  REST_DAY = 'rest_day',
+  PLANNED = 'planned',
+  UNPLANNED = 'unplanned',
+  HOLIDAY = 'holiday',
+  WEEKEND = 'weekend',
+}
+
+export enum AttendanceRequestType {
+  ON_DUTY = 'on_duty',
+  WORK_FROM_HOME = 'work_from_home',
+}
+
+// Zod Schemas
+export const CreateAttendancePolicySchema = z.object({
+  name: z.string().min(2, 'Policy name is required').max(100),
+  code: z.string().min(1, 'Policy code is required').max(50).optional(),
+  description: z.string().max(500).optional().nullable(),
+  isDefault: z.boolean().default(false).optional(),
+  mode: z.enum(['STRICT', 'LENIENT', 'strict', 'lenient']).default('STRICT').optional(),
+  attendanceMode: z.enum(['strict', 'lenient', 'STRICT', 'LENIENT']).default('strict').optional(),
+  workHoursPerDay: z.coerce.number().min(1).max(24).default(8.0).optional(),
+  expectedWorkingHoursPerDay: z.coerce.number().min(1).max(24).default(8.0).optional(),
+  minHoursFullDay: z.coerce.number().min(1).max(24).default(8.0).optional(),
+  minHoursHalfDay: z.coerce.number().min(0.5).max(12).default(4.0).optional(),
+  gracePeriodLateCheckIn: z.coerce.number().int().min(0).max(120).default(15).optional(),
+  gracePeriodEarlyCheckOut: z.coerce.number().int().min(0).max(120).default(15).optional(),
+  maxGraceOccurrencesPerMonth: z.coerce.number().int().min(0).default(3).optional(),
+  lateCheckInPenaltyType: z.string().default('HALF_DAY').optional(),
+  lateCheckInPenaltyDeductionDays: z.coerce.number().default(0.5).optional(),
+  allowOvertime: z.boolean().default(false).optional(),
+  minOvertimeMinutes: z.coerce.number().int().min(0).default(30).optional(),
+  maxOvertimeMinutesPerDay: z.coerce.number().int().min(0).default(240).optional(),
+  overtimeRequiresApproval: z.boolean().default(true).optional(),
+  allowRegularisation: z.boolean().default(true).optional(),
+  regularisationDeadlineDays: z.coerce.number().int().min(1).default(7).optional(),
+  maxRegularisationsPerMonth: z.coerce.number().int().min(0).default(3).optional(),
+  allowSelfCheckIn: z.boolean().default(true).optional(),
+  allowWebPunch: z.boolean().default(true).optional(),
+  allowMobilePunch: z.boolean().default(false).optional(),
+  ipRestrictions: z.any().optional(),
+  geofencingEnabled: z.boolean().default(false).optional(),
+  geofenceRadiusMeters: z.coerce.number().int().optional().nullable(),
+  autoCheckoutEnabled: z.boolean().default(false).optional(),
+  autoCheckoutTime: z.string().optional().nullable(),
+  effectiveFrom: z.string().or(z.date()).optional(),
+  effectiveTo: z.string().or(z.date()).optional().nullable(),
+  status: z.enum(['active', 'inactive', 'ACTIVE', 'INACTIVE']).default('active').optional(),
+});
+
+export const UpdateAttendancePolicySchema = CreateAttendancePolicySchema.partial();
+
+export const AttendancePolicyQueryFilterSchema = z.object({
+  status: z.string().optional(),
+  search: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+export const CreateShiftSchema = z.object({
+  name: z.string().min(2, 'Shift name is required').max(100),
+  code: z.string().min(1, 'Shift code is required').max(20),
+  startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Format must be HH:mm'),
+  endTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Format must be HH:mm'),
+  isOvernight: z.boolean().default(false).optional(),
+  isOvernightShift: z.boolean().default(false).optional(),
+  breakDurationMinutes: z.coerce.number().int().min(0).max(300).default(60).optional(),
+  breakDuration: z.coerce.number().int().min(0).max(300).default(60).optional(),
+  isPaidBreak: z.boolean().default(false).optional(),
+  paidBreakDuration: z.coerce.number().int().min(0).max(120).default(0).optional(),
+  unpaidBreakDuration: z.coerce.number().int().min(0).max(300).default(60).optional(),
+  checkInMarginBeforeMinutes: z.coerce.number().int().min(0).max(240).default(60).optional(),
+  shiftMarginStart: z.coerce.number().int().min(0).max(240).default(60).optional(),
+  checkOutMarginAfterMinutes: z.coerce.number().int().min(0).max(240).default(120).optional(),
+  shiftMarginEnd: z.coerce.number().int().min(0).max(240).default(60).optional(),
+  minHoursFullDay: z.coerce.number().min(1).max(24).default(8.0).optional(),
+  minHoursHalfDay: z.coerce.number().min(0.5).max(12).default(4.0).optional(),
+  colorCode: z.string().default('#3B82F6').optional(),
+  isDefault: z.boolean().default(false).optional(),
+  isRotatingShift: z.boolean().default(false).optional(),
+  status: z.string().default('ACTIVE').optional(),
+  policyId: z.string().uuid().optional().nullable(),
+});
+
+export const UpdateShiftSchema = CreateShiftSchema.partial();
+
+export const ShiftQueryFilterSchema = z.object({
+  status: z.string().optional(),
+  search: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+export const CreateRosterSchema = z.object({
+  name: z.string().min(2, 'Roster name is required').max(100),
+  code: z.string().min(1).max(50).optional(),
+  description: z.string().max(500).optional().nullable(),
+  startDate: z.string().min(1, 'Start date is required'),
+  endDate: z.string().min(1, 'End date is required'),
+  locationId: z.string().uuid().optional().nullable(),
+  departmentId: z.string().uuid().optional().nullable(),
+  status: z.string().default('DRAFT').optional(),
+});
+
+export const UpdateRosterSchema = CreateRosterSchema.partial();
+
+export const RosterQueryFilterSchema = z.object({
+  status: z.string().optional(),
+  search: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+export const CreateShiftAssignmentSchema = z.object({
+  employeeId: z.string().uuid('Valid employeeId required'),
+  shiftId: z.string().uuid('Valid shiftId required'),
+  rosterId: z.string().uuid().optional().nullable(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional().nullable(),
+  effectiveFrom: z.string().optional(),
+  effectiveTo: z.string().optional().nullable(),
+  isRecurring: z.boolean().default(false).optional(),
+  recurrencePattern: z.string().optional().nullable(),
+  isOverride: z.boolean().default(false).optional(),
+  status: z.string().default('ACTIVE').optional(),
+});
+
+export const UpdateShiftAssignmentSchema = CreateShiftAssignmentSchema.partial();
+
+export const ShiftAssignmentQueryFilterSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  shiftId: z.string().uuid().optional(),
+  rosterId: z.string().uuid().optional(),
+  status: z.string().optional(),
+  effectiveDate: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+export const CheckInSchema = z.object({
+  source: z.nativeEnum(CheckInSource).or(z.string()).default(CheckInSource.WEB).optional(),
+  location: z.any().optional().nullable(),
+  ipAddress: z.string().optional().nullable(),
+  remarks: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
+  checkInTime: z.string().optional().nullable(),
+  idempotencyKey: z.string().optional().nullable(),
+});
+
+export const CheckOutSchema = z.object({
+  source: z.nativeEnum(CheckInSource).or(z.string()).default(CheckInSource.WEB).optional(),
+  location: z.any().optional().nullable(),
+  ipAddress: z.string().optional().nullable(),
+  remarks: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
+  checkOutTime: z.string().optional().nullable(),
+  idempotencyKey: z.string().optional().nullable(),
+});
+
+export const ManualAttendanceSchema = z.object({
+  employeeId: z.string().uuid('Valid employeeId required'),
+  attendanceDate: z.string().min(1, 'Attendance date is required'),
+  shiftId: z.string().uuid().optional().nullable(),
+  checkInTime: z.string().optional().nullable(),
+  checkOutTime: z.string().optional().nullable(),
+  breakMinutes: z.coerce.number().int().min(0).default(60).optional(),
+  status: z.nativeEnum(AttendanceStatus).or(z.string()).optional(),
+  attendanceStatus: z.nativeEnum(AttendanceStatus).or(z.string()).optional(),
+  remarks: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
+});
+
+export const AttendanceRecordQueryFilterSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  departmentId: z.string().uuid().optional(),
+  locationId: z.string().uuid().optional(),
+  status: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  search: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1).optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(50).optional(),
+});
+export const AttendanceQueryFilterSchema = AttendanceRecordQueryFilterSchema;
+
+export const CreateAttendanceRegularisationSchema = z.object({
+  attendanceRecordId: z.string().min(1, 'Attendance record ID is required').optional(),
+  attendanceDate: z.string().optional(),
+  requestedCheckIn: z.string().optional().nullable(),
+  requestedCheckInTime: z.string().optional().nullable(),
+  requestedCheckOut: z.string().optional().nullable(),
+  requestedCheckOutTime: z.string().optional().nullable(),
+  requestedBreakMinutes: z.coerce.number().int().min(0).max(240).default(60).optional(),
+  reason: z.nativeEnum(AttendanceRegularisationReason).or(z.string()),
+  explanation: z.string().optional(),
+  description: z.string().optional(),
+  attachmentUrl: z.string().optional().nullable(),
+  idempotencyKey: z.string().optional().nullable(),
+});
+
+export const RegularisationDecisionSchema = z.object({
+  status: z.string().default('APPROVED').optional(),
+  rejectionReason: z.string().optional().nullable(),
+});
+
+export const AttendanceRegularisationQueryFilterSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  status: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+export const CreateOvertimeRequestSchema = z.object({
+  attendanceRecordId: z.string().optional().nullable(),
+  date: z.string().optional(),
+  attendanceDate: z.string().optional(),
+  overtimeMinutes: z.coerce.number().int().min(15, 'Minimum 15 minutes').max(720),
+  reason: z.string().optional(),
+  overtimeReason: z.string().optional(),
+  overtimeType: z.nativeEnum(OvertimeType).or(z.string()).default(OvertimeType.DAILY).optional(),
+  shiftId: z.string().uuid().optional().nullable(),
+  idempotencyKey: z.string().optional().nullable(),
+});
+
+export const OvertimeDecisionSchema = z.object({
+  status: z.string().default('APPROVED').optional(),
+  rejectionReason: z.string().optional().nullable(),
+});
+
+export const OvertimeQueryFilterSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  status: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+export const CreateAttendanceRequestSchema = z.object({
+  requestType: z.nativeEnum(AttendanceRequestType).or(z.string()),
+  fromDate: z.string().min(1, 'From date is required'),
+  toDate: z.string().min(1, 'To date is required'),
+  reason: z.string().min(3, 'Reason is required').max(1000),
+  location: z.string().optional().nullable(),
+  attachmentUrl: z.string().optional().nullable(),
+  idempotencyKey: z.string().optional().nullable(),
+});
+
+export const AttendanceRequestDecisionSchema = z.object({
+  status: z.string().default('APPROVED').optional(),
+  rejectionReason: z.string().optional().nullable(),
+});
+
+export const AttendanceRequestQueryFilterSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  requestType: z.string().optional(),
+  status: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+export const LockAttendancePeriodSchema = z.object({
+  name: z.string().default('Cutoff Lock').optional(),
+  startDate: z.string().min(1, 'Start date is required'),
+  endDate: z.string().min(1, 'End date is required'),
+  remarks: z.string().max(500).optional().nullable(),
+  reason: z.string().max(500).optional().nullable(),
+});
+
+// Infer types
+export type CreateAttendancePolicyInput = z.infer<typeof CreateAttendancePolicySchema>;
+export type UpdateAttendancePolicyInput = z.infer<typeof UpdateAttendancePolicySchema>;
+export type AttendancePolicyQueryFilterInput = z.infer<typeof AttendancePolicyQueryFilterSchema>;
+
+export type CreateShiftInput = z.infer<typeof CreateShiftSchema>;
+export type UpdateShiftInput = z.infer<typeof UpdateShiftSchema>;
+export type ShiftQueryFilterInput = z.infer<typeof ShiftQueryFilterSchema>;
+
+export type CreateRosterInput = z.infer<typeof CreateRosterSchema>;
+export type UpdateRosterInput = z.infer<typeof UpdateRosterSchema>;
+export type RosterQueryFilterInput = z.infer<typeof RosterQueryFilterSchema>;
+
+export type CreateShiftAssignmentInput = z.infer<typeof CreateShiftAssignmentSchema>;
+export type UpdateShiftAssignmentInput = z.infer<typeof UpdateShiftAssignmentSchema>;
+export type ShiftAssignmentQueryFilterInput = z.infer<typeof ShiftAssignmentQueryFilterSchema>;
+
+export type CheckInInput = z.infer<typeof CheckInSchema>;
+export type CheckOutInput = z.infer<typeof CheckOutSchema>;
+export type ManualAttendanceInput = z.infer<typeof ManualAttendanceSchema>;
+export type AttendanceQueryFilterInput = z.infer<typeof AttendanceQueryFilterSchema>;
+export type AttendanceRecordQueryFilterInput = AttendanceQueryFilterInput;
+
+export type CreateAttendanceRegularisationInput = z.infer<typeof CreateAttendanceRegularisationSchema>;
+export type RegularisationDecisionInput = z.infer<typeof RegularisationDecisionSchema>;
+export type AttendanceRegularisationQueryFilterInput = z.infer<typeof AttendanceRegularisationQueryFilterSchema>;
+
+export type CreateOvertimeRequestInput = z.infer<typeof CreateOvertimeRequestSchema>;
+export type OvertimeDecisionInput = z.infer<typeof OvertimeDecisionSchema>;
+export type OvertimeQueryFilterInput = z.infer<typeof OvertimeQueryFilterSchema>;
+
+export type CreateAttendanceRequestInput = z.infer<typeof CreateAttendanceRequestSchema>;
+export type AttendanceRequestDecisionInput = z.infer<typeof AttendanceRequestDecisionSchema>;
+export type AttendanceRequestQueryFilterInput = z.infer<typeof AttendanceRequestQueryFilterSchema>;
+
+export type LockAttendancePeriodInput = z.infer<typeof LockAttendancePeriodSchema>;
+
+// DTO Interfaces
+export interface AttendancePolicyDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  applicableLocations: string[];
+  applicableDepartments: string[];
+  applicableDesignations: string[];
+  applicableGrades: string[];
+  applicableEmploymentTypes: string[];
+  applicableShifts: string[];
+  attendanceMode: string;
+  expectedWorkingHoursPerDay: number;
+  minHoursFullDay: number;
+  minHoursHalfDay: number;
+  weeklyWorkingDays: string[];
+  weekendDays: string[];
+  breakPolicy: string;
+  paidBreakDuration: number;
+  unpaidBreakDuration: number;
+  gracePeriodLateCheckIn: number;
+  gracePeriodEarlyCheckOut: number;
+  maxAllowedLateArrivals: number;
+  maxAllowedEarlyDepartures: number;
+  deviationTrackingPeriod: string;
+  absencePenaltyLeaveType?: string | null;
+  absencePenaltyDeduction?: number | null;
+  allowOvertime: boolean;
+  overtimeCalculationMethod: string;
+  overtimeApprovalRequired: boolean;
+  allowRegularisation: boolean;
+  regularisationApprovalRequired: boolean;
+  allowOnDutyRequests: boolean;
+  allowWorkFromHomeRequests: boolean;
+  allowAttendanceEditByManager: boolean;
+  effectiveFrom: string;
+  effectiveTo?: string | null;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ShiftDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  code: string;
+  startTime: string;
+  endTime: string;
+  breakDuration: number;
+  paidBreakDuration: number;
+  unpaidBreakDuration: number;
+  shiftMarginStart: number;
+  shiftMarginEnd: number;
+  minHoursFullDay: number;
+  minHoursHalfDay: number;
+  isOvernightShift: boolean;
+  isRotatingShift: boolean;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RosterDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  startDate: string;
+  endDate: string;
+  locationId?: string | null;
+  locationName?: string;
+  departmentId?: string | null;
+  departmentName?: string;
+  status: string;
+  createdBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ShiftAssignmentDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  shiftId: string;
+  shiftName?: string;
+  shiftCode?: string;
+  shiftTiming?: string;
+  rosterId?: string | null;
+  rosterName?: string;
+  effectiveFrom: string;
+  effectiveTo?: string | null;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AttendanceRecordDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  departmentName?: string;
+  attendanceDate: string;
+  shiftId?: string | null;
+  shiftName?: string;
+  shiftCode?: string;
+  shiftTiming?: string;
+  attendancePolicyId?: string | null;
+  attendancePolicyName?: string;
+  checkInTime?: string | null;
+  checkOutTime?: string | null;
+  checkInSource?: string | null;
+  checkOutSource?: string | null;
+  checkInLocation?: string | null;
+  checkOutLocation?: string | null;
+  checkInIpAddress?: string | null;
+  checkOutIpAddress?: string | null;
+  workedMinutes: number;
+  breakMinutes: number;
+  paidBreakMinutes: number;
+  payableMinutes: number;
+  overtimeMinutes: number;
+  deviationMinutes: number;
+  lateMinutes: number;
+  earlyDepartureMinutes: number;
+  attendanceStatus: AttendanceStatus;
+  regularisationStatus?: string | null;
+  leaveRequestId?: string | null;
+  holidayId?: string | null;
+  notes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AttendanceRegularisationDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  attendanceRecordId?: string | null;
+  attendanceDate: string;
+  requestedCheckInTime?: string | null;
+  requestedCheckOutTime?: string | null;
+  requestedBreakMinutes?: number | null;
+  reason: AttendanceRegularisationReason;
+  description: string;
+  attachmentUrl?: string | null;
+  status: string;
+  approvalFlowId?: string | null;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  rejectedBy?: string | null;
+  rejectedAt?: string | null;
+  rejectionReason?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OvertimeRequestDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  attendanceDate: string;
+  shiftId?: string | null;
+  shiftName?: string;
+  overtimeMinutes: number;
+  overtimeReason: string;
+  overtimeType: OvertimeType;
+  status: string;
+  approvalFlowId?: string | null;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  rejectedBy?: string | null;
+  rejectedAt?: string | null;
+  rejectionReason?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AttendanceRequestDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  requestType: AttendanceRequestType;
+  fromDate: string;
+  toDate: string;
+  reason: string;
+  location?: string | null;
+  attachmentUrl?: string | null;
+  status: string;
+  approvalFlowId?: string | null;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  rejectedBy?: string | null;
+  rejectedAt?: string | null;
+  rejectionReason?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AttendanceLockDto {
+  id: string;
+  organizationId: string;
+  startDate: string;
+  endDate: string;
+  lockedBy: string;
+  reason?: string | null;
+  isLocked: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AttendanceSummaryDto {
+  employeeId: string;
+  month: number;
+  year: number;
+  totalDays: number;
+  presentDays: number;
+  absentDays: number;
+  halfDays: number;
+  leaveDays: number;
+  holidayDays: number;
+  weekendDays: number;
+  onDutyDays: number;
+  wfhDays: number;
+  lateArrivals: number;
+  earlyDepartures: number;
+  totalWorkedMinutes: number;
+  totalOvertimeMinutes: number;
+  pendingRegularisations: number;
+  pendingOvertime: number;
+}

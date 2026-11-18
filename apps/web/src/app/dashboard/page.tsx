@@ -259,6 +259,14 @@ export default function DashboardPage() {
             </Link>
 
             <Link
+              href="/attendance"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
+            >
+              <Clock className="w-3.5 h-3.5 text-[#1E3A8A]" />
+              <span>Attendance</span>
+            </Link>
+
+            <Link
               href="/settings/workflows"
               className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
             >
@@ -449,6 +457,13 @@ export default function DashboardPage() {
                     className="inline-flex items-center space-x-1 px-2.5 py-1 border border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A] rounded text-xs font-semibold"
                   >
                     <span>Export</span>
+                  </Link>
+                  <Link
+                    href="/attendance"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 bg-amber-50 text-amber-900 hover:bg-amber-100 rounded text-xs font-semibold border border-amber-200"
+                  >
+                    <Clock className="w-3 h-3 text-amber-700" />
+                    <span>Attendance & Shifts</span>
                   </Link>
                 </div>
 
