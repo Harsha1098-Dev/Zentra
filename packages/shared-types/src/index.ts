@@ -452,6 +452,67 @@ export enum PermissionCode {
 
   LETTER_GENERATE = 'letter.generate',
   LETTER_DOWNLOAD = 'letter.download',
+
+  // Performance & Goals Permissions
+  PERFORMANCE_READ = 'performance.read',
+  PERFORMANCE_READ_OWN = 'performance.read_own',
+  PERFORMANCE_READ_TEAM = 'performance.read_team',
+  PERFORMANCE_READ_ALL = 'performance.read_all',
+
+  GOAL_READ = 'goal.read',
+  GOAL_CREATE = 'goal.create',
+  GOAL_UPDATE = 'goal.update',
+  GOAL_DELETE = 'goal.delete',
+  GOAL_ALIGN = 'goal.align',
+  GOAL_APPROVE = 'goal.approve',
+
+  KRA_READ = 'kra.read',
+  KRA_CREATE = 'kra.create',
+  KRA_UPDATE = 'kra.update',
+  KRA_DELETE = 'kra.delete',
+
+  OKR_READ = 'okr.read',
+  OKR_CREATE = 'okr.create',
+  OKR_UPDATE = 'okr.update',
+  OKR_DELETE = 'okr.delete',
+  OKR_CHECKIN_CREATE = 'okr.checkin.create',
+  OKR_CHECKIN_APPROVE = 'okr.checkin.approve',
+
+  FEEDBACK_READ = 'feedback.read',
+  FEEDBACK_CREATE = 'feedback.create',
+  FEEDBACK_REQUEST = 'feedback.request',
+  FEEDBACK_GIVE = 'feedback.give',
+
+  ONE_ON_ONE_READ = 'one_on_one.read',
+  ONE_ON_ONE_CREATE = 'one_on_one.create',
+  ONE_ON_ONE_UPDATE = 'one_on_one.update',
+
+  IMPROVEMENT_PLAN_READ = 'improvement_plan.read',
+  IMPROVEMENT_PLAN_CREATE = 'improvement_plan.create',
+  IMPROVEMENT_PLAN_UPDATE = 'improvement_plan.update',
+  IMPROVEMENT_PLAN_COMPLETE = 'improvement_plan.complete',
+
+  PERFORMANCE_CYCLE_READ = 'performance_cycle.read',
+  PERFORMANCE_CYCLE_CREATE = 'performance_cycle.create',
+  PERFORMANCE_CYCLE_UPDATE = 'performance_cycle.update',
+  PERFORMANCE_CYCLE_DELETE = 'performance_cycle.delete',
+  PERFORMANCE_CYCLE_RUN = 'performance_cycle.run',
+  PERFORMANCE_CYCLE_PUBLISH = 'performance_cycle.publish',
+
+  APPRAISAL_READ = 'appraisal.read',
+  APPRAISAL_SUBMIT = 'appraisal.submit',
+  APPRAISAL_REVIEW = 'appraisal.review',
+  APPRAISAL_APPROVE = 'appraisal.approve',
+  APPRAISAL_REJECT = 'appraisal.reject',
+  APPRAISAL_PUBLISH = 'appraisal.publish',
+
+  CALIBRATION_READ = 'calibration.read',
+  CALIBRATION_CREATE = 'calibration.create',
+  CALIBRATION_PARTICIPATE = 'calibration.participate',
+  CALIBRATION_DECIDE = 'calibration.decide',
+
+  PERFORMANCE_REPORT_VIEW = 'performance.report.view',
+  PERFORMANCE_REPORT_EXPORT = 'performance.report.export',
 }
 
 export enum InvitationStatus {
@@ -813,6 +874,56 @@ export enum AuditAction {
   ASSET_DELETE = 'ASSET_DELETE',
   LETTER_GENERATE = 'LETTER_GENERATE',
   LETTER_DOWNLOAD = 'LETTER_DOWNLOAD',
+
+  // Performance Audit Actions
+  PERFORMANCE_CYCLE_CREATE = 'PERFORMANCE_CYCLE_CREATE',
+  PERFORMANCE_CYCLE_UPDATE = 'PERFORMANCE_CYCLE_UPDATE',
+  PERFORMANCE_CYCLE_START = 'PERFORMANCE_CYCLE_START',
+  PERFORMANCE_CYCLE_PUBLISH = 'PERFORMANCE_CYCLE_PUBLISH',
+  PERFORMANCE_CYCLE_CLOSE = 'PERFORMANCE_CYCLE_CLOSE',
+  GOAL_CREATE = 'GOAL_CREATE',
+  GOAL_UPDATE = 'GOAL_UPDATE',
+  GOAL_ALIGN = 'GOAL_ALIGN',
+  GOAL_APPROVE = 'GOAL_APPROVE',
+  GOAL_REJECT = 'GOAL_REJECT',
+  GOAL_DELETE = 'GOAL_DELETE',
+  KRA_CREATE = 'KRA_CREATE',
+  KRA_UPDATE = 'KRA_UPDATE',
+  KRA_DELETE = 'KRA_DELETE',
+  OBJECTIVE_CREATE = 'OBJECTIVE_CREATE',
+  OBJECTIVE_UPDATE = 'OBJECTIVE_UPDATE',
+  OBJECTIVE_DELETE = 'OBJECTIVE_DELETE',
+  OBJECTIVE_ALIGN = 'OBJECTIVE_ALIGN',
+  KEY_RESULT_CREATE = 'KEY_RESULT_CREATE',
+  KEY_RESULT_UPDATE = 'KEY_RESULT_UPDATE',
+  KEY_RESULT_DELETE = 'KEY_RESULT_DELETE',
+  CHECK_IN_CREATE = 'CHECK_IN_CREATE',
+  CHECK_IN_UPDATE = 'CHECK_IN_UPDATE',
+  CHECK_IN_APPROVE = 'CHECK_IN_APPROVE',
+  CHECK_IN_REJECT = 'CHECK_IN_REJECT',
+  FEEDBACK_CREATE = 'FEEDBACK_CREATE',
+  FEEDBACK_UPDATE = 'FEEDBACK_UPDATE',
+  FEEDBACK_REQUEST = 'FEEDBACK_REQUEST',
+  ONE_ON_ONE_CREATE = 'ONE_ON_ONE_CREATE',
+  ONE_ON_ONE_UPDATE = 'ONE_ON_ONE_UPDATE',
+  ONE_ON_ONE_COMPLETE = 'ONE_ON_ONE_COMPLETE',
+  IMPROVEMENT_PLAN_CREATE = 'IMPROVEMENT_PLAN_CREATE',
+  IMPROVEMENT_PLAN_UPDATE = 'IMPROVEMENT_PLAN_UPDATE',
+  IMPROVEMENT_PLAN_COMPLETE = 'IMPROVEMENT_PLAN_COMPLETE',
+  APPRAISAL_TEMPLATE_CREATE = 'APPRAISAL_TEMPLATE_CREATE',
+  APPRAISAL_TEMPLATE_UPDATE = 'APPRAISAL_TEMPLATE_UPDATE',
+  APPRAISAL_TEMPLATE_DELETE = 'APPRAISAL_TEMPLATE_DELETE',
+  APPRAISAL_ASSIGNMENT_CREATE = 'APPRAISAL_ASSIGNMENT_CREATE',
+  SELF_REVIEW_SUBMIT = 'SELF_REVIEW_SUBMIT',
+  MANAGER_REVIEW_SUBMIT = 'MANAGER_REVIEW_SUBMIT',
+  APPRAISAL_APPROVE = 'APPRAISAL_APPROVE',
+  APPRAISAL_REJECT = 'APPRAISAL_REJECT',
+  APPRAISAL_PUBLISH = 'APPRAISAL_PUBLISH',
+  APPRAISAL_ACKNOWLEDGE = 'APPRAISAL_ACKNOWLEDGE',
+  CALIBRATION_SESSION_CREATE = 'CALIBRATION_SESSION_CREATE',
+  CALIBRATION_DECISION_RECORD = 'CALIBRATION_DECISION_RECORD',
+  CALIBRATION_PUBLISH = 'CALIBRATION_PUBLISH',
+  PERFORMANCE_REPORT_EXPORT = 'PERFORMANCE_REPORT_EXPORT',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -1096,6 +1207,56 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.ASSET_DELETE,
     PermissionCode.LETTER_GENERATE,
     PermissionCode.LETTER_DOWNLOAD,
+    // Performance Permissions for HR_ADMIN
+    PermissionCode.PERFORMANCE_READ,
+    PermissionCode.PERFORMANCE_READ_OWN,
+    PermissionCode.PERFORMANCE_READ_TEAM,
+    PermissionCode.PERFORMANCE_READ_ALL,
+    PermissionCode.GOAL_READ,
+    PermissionCode.GOAL_CREATE,
+    PermissionCode.GOAL_UPDATE,
+    PermissionCode.GOAL_DELETE,
+    PermissionCode.GOAL_ALIGN,
+    PermissionCode.GOAL_APPROVE,
+    PermissionCode.KRA_READ,
+    PermissionCode.KRA_CREATE,
+    PermissionCode.KRA_UPDATE,
+    PermissionCode.KRA_DELETE,
+    PermissionCode.OKR_READ,
+    PermissionCode.OKR_CREATE,
+    PermissionCode.OKR_UPDATE,
+    PermissionCode.OKR_DELETE,
+    PermissionCode.OKR_CHECKIN_CREATE,
+    PermissionCode.OKR_CHECKIN_APPROVE,
+    PermissionCode.FEEDBACK_READ,
+    PermissionCode.FEEDBACK_CREATE,
+    PermissionCode.FEEDBACK_REQUEST,
+    PermissionCode.FEEDBACK_GIVE,
+    PermissionCode.ONE_ON_ONE_READ,
+    PermissionCode.ONE_ON_ONE_CREATE,
+    PermissionCode.ONE_ON_ONE_UPDATE,
+    PermissionCode.IMPROVEMENT_PLAN_READ,
+    PermissionCode.IMPROVEMENT_PLAN_CREATE,
+    PermissionCode.IMPROVEMENT_PLAN_UPDATE,
+    PermissionCode.IMPROVEMENT_PLAN_COMPLETE,
+    PermissionCode.PERFORMANCE_CYCLE_READ,
+    PermissionCode.PERFORMANCE_CYCLE_CREATE,
+    PermissionCode.PERFORMANCE_CYCLE_UPDATE,
+    PermissionCode.PERFORMANCE_CYCLE_DELETE,
+    PermissionCode.PERFORMANCE_CYCLE_RUN,
+    PermissionCode.PERFORMANCE_CYCLE_PUBLISH,
+    PermissionCode.APPRAISAL_READ,
+    PermissionCode.APPRAISAL_SUBMIT,
+    PermissionCode.APPRAISAL_REVIEW,
+    PermissionCode.APPRAISAL_APPROVE,
+    PermissionCode.APPRAISAL_REJECT,
+    PermissionCode.APPRAISAL_PUBLISH,
+    PermissionCode.CALIBRATION_READ,
+    PermissionCode.CALIBRATION_CREATE,
+    PermissionCode.CALIBRATION_PARTICIPATE,
+    PermissionCode.CALIBRATION_DECIDE,
+    PermissionCode.PERFORMANCE_REPORT_VIEW,
+    PermissionCode.PERFORMANCE_REPORT_EXPORT,
   ],
   [RoleCode.PAYROLL_ADMIN]: Object.values(PermissionCode),
   [RoleCode.FINANCE]: [
@@ -1210,6 +1371,35 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.EXIT_CLEARANCE_READ,
     PermissionCode.EXIT_CLEARANCE_COMPLETE,
     PermissionCode.LETTER_DOWNLOAD,
+    // Performance Permissions for MANAGER
+    PermissionCode.PERFORMANCE_READ_TEAM,
+    PermissionCode.PERFORMANCE_READ_OWN,
+    PermissionCode.GOAL_READ,
+    PermissionCode.GOAL_CREATE,
+    PermissionCode.GOAL_UPDATE,
+    PermissionCode.GOAL_ALIGN,
+    PermissionCode.GOAL_APPROVE,
+    PermissionCode.KRA_READ,
+    PermissionCode.OKR_READ,
+    PermissionCode.OKR_CREATE,
+    PermissionCode.OKR_UPDATE,
+    PermissionCode.OKR_CHECKIN_CREATE,
+    PermissionCode.OKR_CHECKIN_APPROVE,
+    PermissionCode.FEEDBACK_READ,
+    PermissionCode.FEEDBACK_CREATE,
+    PermissionCode.FEEDBACK_REQUEST,
+    PermissionCode.FEEDBACK_GIVE,
+    PermissionCode.ONE_ON_ONE_READ,
+    PermissionCode.ONE_ON_ONE_CREATE,
+    PermissionCode.ONE_ON_ONE_UPDATE,
+    PermissionCode.IMPROVEMENT_PLAN_READ,
+    PermissionCode.IMPROVEMENT_PLAN_CREATE,
+    PermissionCode.IMPROVEMENT_PLAN_UPDATE,
+    PermissionCode.IMPROVEMENT_PLAN_COMPLETE,
+    PermissionCode.APPRAISAL_READ,
+    PermissionCode.APPRAISAL_REVIEW,
+    PermissionCode.APPRAISAL_APPROVE,
+    PermissionCode.PERFORMANCE_REPORT_VIEW,
   ],
   [RoleCode.EMPLOYEE]: [
     PermissionCode.ORGANIZATION_READ,
@@ -1252,6 +1442,22 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.EXIT_CLEARANCE_READ,
     PermissionCode.ASSET_READ,
     PermissionCode.LETTER_DOWNLOAD,
+    // Performance Permissions for EMPLOYEE
+    PermissionCode.PERFORMANCE_READ_OWN,
+    PermissionCode.GOAL_READ,
+    PermissionCode.GOAL_CREATE,
+    PermissionCode.GOAL_UPDATE,
+    PermissionCode.GOAL_ALIGN,
+    PermissionCode.KRA_READ,
+    PermissionCode.OKR_READ,
+    PermissionCode.OKR_CHECKIN_CREATE,
+    PermissionCode.FEEDBACK_READ,
+    PermissionCode.FEEDBACK_REQUEST,
+    PermissionCode.FEEDBACK_GIVE,
+    PermissionCode.ONE_ON_ONE_READ,
+    PermissionCode.IMPROVEMENT_PLAN_READ,
+    PermissionCode.APPRAISAL_READ,
+    PermissionCode.APPRAISAL_SUBMIT,
   ],
 };
 
@@ -5126,6 +5332,792 @@ export interface LifecycleLetterDto {
   isSharedWithEmployee: boolean;
   generatedBy: string;
   referenceId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
+// ==========================================
+// PERFORMANCE & GOALS MODULE TYPES & SCHEMAS
+// ==========================================
+
+export enum PerformanceCycleType {
+  ANNUAL = 'ANNUAL',
+  HALF_YEARLY = 'HALF_YEARLY',
+  QUARTERLY = 'QUARTERLY',
+  MONTHLY = 'MONTHLY',
+  CUSTOM = 'CUSTOM',
+}
+
+export enum PerformanceCycleStatus {
+  DRAFT = 'DRAFT',
+  ACTIVE = 'ACTIVE',
+  IN_PROGRESS = 'IN_PROGRESS',
+  IN_CALIBRATION = 'IN_CALIBRATION',
+  PUBLISHED = 'PUBLISHED',
+  CLOSED = 'CLOSED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum GoalType {
+  INDIVIDUAL = 'INDIVIDUAL',
+  TEAM = 'TEAM',
+  DEPARTMENT = 'DEPARTMENT',
+  COMPANY = 'COMPANY',
+}
+
+export enum GoalCategory {
+  BUSINESS = 'BUSINESS',
+  OPERATIONAL = 'OPERATIONAL',
+  DEVELOPMENTAL = 'DEVELOPMENTAL',
+  INNOVATION = 'INNOVATION',
+  LEADERSHIP = 'LEADERSHIP',
+}
+
+export enum GoalPriority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
+}
+
+export enum GoalStatus {
+  DRAFT = 'DRAFT',
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  ACTIVE = 'ACTIVE',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  OVERDUE = 'OVERDUE',
+}
+
+export enum AlignmentType {
+  MANAGER = 'MANAGER',
+  DEPARTMENT = 'DEPARTMENT',
+  ORGANIZATION = 'ORGANIZATION',
+}
+
+export enum KraCategory {
+  CORE = 'CORE',
+  FUNCTIONAL = 'FUNCTIONAL',
+  BEHAVIORAL = 'BEHAVIORAL',
+  STRATEGIC = 'STRATEGIC',
+}
+
+export enum KraStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  ARCHIVED = 'ARCHIVED',
+}
+
+export enum OkrOwnerType {
+  EMPLOYEE = 'EMPLOYEE',
+  MANAGER = 'MANAGER',
+  DEPARTMENT = 'DEPARTMENT',
+  ORGANIZATION = 'ORGANIZATION',
+}
+
+export enum OkrStatus {
+  DRAFT = 'DRAFT',
+  ACTIVE = 'ACTIVE',
+  ON_TRACK = 'ON_TRACK',
+  AT_RISK = 'AT_RISK',
+  BEHIND = 'BEHIND',
+  CLOSED = 'CLOSED',
+}
+
+export enum KeyResultMetricType {
+  NUMBER = 'NUMBER',
+  PERCENTAGE = 'PERCENTAGE',
+  CURRENCY = 'CURRENCY',
+  TIME = 'TIME',
+  BOOLEAN = 'BOOLEAN',
+  MILESTONE = 'MILESTONE',
+}
+
+export enum CheckInStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+
+export enum FeedbackType {
+  PRAISE = 'PRAISE',
+  CONSTRUCTIVE = 'CONSTRUCTIVE',
+  IMPROVEMENT = 'IMPROVEMENT',
+  COACHING = 'COACHING',
+  RECOGNITION = 'RECOGNITION',
+  CORRECTION = 'CORRECTION',
+}
+
+export enum FeedbackCategory {
+  QUALITY_OF_WORK = 'QUALITY_OF_WORK',
+  OWNERSHIP = 'OWNERSHIP',
+  COLLABORATION = 'COLLABORATION',
+  COMMUNICATION = 'COMMUNICATION',
+  LEADERSHIP = 'LEADERSHIP',
+  INNOVATION = 'INNOVATION',
+  CUSTOMER_FOCUS = 'CUSTOMER_FOCUS',
+  DISCIPLINE = 'DISCIPLINE',
+  OTHER = 'OTHER',
+}
+
+export enum FeedbackStatus {
+  ACTIVE = 'ACTIVE',
+  ARCHIVED = 'ARCHIVED',
+  REQUESTED = 'REQUESTED',
+}
+
+export enum OneOnOneStatus {
+  SCHEDULED = 'SCHEDULED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum ImprovementPlanStatus {
+  DRAFT = 'DRAFT',
+  ACTIVE = 'ACTIVE',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum RatingScaleType {
+  FIVE_POINT = 'FIVE_POINT',
+  TEN_POINT = 'TEN_POINT',
+  CUSTOM = 'CUSTOM',
+}
+
+export enum AppraisalType {
+  ANNUAL = 'ANNUAL',
+  HALF_YEARLY = 'HALF_YEARLY',
+  QUARTERLY = 'QUARTERLY',
+  PROBATION = 'PROBATION',
+  AD_HOC = 'AD_HOC',
+}
+
+export enum AppraisalStatus {
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  SUBMITTED = 'SUBMITTED',
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  PUBLISHED = 'PUBLISHED',
+  ACKNOWLEDGED = 'ACKNOWLEDGED',
+  CLOSED = 'CLOSED',
+}
+
+export enum ReviewStageStatus {
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  SUBMITTED = 'SUBMITTED',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+
+export enum ReviewerType {
+  EMPLOYEE = 'EMPLOYEE',
+  MANAGER = 'MANAGER',
+  SKIP_LEVEL = 'SKIP_LEVEL',
+  PEER = 'PEER',
+  CALIBRATION = 'CALIBRATION',
+}
+
+export enum ReviewType {
+  SELF = 'SELF',
+  MANAGER = 'MANAGER',
+  MULTI_RATER = 'MULTI_RATER',
+  CALIBRATION = 'CALIBRATION',
+}
+
+export enum CalibrationSessionStatus {
+  SCHEDULED = 'SCHEDULED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+// ZOD SCHEMAS
+
+export const CreatePerformanceCycleSchema = z.object({
+  name: z.string().min(2, 'Name is required').max(100),
+  description: z.string().optional().nullable(),
+  cycleType: z.nativeEnum(PerformanceCycleType).default(PerformanceCycleType.ANNUAL),
+  startDate: z.string().min(1, 'Start date is required'),
+  endDate: z.string().min(1, 'End date is required'),
+  reviewStartDate: z.string().optional().nullable(),
+  reviewEndDate: z.string().optional().nullable(),
+  selfReviewStartDate: z.string().optional().nullable(),
+  selfReviewEndDate: z.string().optional().nullable(),
+  managerReviewStartDate: z.string().optional().nullable(),
+  managerReviewEndDate: z.string().optional().nullable(),
+  calibrationStartDate: z.string().optional().nullable(),
+  calibrationEndDate: z.string().optional().nullable(),
+  publishDate: z.string().optional().nullable(),
+  includeOkr: z.boolean().default(true),
+  includeGoals: z.boolean().default(true),
+  includeKra: z.boolean().default(true),
+  includeCompetency: z.boolean().default(true),
+  include360Feedback: z.boolean().default(false),
+  includeSelfReview: z.boolean().default(true),
+  includeManagerReview: z.boolean().default(true),
+  includeCalibration: z.boolean().default(true),
+});
+
+export const UpdatePerformanceCycleSchema = CreatePerformanceCycleSchema.partial().extend({
+  status: z.nativeEnum(PerformanceCycleStatus).optional(),
+});
+
+export const CreateGoalSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  title: z.string().min(2, 'Title is required').max(200),
+  description: z.string().optional().nullable(),
+  goalType: z.nativeEnum(GoalType).default(GoalType.INDIVIDUAL),
+  goalCategory: z.nativeEnum(GoalCategory).default(GoalCategory.BUSINESS),
+  startDate: z.string().min(1, 'Start date is required'),
+  dueDate: z.string().min(1, 'Due date is required'),
+  weightage: z.number().min(0, 'Weightage must be >= 0').max(100, 'Weightage cannot exceed 100').default(100),
+  priority: z.nativeEnum(GoalPriority).default(GoalPriority.MEDIUM),
+  parentGoalId: z.string().uuid().optional().nullable(),
+  alignedGoalId: z.string().uuid().optional().nullable(),
+  alignmentType: z.nativeEnum(AlignmentType).optional().nullable(),
+});
+
+export const UpdateGoalSchema = z.object({
+  title: z.string().min(2).max(200).optional(),
+  description: z.string().optional().nullable(),
+  goalType: z.nativeEnum(GoalType).optional(),
+  goalCategory: z.nativeEnum(GoalCategory).optional(),
+  startDate: z.string().optional(),
+  dueDate: z.string().optional(),
+  weightage: z.number().min(0).max(100).optional(),
+  priority: z.nativeEnum(GoalPriority).optional(),
+  status: z.nativeEnum(GoalStatus).optional(),
+  progressPercentage: z.number().min(0).max(100).optional(),
+  parentGoalId: z.string().uuid().optional().nullable(),
+  alignedGoalId: z.string().uuid().optional().nullable(),
+  alignmentType: z.nativeEnum(AlignmentType).optional().nullable(),
+});
+
+export const AlignGoalSchema = z.object({
+  alignedGoalId: z.string().uuid('Aligned goal ID is required'),
+  alignmentType: z.nativeEnum(AlignmentType),
+});
+
+export const CreateKraSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  title: z.string().min(2, 'Title is required').max(200),
+  description: z.string().optional().nullable(),
+  category: z.nativeEnum(KraCategory).default(KraCategory.CORE),
+  weightage: z.number().min(0).max(100).default(100),
+  startDate: z.string().min(1, 'Start date is required'),
+  endDate: z.string().min(1, 'End date is required'),
+  status: z.nativeEnum(KraStatus).default(KraStatus.ACTIVE),
+});
+
+export const UpdateKraSchema = CreateKraSchema.partial();
+
+export const CreateObjectiveSchema = z.object({
+  ownerType: z.nativeEnum(OkrOwnerType).default(OkrOwnerType.EMPLOYEE),
+  ownerId: z.string().min(1, 'Owner ID is required'),
+  title: z.string().min(2, 'Title is required').max(250),
+  description: z.string().optional().nullable(),
+  periodStartDate: z.string().min(1, 'Period start date is required'),
+  periodEndDate: z.string().min(1, 'Period end date is required'),
+  parentObjectiveId: z.string().uuid().optional().nullable(),
+  alignmentType: z.nativeEnum(AlignmentType).optional().nullable(),
+});
+
+export const UpdateObjectiveSchema = CreateObjectiveSchema.partial().extend({
+  status: z.nativeEnum(OkrStatus).optional(),
+  progressPercentage: z.number().min(0).max(100).optional(),
+});
+
+export const CreateKeyResultSchema = z.object({
+  objectiveId: z.string().uuid('Objective ID is required'),
+  title: z.string().min(2, 'Title is required').max(250),
+  description: z.string().optional().nullable(),
+  metricType: z.nativeEnum(KeyResultMetricType).default(KeyResultMetricType.PERCENTAGE),
+  startValue: z.number().default(0),
+  targetValue: z.number(),
+  currentValue: z.number().default(0),
+  unit: z.string().default('%'),
+  weightage: z.number().min(0).max(100).default(100),
+  dueDate: z.string().min(1, 'Due date is required'),
+});
+
+export const UpdateKeyResultSchema = CreateKeyResultSchema.partial().extend({
+  status: z.nativeEnum(OkrStatus).optional(),
+  progressPercentage: z.number().min(0).max(100).optional(),
+});
+
+export const CreateCheckInSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  goalId: z.string().uuid().optional().nullable(),
+  keyResultId: z.string().uuid().optional().nullable(),
+  checkInDate: z.string().default(() => new Date().toISOString()),
+  currentValue: z.number(),
+  progressPercentage: z.number().min(0).max(100).optional(),
+  comments: z.string().optional().nullable(),
+  blockers: z.string().optional().nullable(),
+  supportRequired: z.string().optional().nullable(),
+});
+
+export const ApproveCheckInSchema = z.object({
+  approved: z.boolean(),
+  rejectionReason: z.string().optional().nullable(),
+});
+
+export const CreateFeedbackSchema = z.object({
+  employeeId: z.string().uuid('Target employee ID is required'),
+  feedbackType: z.nativeEnum(FeedbackType).default(FeedbackType.PRAISE),
+  feedbackCategory: z.nativeEnum(FeedbackCategory).default(FeedbackCategory.QUALITY_OF_WORK),
+  feedback: z.string().min(3, 'Feedback content is required'),
+  rating: z.number().min(1).max(5).optional().nullable(),
+  isPrivate: z.boolean().default(false),
+  isAnonymous: z.boolean().default(false),
+});
+
+export const RequestFeedbackSchema = z.object({
+  employeeId: z.string().uuid('Employee ID is required'),
+  requestedFromId: z.string().uuid('Target recipient ID is required'),
+  feedbackCategory: z.nativeEnum(FeedbackCategory).default(FeedbackCategory.QUALITY_OF_WORK),
+  requestReason: z.string().min(3, 'Reason is required'),
+});
+
+export const CreateOneOnOneSchema = z.object({
+  employeeId: z.string().uuid('Employee ID is required'),
+  managerId: z.string().uuid('Manager ID is required'),
+  meetingDate: z.string().min(1, 'Meeting date is required'),
+  agenda: z.string().min(2, 'Agenda is required'),
+  discussionNotes: z.string().optional().nullable(),
+  actionItems: z.any().optional().nullable(),
+  nextMeetingDate: z.string().optional().nullable(),
+});
+
+export const UpdateOneOnOneSchema = CreateOneOnOneSchema.partial().extend({
+  status: z.nativeEnum(OneOnOneStatus).optional(),
+});
+
+export const CreateImprovementPlanSchema = z.object({
+  employeeId: z.string().uuid('Employee ID is required'),
+  managerId: z.string().uuid('Manager ID is required'),
+  title: z.string().min(2, 'Title is required').max(200),
+  description: z.string().optional().nullable(),
+  startDate: z.string().min(1, 'Start date is required'),
+  endDate: z.string().min(1, 'End date is required'),
+  improvementAreas: z.any().optional().nullable(),
+  successCriteria: z.string().min(2, 'Success criteria is required'),
+  supportRequired: z.string().optional().nullable(),
+});
+
+export const UpdateImprovementPlanSchema = CreateImprovementPlanSchema.partial().extend({
+  status: z.nativeEnum(ImprovementPlanStatus).optional(),
+});
+
+export const CreateRatingScaleSchema = z.object({
+  name: z.string().min(2, 'Name is required').max(100),
+  description: z.string().optional().nullable(),
+  scaleType: z.nativeEnum(RatingScaleType).default(RatingScaleType.FIVE_POINT),
+  levels: z.any().default([
+    { rating: 5, label: 'Outstanding', description: 'Consistently exceeds all performance expectations' },
+    { rating: 4, label: 'Exceeds Expectations', description: 'Frequently exceeds performance expectations' },
+    { rating: 3, label: 'Meets Expectations', description: 'Consistently meets performance standards' },
+    { rating: 2, label: 'Needs Improvement', description: 'Does not consistently meet performance standards' },
+    { rating: 1, label: 'Unsatisfactory', description: 'Consistently below expectations' },
+  ]),
+  isDefault: z.boolean().default(false),
+  status: z.enum(['ACTIVE', 'INACTIVE']).default('ACTIVE'),
+});
+
+export const CreateAppraisalTemplateSchema = z.object({
+  name: z.string().min(2, 'Name is required').max(100),
+  description: z.string().optional().nullable(),
+  appraisalType: z.nativeEnum(AppraisalType).default(AppraisalType.ANNUAL),
+  includeSelfReview: z.boolean().default(true),
+  includeManagerReview: z.boolean().default(true),
+  includeMultiRater: z.boolean().default(false),
+  includeGoalRating: z.boolean().default(true),
+  includeKraRating: z.boolean().default(true),
+  includeCompetencyRating: z.boolean().default(true),
+  includeOkrRating: z.boolean().default(true),
+  ratingScaleId: z.string().uuid().optional().nullable(),
+  sections: z.any().optional().nullable(),
+  questions: z.any().optional().nullable(),
+  weightages: z.any().optional().nullable(),
+  isDefault: z.boolean().default(false),
+});
+
+export const CreateAppraisalAssignmentSchema = z.object({
+  performanceCycleId: z.string().uuid('Performance cycle ID is required'),
+  employeeId: z.string().uuid('Employee ID is required'),
+  appraisalTemplateId: z.string().uuid('Appraisal template ID is required'),
+  reportingManagerId: z.string().uuid().optional().nullable(),
+  reviewerId: z.string().uuid().optional().nullable(),
+  departmentHeadId: z.string().uuid().optional().nullable(),
+});
+
+export const SubmitSelfReviewSchema = z.object({
+  responses: z.array(
+    z.object({
+      section: z.string(),
+      question: z.string(),
+      response: z.string(),
+      rating: z.number().min(1).max(5).optional(),
+      comments: z.string().optional(),
+    }),
+  ),
+  overallComments: z.string().optional().nullable(),
+});
+
+export const SubmitManagerReviewSchema = z.object({
+  responses: z.array(
+    z.object({
+      section: z.string(),
+      question: z.string(),
+      response: z.string(),
+      rating: z.number().min(1).max(5).optional(),
+      comments: z.string().optional(),
+    }),
+  ),
+  finalRating: z.number().min(1).max(5),
+  finalComments: z.string().optional().nullable(),
+  promotionRecommended: z.boolean().default(false),
+  incrementRecommended: z.boolean().default(false),
+});
+
+export const AcknowledgeAppraisalSchema = z.object({
+  comments: z.string().optional().nullable(),
+});
+
+export const CreateCalibrationSessionSchema = z.object({
+  performanceCycleId: z.string().uuid('Performance cycle ID is required'),
+  name: z.string().min(2, 'Name is required').max(100),
+  description: z.string().optional().nullable(),
+  departmentId: z.string().uuid().optional().nullable(),
+  locationId: z.string().uuid().optional().nullable(),
+  sessionDate: z.string().min(1, 'Session date is required'),
+  facilitatorId: z.string().uuid().optional().nullable(),
+  participants: z.any().optional().nullable(),
+});
+
+export const RecordCalibrationDecisionSchema = z.object({
+  employeeId: z.string().uuid('Employee ID is required'),
+  originalRating: z.number().min(1).max(5),
+  adjustedRating: z.number().min(1).max(5),
+  adjustmentReason: z.string().min(3, 'Adjustment reason is required'),
+});
+
+// INTERFACES / DTOS
+
+export interface PerformanceCycleDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  cycleType: PerformanceCycleType;
+  startDate: string;
+  endDate: string;
+  reviewStartDate?: string | null;
+  reviewEndDate?: string | null;
+  selfReviewStartDate?: string | null;
+  selfReviewEndDate?: string | null;
+  managerReviewStartDate?: string | null;
+  managerReviewEndDate?: string | null;
+  calibrationStartDate?: string | null;
+  calibrationEndDate?: string | null;
+  publishDate?: string | null;
+  status: PerformanceCycleStatus;
+  includeOkr: boolean;
+  includeGoals: boolean;
+  includeKra: boolean;
+  includeCompetency: boolean;
+  include360Feedback: boolean;
+  includeSelfReview: boolean;
+  includeManagerReview: boolean;
+  includeCalibration: boolean;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GoalDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  title: string;
+  description?: string | null;
+  goalType: GoalType;
+  goalCategory: GoalCategory;
+  startDate: string;
+  dueDate: string;
+  weightage: number;
+  priority: GoalPriority;
+  status: GoalStatus;
+  progressPercentage: number;
+  parentGoalId?: string | null;
+  alignedGoalId?: string | null;
+  alignedGoal?: any;
+  alignmentType?: AlignmentType | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface KraDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  title: string;
+  description?: string | null;
+  category: KraCategory;
+  weightage: number;
+  startDate: string;
+  endDate: string;
+  status: KraStatus;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ObjectiveDto {
+  id: string;
+  organizationId: string;
+  ownerType: OkrOwnerType;
+  ownerId: string;
+  title: string;
+  description?: string | null;
+  periodStartDate: string;
+  periodEndDate: string;
+  status: OkrStatus;
+  progressPercentage: number;
+  parentObjectiveId?: string | null;
+  alignmentType?: AlignmentType | null;
+  keyResults?: KeyResultDto[];
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface KeyResultDto {
+  id: string;
+  organizationId: string;
+  objectiveId: string;
+  title: string;
+  description?: string | null;
+  metricType: KeyResultMetricType;
+  startValue: number;
+  targetValue: number;
+  currentValue: number;
+  unit: string;
+  weightage: number;
+  dueDate: string;
+  status: OkrStatus;
+  progressPercentage: number;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CheckInDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  goalId?: string | null;
+  keyResultId?: string | null;
+  checkInDate: string;
+  currentValue: number;
+  progressPercentage: number;
+  comments?: string | null;
+  blockers?: string | null;
+  supportRequired?: string | null;
+  status: CheckInStatus;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  rejectionReason?: string | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ContinuousFeedbackDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  givenBy: string;
+  giver?: any;
+  feedbackType: FeedbackType;
+  feedbackCategory: FeedbackCategory;
+  feedback: string;
+  rating?: number | null;
+  isPrivate: boolean;
+  isAnonymous: boolean;
+  status: FeedbackStatus;
+  requestReason?: string | null;
+  requestedBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OneOnOneMeetingDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  managerId: string;
+  manager?: any;
+  meetingDate: string;
+  agenda: string;
+  discussionNotes?: string | null;
+  actionItems?: any;
+  nextMeetingDate?: string | null;
+  status: OneOnOneStatus;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ImprovementPlanDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  managerId: string;
+  manager?: any;
+  title: string;
+  description?: string | null;
+  startDate: string;
+  endDate: string;
+  improvementAreas?: any;
+  successCriteria: string;
+  supportRequired?: string | null;
+  status: ImprovementPlanStatus;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RatingScaleDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  scaleType: RatingScaleType;
+  levels: any;
+  isDefault: boolean;
+  status: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AppraisalTemplateDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  appraisalType: AppraisalType;
+  includeSelfReview: boolean;
+  includeManagerReview: boolean;
+  includeMultiRater: boolean;
+  includeGoalRating: boolean;
+  includeKraRating: boolean;
+  includeCompetencyRating: boolean;
+  includeOkrRating: boolean;
+  ratingScaleId?: string | null;
+  sections?: any;
+  questions?: any;
+  weightages?: any;
+  isDefault: boolean;
+  status: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AppraisalAssignmentDto {
+  id: string;
+  organizationId: string;
+  performanceCycleId: string;
+  performanceCycle?: PerformanceCycleDto;
+  employeeId: string;
+  employee?: any;
+  appraisalTemplateId: string;
+  appraisalTemplate?: AppraisalTemplateDto;
+  reportingManagerId?: string | null;
+  reportingManager?: any;
+  reviewerId?: string | null;
+  departmentHeadId?: string | null;
+  status: AppraisalStatus;
+  selfReviewStatus: ReviewStageStatus;
+  managerReviewStatus: ReviewStageStatus;
+  multiRaterStatus: ReviewStageStatus;
+  calibrationStatus: ReviewStageStatus;
+  finalRating?: number | null;
+  finalComments?: string | null;
+  promotionRecommended: boolean;
+  incrementRecommended: boolean;
+  acknowledgedAt?: string | null;
+  acknowledgementComments?: string | null;
+  responses?: ReviewResponseDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ReviewResponseDto {
+  id: string;
+  organizationId: string;
+  appraisalAssignmentId: string;
+  reviewerId: string;
+  reviewerType: ReviewerType;
+  reviewType: ReviewType;
+  section: string;
+  question: string;
+  response: string;
+  rating?: number | null;
+  comments?: string | null;
+  submittedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CalibrationSessionDto {
+  id: string;
+  organizationId: string;
+  performanceCycleId: string;
+  performanceCycle?: PerformanceCycleDto;
+  name: string;
+  description?: string | null;
+  departmentId?: string | null;
+  department?: any;
+  locationId?: string | null;
+  location?: any;
+  sessionDate: string;
+  facilitatorId?: string | null;
+  participants?: any;
+  status: CalibrationSessionStatus;
+  decisions?: CalibrationDecisionDto[];
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CalibrationDecisionDto {
+  id: string;
+  organizationId: string;
+  calibrationSessionId: string;
+  employeeId: string;
+  employee?: any;
+  originalRating: number;
+  adjustedRating: number;
+  adjustmentReason: string;
+  decidedBy: string;
+  decidedAt: string;
   createdAt: string;
   updatedAt: string;
 }

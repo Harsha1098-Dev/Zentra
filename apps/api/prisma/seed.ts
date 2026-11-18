@@ -325,6 +325,67 @@ const BASE_PERMISSIONS: { code: string; name: string; description: string }[] = 
 
   { code: 'letter.generate', name: 'Generate Lifecycle Letter', description: 'Generate official HR lifecycle letter' },
   { code: 'letter.download', name: 'Download Lifecycle Letter', description: 'Download generated lifecycle letter PDF' },
+
+  // Performance & Goals Permissions
+  { code: 'performance.read', name: 'Read Performance', description: 'View general performance modules' },
+  { code: 'performance.read_own', name: 'Read Own Performance', description: 'View own performance dashboard, reviews, and goals' },
+  { code: 'performance.read_team', name: 'Read Team Performance', description: 'View team reportees performance data' },
+  { code: 'performance.read_all', name: 'Read All Performance', description: 'View organization-wide performance data' },
+
+  { code: 'goal.read', name: 'Read Goals', description: 'View goals and progress' },
+  { code: 'goal.create', name: 'Create Goal', description: 'Create new goals' },
+  { code: 'goal.update', name: 'Update Goal', description: 'Modify goals and progress' },
+  { code: 'goal.delete', name: 'Delete Goal', description: 'Delete goals' },
+  { code: 'goal.align', name: 'Align Goal', description: 'Align goal with manager or org goals' },
+  { code: 'goal.approve', name: 'Approve Goal', description: 'Approve goal creation or alignment' },
+
+  { code: 'kra.read', name: 'Read KRAs', description: 'View Key Result Areas' },
+  { code: 'kra.create', name: 'Create KRA', description: 'Create Key Result Area' },
+  { code: 'kra.update', name: 'Update KRA', description: 'Modify Key Result Area' },
+  { code: 'kra.delete', name: 'Delete KRA', description: 'Delete Key Result Area' },
+
+  { code: 'okr.read', name: 'Read OKRs', description: 'View OKR objectives and key results' },
+  { code: 'okr.create', name: 'Create OKR', description: 'Create objectives and key results' },
+  { code: 'okr.update', name: 'Update OKR', description: 'Update objectives and key results' },
+  { code: 'okr.delete', name: 'Delete OKR', description: 'Delete objectives and key results' },
+  { code: 'okr.checkin.create', name: 'Create OKR Check-in', description: 'Submit check-in for key results' },
+  { code: 'okr.checkin.approve', name: 'Approve OKR Check-in', description: 'Approve or reject check-in submissions' },
+
+  { code: 'feedback.read', name: 'Read Feedback', description: 'View continuous feedback' },
+  { code: 'feedback.create', name: 'Create Feedback', description: 'Give praise or constructive feedback' },
+  { code: 'feedback.request', name: 'Request Feedback', description: 'Request 360 or peer feedback' },
+  { code: 'feedback.give', name: 'Give Feedback', description: 'Respond with feedback' },
+
+  { code: 'one_on_one.read', name: 'Read 1:1 Meetings', description: 'View 1:1 meetings' },
+  { code: 'one_on_one.create', name: 'Schedule 1:1 Meeting', description: 'Schedule 1:1 meetings' },
+  { code: 'one_on_one.update', name: 'Update 1:1 Meeting', description: 'Update agenda and meeting notes' },
+
+  { code: 'improvement_plan.read', name: 'Read Improvement Plans', description: 'View PIP plans' },
+  { code: 'improvement_plan.create', name: 'Create Improvement Plan', description: 'Initiate performance improvement plan' },
+  { code: 'improvement_plan.update', name: 'Update Improvement Plan', description: 'Update PIP progress' },
+  { code: 'improvement_plan.complete', name: 'Complete Improvement Plan', description: 'Mark PIP as completed or resolved' },
+
+  { code: 'performance_cycle.read', name: 'Read Performance Cycles', description: 'View appraisal review cycles' },
+  { code: 'performance_cycle.create', name: 'Create Performance Cycle', description: 'Configure review cycle' },
+  { code: 'performance_cycle.update', name: 'Update Performance Cycle', description: 'Edit review cycle parameters' },
+  { code: 'performance_cycle.delete', name: 'Delete Performance Cycle', description: 'Remove or cancel review cycle' },
+  { code: 'performance_cycle.run', name: 'Run Performance Cycle', description: 'Start appraisal process and assign reviews' },
+  { code: 'performance_cycle.publish', name: 'Publish Performance Cycle', description: 'Publish final appraisal ratings' },
+
+  { code: 'appraisal.read', name: 'Read Appraisals', description: 'View appraisal assignments and templates' },
+  { code: 'appraisal.submit', name: 'Submit Appraisal', description: 'Submit self-review appraisal' },
+  { code: 'appraisal.review', name: 'Review Appraisal', description: 'Submit manager appraisal review' },
+  { code: 'appraisal.approve', name: 'Approve Appraisal', description: 'Approve appraisal review' },
+  { code: 'appraisal.reject', name: 'Reject Appraisal', description: 'Reject or request rework on review' },
+  { code: 'appraisal.publish', name: 'Publish Appraisal', description: 'Release appraisal ratings' },
+
+  { code: 'calibration.read', name: 'Read Calibration', description: 'View calibration sessions' },
+  { code: 'calibration.create', name: 'Create Calibration Session', description: 'Schedule calibration meeting' },
+  { code: 'calibration.participate', name: 'Participate in Calibration', description: 'Attend calibration session' },
+  { code: 'calibration.decide', name: 'Record Calibration Decision', description: 'Adjust ratings with justification' },
+
+  { code: 'performance.report.view', name: 'View Performance Reports', description: 'View performance analytics dashboards' },
+  { code: 'performance.report.export', name: 'Export Performance Reports', description: 'Export performance data to CSV' },
 ];
 
 const BASE_ROLES = [

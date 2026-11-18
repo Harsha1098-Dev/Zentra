@@ -24,6 +24,7 @@ import { AttendanceModule } from './attendance/attendance.module';
 import { PayrollModule } from './payroll/payroll.module';
 import { StatutoryModule } from './payroll/statutory/statutory.module';
 import { LifecycleModule } from './lifecycle/lifecycle.module';
+import { PerformanceModule } from './performance/performance.module';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { TenantContextInterceptor } from './common/interceptors/tenant-context.interceptor';
@@ -57,6 +58,7 @@ import { TenantContextInterceptor } from './common/interceptors/tenant-context.i
     PayrollModule,
     StatutoryModule,
     LifecycleModule,
+    PerformanceModule,
   ],
   providers: [
     {

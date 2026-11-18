@@ -23,6 +23,7 @@ import {
   AlertCircle,
   Sliders,
   DollarSign,
+  Target,
 } from 'lucide-react';
 import { PermissionCode, RoleCode } from '@zentra/shared-types';
 
@@ -283,6 +284,14 @@ export default function DashboardPage() {
             </Link>
 
             <Link
+              href="/performance"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-900 border border-indigo-200 hover:bg-indigo-100 rounded-lg text-xs font-semibold transition-colors shadow-sm"
+            >
+              <Target className="w-3.5 h-3.5 text-indigo-700" />
+              <span>Performance</span>
+            </Link>
+
+            <Link
               href="/settings/workflows"
               className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
             >
@@ -480,6 +489,13 @@ export default function DashboardPage() {
                   >
                     <Clock className="w-3 h-3 text-amber-700" />
                     <span>Attendance & Shifts</span>
+                  </Link>
+                  <Link
+                    href="/performance"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 bg-indigo-50 text-indigo-900 hover:bg-indigo-100 rounded text-xs font-semibold border border-indigo-200"
+                  >
+                    <Target className="w-3 h-3 text-indigo-700" />
+                    <span>Performance & Goals</span>
                   </Link>
                 </div>
 

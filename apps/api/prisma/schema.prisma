@@ -115,6 +115,21 @@ model Organization {
   offboardingRequests     OffboardingRequest[]
   assets                  Asset[]
   lifecycleLetters        LifecycleLetter[]
+  performanceCycles       PerformanceCycle[]
+  goals                   Goal[]
+  kras                    KRA[]
+  objectives              Objective[]
+  keyResults              KeyResult[]
+  checkIns                CheckIn[]
+  continuousFeedbacks     ContinuousFeedback[]
+  oneOnOneMeetings        OneOnOneMeeting[]
+  improvementPlans        ImprovementPlan[]
+  ratingScales            RatingScale[]
+  appraisalTemplates      AppraisalTemplate[]
+  appraisalAssignments    AppraisalAssignment[]
+  reviewResponses         ReviewResponse[]
+  calibrationSessions     CalibrationSession[]
+  calibrationDecisions    CalibrationDecision[]
 
   @@index([slug])
   @@map("organizations")
@@ -373,6 +388,7 @@ model Location {
   holidays            Holiday[]
   employees           Employee[]
   employmentHistories EmploymentHistory[]
+  calibrationSessions CalibrationSession[]
 
   @@unique([organizationId, name])
   @@unique([organizationId, code])
@@ -401,6 +417,7 @@ model Department {
   designations        Designation[]
   employees           Employee[]
   employmentHistories EmploymentHistory[]
+  calibrationSessions CalibrationSession[]
 
   @@unique([organizationId, name])
   @@unique([organizationId, code])
@@ -590,6 +607,20 @@ model Employee {
   offboardingRequests       OffboardingRequest[]
   assignedAssets            Asset[]
   lifecycleLetters          LifecycleLetter[]
+  goals                     Goal[]
+  kras                      KRA[]
+  checkIns                  CheckIn[]
+  feedbackReceived          ContinuousFeedback[] @relation("EmployeeFeedbackReceived")
+  feedbackGiven             ContinuousFeedback[] @relation("EmployeeFeedbackGiven")
+  oneOnOneAsEmployee        OneOnOneMeeting[]    @relation("OneOnOneEmployee")
+  oneOnOneAsManager         OneOnOneMeeting[]    @relation("OneOnOneManager")
+  improvementPlansAsEmployee ImprovementPlan[]  @relation("ImprovementPlanEmployee")
+  improvementPlansAsManager  ImprovementPlan[]   @relation("ImprovementPlanManager")
+  appraisalAssignments      AppraisalAssignment[] @relation("EmployeeAppraisals")
+  managerAppraisals         AppraisalAssignment[] @relation("ManagerAppraisals")
+  reviewerAppraisals        AppraisalAssignment[] @relation("ReviewerAppraisals")
+  deptHeadAppraisals        AppraisalAssignment[] @relation("DeptHeadAppraisals")
+  calibrationDecisions      CalibrationDecision[]
 
   @@unique([organizationId, employeeCode])
   @@unique([organizationId, workEmail])
@@ -2641,4 +2672,459 @@ model LifecycleLetter {
   @@index([employeeId])
   @@index([letterType])
   @@map("lifecycle_letters")
+}
+
+
+// ==========================================
+// PERFORMANCE & GOALS MODULE
+// ==========================================
+
+model PerformanceCycle {
+  id                     String    @id @default(uuid())
+  organizationId         String    @map("organization_id")
+  name                   String
+  description            String?
+  cycleType              String    @default("ANNUAL") @map("cycle_type") // ANNUAL, HALF_YEARLY, QUARTERLY, MONTHLY, CUSTOM
+  startDate              DateTime  @map("start_date")
+  endDate                DateTime  @map("end_date")
+  reviewStartDate        DateTime? @map("review_start_date")
+  reviewEndDate          DateTime? @map("review_end_date")
+  selfReviewStartDate    DateTime? @map("self_review_start_date")
+  selfReviewEndDate      DateTime? @map("self_review_end_date")
+  managerReviewStartDate DateTime? @map("manager_review_start_date")
+  managerReviewEndDate   DateTime? @map("manager_review_end_date")
+  calibrationStartDate   DateTime? @map("calibration_start_date")
+  calibrationEndDate     DateTime? @map("calibration_end_date")
+  publishDate            DateTime? @map("publish_date")
+  status                 String    @default("DRAFT") // DRAFT, ACTIVE, IN_PROGRESS, IN_CALIBRATION, PUBLISHED, CLOSED, CANCELLED
+  includeOkr             Boolean   @default(true) @map("include_okr")
+  includeGoals           Boolean   @default(true) @map("include_goals")
+  includeKra             Boolean   @default(true) @map("include_kra")
+  includeCompetency      Boolean   @default(true) @map("include_competency")
+  include360Feedback     Boolean   @default(false) @map("include_360_feedback")
+  includeSelfReview      Boolean   @default(true) @map("include_self_review")
+  includeManagerReview   Boolean   @default(true) @map("include_manager_review")
+  includeCalibration     Boolean   @default(true) @map("include_calibration")
+  createdBy              String    @map("created_by")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+  deletedAt              DateTime? @map("deleted_at")
+
+  organization         Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  appraisalAssignments AppraisalAssignment[]
+  calibrationSessions  CalibrationSession[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("performance_cycles")
+}
+
+model Goal {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  employeeId         String    @map("employee_id")
+  title              String
+  description        String?
+  goalType           String    @default("INDIVIDUAL") @map("goal_type") // INDIVIDUAL, TEAM, DEPARTMENT, COMPANY
+  goalCategory       String    @default("BUSINESS") @map("goal_category") // BUSINESS, OPERATIONAL, DEVELOPMENTAL, INNOVATION, LEADERSHIP
+  startDate          DateTime  @map("start_date")
+  dueDate            DateTime  @map("due_date")
+  weightage          Float     @default(100)
+  priority           String    @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status             String    @default("DRAFT") // DRAFT, PENDING_APPROVAL, ACTIVE, IN_PROGRESS, COMPLETED, CANCELLED, OVERDUE
+  progressPercentage Float     @default(0) @map("progress_percentage")
+  parentGoalId       String?   @map("parent_goal_id")
+  alignedGoalId      String?   @map("aligned_goal_id")
+  alignmentType      String?   @map("alignment_type") // MANAGER, DEPARTMENT, ORGANIZATION
+  createdBy          String    @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee        Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  parentGoal      Goal?        @relation("GoalHierarchy", fields: [parentGoalId], references: [id], onDelete: SetNull)
+  subGoals        Goal[]       @relation("GoalHierarchy")
+  alignedGoal     Goal?        @relation("GoalAlignment", fields: [alignedGoalId], references: [id], onDelete: SetNull)
+  alignedSubGoals Goal[]       @relation("GoalAlignment")
+  checkIns        CheckIn[]
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([status])
+  @@index([dueDate])
+  @@map("goals")
+}
+
+model KRA {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  employeeId     String    @map("employee_id")
+  title          String
+  description    String?
+  category       String    @default("CORE") // CORE, FUNCTIONAL, BEHAVIORAL, STRATEGIC
+  weightage      Float     @default(100)
+  startDate      DateTime  @map("start_date")
+  endDate        DateTime  @map("end_date")
+  status         String    @default("ACTIVE") // ACTIVE, INACTIVE, ARCHIVED
+  createdBy      String    @map("created_by")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([status])
+  @@map("kras")
+}
+
+model Objective {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  ownerType          String    @default("EMPLOYEE") @map("owner_type") // EMPLOYEE, MANAGER, DEPARTMENT, ORGANIZATION
+  ownerId            String    @map("owner_id")
+  title              String
+  description        String?
+  periodStartDate    DateTime  @map("period_start_date")
+  periodEndDate      DateTime  @map("period_end_date")
+  status             String    @default("ACTIVE") // DRAFT, ACTIVE, ON_TRACK, AT_RISK, BEHIND, CLOSED
+  progressPercentage Float     @default(0) @map("progress_percentage")
+  parentObjectiveId  String?   @map("parent_objective_id")
+  alignmentType      String?   @map("alignment_type")
+  createdBy          String    @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  parentObjective Objective?   @relation("ObjectiveHierarchy", fields: [parentObjectiveId], references: [id], onDelete: SetNull)
+  subObjectives   Objective[]  @relation("ObjectiveHierarchy")
+  keyResults      KeyResult[]
+
+  @@index([organizationId])
+  @@index([ownerType, ownerId])
+  @@index([status])
+  @@map("objectives")
+}
+
+model KeyResult {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  objectiveId        String    @map("objective_id")
+  title              String
+  description        String?
+  metricType         String    @default("PERCENTAGE") @map("metric_type") // NUMBER, PERCENTAGE, CURRENCY, TIME, BOOLEAN, MILESTONE
+  startValue         Float     @default(0) @map("start_value")
+  targetValue        Float     @map("target_value")
+  currentValue       Float     @default(0) @map("current_value")
+  unit               String    @default("%")
+  weightage          Float     @default(100)
+  dueDate            DateTime  @map("due_date")
+  status             String    @default("ACTIVE")
+  progressPercentage Float     @default(0) @map("progress_percentage")
+  createdBy          String    @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  objective    Objective    @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  checkIns     CheckIn[]
+
+  @@index([organizationId])
+  @@index([objectiveId])
+  @@index([status])
+  @@index([dueDate])
+  @@map("key_results")
+}
+
+model CheckIn {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  employeeId         String    @map("employee_id")
+  goalId             String?   @map("goal_id")
+  keyResultId        String?   @map("key_result_id")
+  checkInDate        DateTime  @default(now()) @map("check_in_date")
+  currentValue       Float     @map("current_value")
+  progressPercentage Float     @map("progress_percentage")
+  comments           String?
+  blockers           String?
+  supportRequired    String?   @map("support_required")
+  status             String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  approvedBy         String?   @map("approved_by")
+  approvedAt         DateTime? @map("approved_at")
+  rejectionReason    String?   @map("rejection_reason")
+  createdBy          String    @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  goal         Goal?        @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  keyResult    KeyResult?   @relation(fields: [keyResultId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([goalId])
+  @@index([keyResultId])
+  @@index([status])
+  @@map("check_ins")
+}
+
+model ContinuousFeedback {
+  id               String    @id @default(uuid())
+  organizationId   String    @map("organization_id")
+  employeeId       String    @map("employee_id")
+  givenBy          String    @map("given_by")
+  feedbackType     String    @default("PRAISE") @map("feedback_type") // PRAISE, CONSTRUCTIVE, IMPROVEMENT, COACHING, RECOGNITION, CORRECTION
+  feedbackCategory String    @default("QUALITY_OF_WORK") @map("feedback_category") // QUALITY_OF_WORK, OWNERSHIP, COLLABORATION, etc.
+  feedback         String
+  rating           Float?
+  isPrivate        Boolean   @default(false) @map("is_private")
+  isAnonymous      Boolean   @default(false) @map("is_anonymous")
+  status           String    @default("ACTIVE") // ACTIVE, ARCHIVED, REQUESTED
+  requestReason    String?   @map("request_reason")
+  requestedBy      String?   @map("requested_by")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation("EmployeeFeedbackReceived", fields: [employeeId], references: [id], onDelete: Cascade)
+  giver        Employee?    @relation("EmployeeFeedbackGiven", fields: [givenBy], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([givenBy])
+  @@index([status])
+  @@map("continuous_feedback")
+}
+
+model OneOnOneMeeting {
+  id              String    @id @default(uuid())
+  organizationId  String    @map("organization_id")
+  employeeId      String    @map("employee_id")
+  managerId       String    @map("manager_id")
+  meetingDate     DateTime  @map("meeting_date")
+  agenda          String
+  discussionNotes String?   @map("discussion_notes")
+  actionItems     Json?     @map("action_items")
+  nextMeetingDate DateTime? @map("next_meeting_date")
+  status          String    @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED
+  createdBy       String    @map("created_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation("OneOnOneEmployee", fields: [employeeId], references: [id], onDelete: Cascade)
+  manager      Employee     @relation("OneOnOneManager", fields: [managerId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([managerId])
+  @@index([status])
+  @@map("one_on_one_meetings")
+}
+
+model ImprovementPlan {
+  id               String   @id @default(uuid())
+  organizationId   String   @map("organization_id")
+  employeeId       String   @map("employee_id")
+  managerId        String   @map("manager_id")
+  title            String
+  description      String?
+  startDate        DateTime @map("start_date")
+  endDate          DateTime @map("end_date")
+  improvementAreas Json?    @map("improvement_areas")
+  successCriteria  String   @map("success_criteria")
+  supportRequired  String?  @map("support_required")
+  status           String   @default("ACTIVE") // DRAFT, ACTIVE, COMPLETED, FAILED, CANCELLED
+  createdBy        String   @map("created_by")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation("ImprovementPlanEmployee", fields: [employeeId], references: [id], onDelete: Cascade)
+  manager      Employee     @relation("ImprovementPlanManager", fields: [managerId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([managerId])
+  @@index([status])
+  @@map("improvement_plans")
+}
+
+model RatingScale {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  name           String
+  description    String?
+  scaleType      String    @default("FIVE_POINT") @map("scale_type")
+  levels         Json
+  isDefault      Boolean   @default(false) @map("is_default")
+  status         String    @default("ACTIVE")
+  createdBy      String    @map("created_by")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  appraisalTemplates AppraisalTemplate[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("rating_scales")
+}
+
+model AppraisalTemplate {
+  id                      String    @id @default(uuid())
+  organizationId          String    @map("organization_id")
+  name                    String
+  description             String?
+  appraisalType           String    @default("ANNUAL") @map("appraisal_type")
+  includeSelfReview       Boolean   @default(true) @map("include_self_review")
+  includeManagerReview    Boolean   @default(true) @map("include_manager_review")
+  includeMultiRater       Boolean   @default(false) @map("include_multi_rater")
+  includeGoalRating       Boolean   @default(true) @map("include_goal_rating")
+  includeKraRating        Boolean   @default(true) @map("include_kra_rating")
+  includeCompetencyRating Boolean   @default(true) @map("include_competency_rating")
+  includeOkrRating        Boolean   @default(true) @map("include_okr_rating")
+  ratingScaleId           String?   @map("rating_scale_id")
+  sections                Json?
+  questions               Json?
+  weightages              Json?
+  isDefault               Boolean   @default(false) @map("is_default")
+  status                  String    @default("ACTIVE")
+  createdBy               String    @map("created_by")
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+  deletedAt               DateTime? @map("deleted_at")
+
+  organization         Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  ratingScale          RatingScale?          @relation(fields: [ratingScaleId], references: [id], onDelete: SetNull)
+  appraisalAssignments AppraisalAssignment[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("appraisal_templates")
+}
+
+model AppraisalAssignment {
+  id                      String    @id @default(uuid())
+  organizationId          String    @map("organization_id")
+  performanceCycleId      String    @map("performance_cycle_id")
+  employeeId              String    @map("employee_id")
+  appraisalTemplateId     String    @map("appraisal_template_id")
+  reportingManagerId      String?   @map("reporting_manager_id")
+  reviewerId              String?   @map("reviewer_id")
+  departmentHeadId        String?   @map("department_head_id")
+  status                  String    @default("NOT_STARTED") // NOT_STARTED, IN_PROGRESS, SUBMITTED, PENDING_APPROVAL, APPROVED, REJECTED, PUBLISHED, ACKNOWLEDGED, CLOSED
+  selfReviewStatus        String    @default("NOT_STARTED") @map("self_review_status")
+  managerReviewStatus     String    @default("NOT_STARTED") @map("manager_review_status")
+  multiRaterStatus        String    @default("NOT_STARTED") @map("multi_rater_status")
+  calibrationStatus       String    @default("NOT_STARTED") @map("calibration_status")
+  finalRating             Float?    @map("final_rating")
+  finalComments           String?   @map("final_comments")
+  promotionRecommended    Boolean   @default(false) @map("promotion_recommended")
+  incrementRecommended    Boolean   @default(false) @map("increment_recommended")
+  acknowledgedAt          DateTime? @map("acknowledged_at")
+  acknowledgementComments String?   @map("acknowledgement_comments")
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+
+  organization      Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  performanceCycle  PerformanceCycle    @relation(fields: [performanceCycleId], references: [id], onDelete: Cascade)
+  employee          Employee            @relation("EmployeeAppraisals", fields: [employeeId], references: [id], onDelete: Cascade)
+  appraisalTemplate AppraisalTemplate  @relation(fields: [appraisalTemplateId], references: [id], onDelete: Restrict)
+  reportingManager  Employee?           @relation("ManagerAppraisals", fields: [reportingManagerId], references: [id], onDelete: SetNull)
+  reviewer          Employee?           @relation("ReviewerAppraisals", fields: [reviewerId], references: [id], onDelete: SetNull)
+  departmentHead    Employee?           @relation("DeptHeadAppraisals", fields: [departmentHeadId], references: [id], onDelete: SetNull)
+  responses         ReviewResponse[]
+
+  @@unique([performanceCycleId, employeeId])
+  @@index([organizationId])
+  @@index([performanceCycleId])
+  @@index([employeeId])
+  @@index([reportingManagerId])
+  @@index([status])
+  @@map("appraisal_assignments")
+}
+
+model ReviewResponse {
+  id                    String   @id @default(uuid())
+  organizationId        String   @map("organization_id")
+  appraisalAssignmentId String   @map("appraisal_assignment_id")
+  reviewerId            String   @map("reviewer_id")
+  reviewerType          String   @default("EMPLOYEE") @map("reviewer_type") // EMPLOYEE, MANAGER, SKIP_LEVEL, PEER, CALIBRATION
+  reviewType            String   @default("SELF") @map("review_type") // SELF, MANAGER, MULTI_RATER, CALIBRATION
+  section               String
+  question              String
+  response              String
+  rating                Float?
+  comments              String?
+  submittedAt           DateTime @default(now()) @map("submitted_at")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  organization        Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  appraisalAssignment AppraisalAssignment @relation(fields: [appraisalAssignmentId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([appraisalAssignmentId])
+  @@map("review_responses")
+}
+
+model CalibrationSession {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  performanceCycleId String    @map("performance_cycle_id")
+  name               String
+  description        String?
+  departmentId       String?   @map("department_id")
+  locationId         String?   @map("location_id")
+  sessionDate        DateTime  @map("session_date")
+  facilitatorId      String?   @map("facilitator_id")
+  participants       Json?
+  status             String    @default("SCHEDULED") // SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
+  createdBy          String    @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization     Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  performanceCycle PerformanceCycle      @relation(fields: [performanceCycleId], references: [id], onDelete: Cascade)
+  department       Department?           @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  location         Location?             @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  decisions        CalibrationDecision[]
+
+  @@index([organizationId])
+  @@index([performanceCycleId])
+  @@index([status])
+  @@map("calibration_sessions")
+}
+
+model CalibrationDecision {
+  id                   String   @id @default(uuid())
+  organizationId       String   @map("organization_id")
+  calibrationSessionId String   @map("calibration_session_id")
+  employeeId           String   @map("employee_id")
+  originalRating       Float    @map("original_rating")
+  adjustedRating       Float    @map("adjusted_rating")
+  adjustmentReason     String   @map("adjustment_reason")
+  decidedBy            String   @map("decided_by")
+  decidedAt            DateTime @default(now()) @map("decided_at")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  organization       Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  calibrationSession CalibrationSession @relation(fields: [calibrationSessionId], references: [id], onDelete: Cascade)
+  employee           Employee           @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([calibrationSessionId, employeeId])
+  @@index([organizationId])
+  @@index([calibrationSessionId])
+  @@index([employeeId])
+  @@map("calibration_decisions")
 }
