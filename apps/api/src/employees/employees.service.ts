@@ -318,6 +318,14 @@ export class EmployeesService {
       });
     }
 
+    if (!invitationCreated) {
+      await this.emailService.sendNotification(
+        employee.workEmail,
+        'Welcome to Zentra - Employee Record Created',
+        `Hello ${employee.firstName},\n\nYour employee profile (${employee.employeeCode}) has been successfully created.`,
+      );
+    }
+
     return this.mapToEmployeeDto(employee);
   }
 
@@ -502,6 +510,12 @@ export class EmployeesService {
       userAgent,
     });
 
+    await this.emailService.sendNotification(
+      existing.workEmail,
+      'Your Profile Has Been Updated',
+      `Hello ${existing.firstName},\n\nYour employee profile details have been updated by an administrator.`,
+    );
+
     return this.mapToEmployeeDto(employee);
   }
 
@@ -544,7 +558,7 @@ export class EmployeesService {
     actorUserId?: string,
     ipAddress?: string,
     userAgent?: string,
-  ) {
+  ): Promise<EmployeeDto> {
     const existing = await this.employeesRepo.findById(id, organizationId);
     if (!existing) {
       throw new NotFoundException(`Employee with ID ${id} not found`);
@@ -606,6 +620,12 @@ export class EmployeesService {
       userAgent,
     });
 
+    await this.emailService.sendNotification(
+      existing.workEmail,
+      'Employment Status Update',
+      `Hello ${existing.firstName},\n\nYour employment status has been updated to ${input.status}.`,
+    );
+
     return this.mapToEmployeeDto(employee);
   }
 
@@ -616,7 +636,7 @@ export class EmployeesService {
     actorUserId?: string,
     ipAddress?: string,
     userAgent?: string,
-  ) {
+  ): Promise<EmployeeDto> {
     const existing = await this.employeesRepo.findById(id, organizationId);
     if (!existing) {
       throw new NotFoundException(`Employee with ID ${id} not found`);
@@ -693,6 +713,12 @@ export class EmployeesService {
       userAgent,
     });
 
+    await this.emailService.sendNotification(
+      existing.workEmail,
+      'Reporting Manager Updated',
+      `Hello ${existing.firstName},\n\nYour reporting manager assignment has been updated.`,
+    );
+
     return this.mapToEmployeeDto(employee);
   }
 
@@ -744,6 +770,12 @@ export class EmployeesService {
       ipAddress,
       userAgent,
     });
+
+    await this.emailService.sendNotification(
+      existing.workEmail,
+      'Department Transfer Notice',
+      `Hello ${existing.firstName},\n\nYou have been transferred to department: ${dept.name}.`,
+    );
 
     return this.mapToEmployeeDto(employee);
   }
@@ -797,6 +829,12 @@ export class EmployeesService {
       userAgent,
     });
 
+    await this.emailService.sendNotification(
+      existing.workEmail,
+      'Designation Update Notice',
+      `Hello ${existing.firstName},\n\nYour designation has been updated to: ${des.name}.`,
+    );
+
     return this.mapToEmployeeDto(employee);
   }
 
@@ -849,6 +887,12 @@ export class EmployeesService {
       userAgent,
     });
 
+    await this.emailService.sendNotification(
+      existing.workEmail,
+      'Location Transfer Notice',
+      `Hello ${existing.firstName},\n\nYour work location has been transferred to: ${loc.name}.`,
+    );
+
     return this.mapToEmployeeDto(employee);
   }
 
@@ -895,6 +939,12 @@ export class EmployeesService {
       ipAddress,
       userAgent,
     });
+
+    await this.emailService.sendNotification(
+      existing.workEmail,
+      'Employment Type Update Notice',
+      `Hello ${existing.firstName},\n\nYour employment type has been changed to: ${input.employmentType}.`,
+    );
 
     return this.mapToEmployeeDto(employee);
   }

@@ -71,10 +71,12 @@ describe('Employee Management Module Test Suite', () => {
     const mockEmailService = {
       sendInvitationEmail: jest.fn().mockResolvedValue(undefined),
       sendVerificationEmail: jest.fn().mockResolvedValue(undefined),
+      sendNotification: jest.fn().mockResolvedValue(undefined),
     };
 
     const mockUsersService = {
       findByEmail: jest.fn(),
+      findById: jest.fn().mockResolvedValue({ id: actorUserId, email: 'admin@acme.com' } as any),
       getOrCreateForInvitation: jest.fn(),
       createInvitedUser: jest.fn(),
     };

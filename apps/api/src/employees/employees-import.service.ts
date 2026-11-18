@@ -1,6 +1,8 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { EmployeesRepository } from './employees.repository';
 import { AuditService } from '../audit/audit.service';
+import { EmailService } from '../email/email.service';
+import { UsersService } from '../users/users.service';
 import { DepartmentsService } from '../organization-setup/departments/departments.service';
 import { DesignationsService } from '../organization-setup/designations/designations.service';
 import { LocationsService } from '../organization-setup/locations/locations.service';
@@ -37,6 +39,8 @@ export class EmployeesImportService {
   constructor(
     private readonly employeesRepo: EmployeesRepository,
     private readonly auditService: AuditService,
+    private readonly emailService: EmailService,
+    private readonly usersService: UsersService,
     private readonly departmentsService: DepartmentsService,
     private readonly designationsService: DesignationsService,
     private readonly locationsService: LocationsService,
@@ -396,6 +400,21 @@ export class EmployeesImportService {
       ipAddress,
       userAgent,
     });
+
+    if (actorUserId) {
+      try {
+        const actor = await this.usersService.findById(actorUserId);
+        if (actor && actor.email) {
+          await this.emailService.sendNotification(
+            actor.email,
+            'Employee Import Completed',
+            `Your employee CSV import (${fileName}) has finished with status ${finalStatus}. Total: ${totalRows}, Successful: ${successfulRows}, Failed: ${failedRows}.`,
+          );
+        }
+      } catch {
+        // Notification failure should not fail the import job
+      }
+    }
 
     return updatedJob;
   }

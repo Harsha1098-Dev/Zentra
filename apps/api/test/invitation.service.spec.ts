@@ -48,6 +48,7 @@ describe('Invitation Flow & User Linking', () => {
 
     const mockEmailService = {
       sendInvitationEmail: jest.fn().mockResolvedValue(undefined),
+      sendNotification: jest.fn().mockResolvedValue(undefined),
     };
 
     const mockAuditService = {

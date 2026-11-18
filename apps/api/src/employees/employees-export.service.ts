@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EmployeesRepository } from './employees.repository';
 import { AuditService } from '../audit/audit.service';
+import { EmailService } from '../email/email.service';
+import { UsersService } from '../users/users.service';
 import { EmployeeQueryFilterInput, AuditAction, RoleCode } from '@zentra/shared-types';
 
 @Injectable()
@@ -8,6 +10,8 @@ export class EmployeesExportService {
   constructor(
     private readonly employeesRepo: EmployeesRepository,
     private readonly auditService: AuditService,
+    private readonly emailService: EmailService,
+    private readonly usersService: UsersService,
   ) {}
 
   async generateExport(
@@ -122,6 +126,21 @@ export class EmployeesExportService {
       ipAddress,
       userAgent,
     });
+
+    if (actorUserId) {
+      try {
+        const actor = await this.usersService.findById(actorUserId);
+        if (actor && actor.email) {
+          await this.emailService.sendNotification(
+            actor.email,
+            'Employee Export Completed',
+            `Your employee data export (${fileName}) has finished with ${employees.length} records.`,
+          );
+        }
+      } catch {
+        // Notification failure should not fail export
+      }
+    }
 
     return {
       exportId: exportJob.id,

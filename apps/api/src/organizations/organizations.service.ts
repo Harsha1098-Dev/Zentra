@@ -245,6 +245,13 @@ export class OrganizationsService {
     // Mark invitation as accepted
     await this.orgsRepository.updateInvitationStatus(invitation.id, InvitationStatus.ACCEPTED, new Date());
 
+    // Dispatch notification
+    await this.emailService.sendNotification(
+      user.email,
+      'Welcome to Zentra - Invitation Accepted',
+      `Your invitation to join ${invitation.organization.name} has been successfully accepted.`,
+    );
+
     // Audit log invitation acceptance
     await this.auditService.log({
       organizationId: invitation.organizationId,

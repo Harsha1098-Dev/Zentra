@@ -53,6 +53,11 @@ export class EmailService {
     this.sentEmails.push({ to, subject, token, link, content, sentAt: new Date() });
   }
 
+  async sendNotification(to: string, subject: string, content: string): Promise<void> {
+    this.logger.log(`[NOTIFICATION DISPATCH] To: ${to} | Subject: "${subject}"`);
+    this.sentEmails.push({ to, subject, content, sentAt: new Date() });
+  }
+
   getLastEmailFor(email: string): SentEmail | undefined {
     return this.sentEmails
       .filter((e) => e.to.toLowerCase() === email.toLowerCase())
