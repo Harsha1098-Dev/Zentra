@@ -14,6 +14,11 @@ import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
 import { OrganizationSetupModule } from './organization-setup/organization-setup.module';
 import { EmployeesModule } from './employees/employees.module';
+import { DelegationsModule } from './delegations/delegations.module';
+import { TasksModule } from './tasks/tasks.module';
+import { ChecklistsModule } from './checklists/checklists.module';
+import { ApprovalsModule } from './approvals/approvals.module';
+import { WorkflowsModule } from './workflows/workflows.module';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { TenantContextInterceptor } from './common/interceptors/tenant-context.interceptor';
@@ -37,6 +42,11 @@ import { TenantContextInterceptor } from './common/interceptors/tenant-context.i
     HealthModule,
     OrganizationSetupModule,
     EmployeesModule,
+    DelegationsModule,
+    TasksModule,
+    ChecklistsModule,
+    ApprovalsModule,
+    WorkflowsModule,
   ],
   providers: [
     {

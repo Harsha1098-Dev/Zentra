@@ -64,6 +64,40 @@ const BASE_PERMISSIONS: { code: string; name: string; description: string }[] = 
   { code: 'employee.export', name: 'Export Employees', description: 'Export employee dataset to CSV' },
   { code: 'employee.timeline.read', name: 'Read Employee Timeline', description: 'View employee milestone timeline' },
   { code: 'employee.employment_history.read', name: 'Read Employment History', description: 'View complete employment history events' },
+
+  // Workflow Engine Permissions
+  { code: 'workflow.read', name: 'Read Workflows', description: 'View workflow rules and executions' },
+  { code: 'workflow.create', name: 'Create Workflow', description: 'Create new workflow rules' },
+  { code: 'workflow.update', name: 'Update Workflow', description: 'Update workflow rules, triggers, and actions' },
+  { code: 'workflow.delete', name: 'Delete Workflow', description: 'Delete or deactivate workflow rules' },
+  { code: 'workflow.execute', name: 'Execute Workflow', description: 'Trigger workflow execution' },
+  { code: 'workflow.test', name: 'Test Workflow', description: 'Simulate workflow rule against sample payload' },
+
+  // Approval Engine Permissions
+  { code: 'approval.read', name: 'Read Approvals', description: 'View approval requests and inbox' },
+  { code: 'approval.approve', name: 'Approve Request', description: 'Approve an assigned approval step' },
+  { code: 'approval.reject', name: 'Reject Request', description: 'Reject an assigned approval step' },
+  { code: 'approval.delegate', name: 'Delegate Approval', description: 'Delegate approval to another user' },
+  { code: 'approval.reassign', name: 'Reassign Approval', description: 'Reassign approval step to another approver' },
+  { code: 'approval.cancel', name: 'Cancel Approval', description: 'Cancel an initiated approval request' },
+  { code: 'approval.escalate', name: 'Escalate Approval', description: 'Escalate approval step past due date' },
+
+  // Checklist Permissions
+  { code: 'checklist.read', name: 'Read Checklists', description: 'View checklists and checklist runs' },
+  { code: 'checklist.create', name: 'Create Checklist', description: 'Create reusable onboarding/offboarding checklists' },
+  { code: 'checklist.update', name: 'Update Checklist', description: 'Edit checklist and item details' },
+  { code: 'checklist.delete', name: 'Delete Checklist', description: 'Remove checklist template' },
+  { code: 'checklist.execute', name: 'Execute Checklist', description: 'Instantiate a checklist run for an employee' },
+
+  // Task Permissions
+  { code: 'task.read', name: 'Read Tasks', description: 'View assigned or organization tasks' },
+  { code: 'task.create', name: 'Create Task', description: 'Create tasks and assignments' },
+  { code: 'task.update', name: 'Update Task', description: 'Update task details and due date' },
+  { code: 'task.complete', name: 'Complete Task', description: 'Mark task as completed' },
+  { code: 'task.reassign', name: 'Reassign Task', description: 'Reassign task to another user' },
+
+  // Delegation Permissions
+  { code: 'delegation.manage', name: 'Manage Delegations', description: 'Configure approval delegations' },
 ];
 
 const BASE_ROLES = [
@@ -95,19 +129,15 @@ const BASE_ROLES = [
 
 export async function seedDatabase(client: PrismaClient = prisma) {
   console.log('Seeding permissions...');
-  const permissionMap = new Map<string, string>();
+  await client.permission.createMany({
+    data: BASE_PERMISSIONS,
+    skipDuplicates: true,
+  });
 
-  for (const perm of BASE_PERMISSIONS) {
-    const record = await client.permission.upsert({
-      where: { code: perm.code },
-      update: { name: perm.name, description: perm.description },
-      create: {
-        code: perm.code,
-        name: perm.name,
-        description: perm.description,
-      },
-    });
-    permissionMap.set(perm.code, record.id);
+  const allPerms = await client.permission.findMany();
+  const permissionMap = new Map<string, string>();
+  for (const perm of allPerms) {
+    permissionMap.set(perm.code, perm.id);
   }
 
   console.log('Seeding base system roles...');
@@ -140,24 +170,18 @@ export async function seedDatabase(client: PrismaClient = prisma) {
       });
     }
 
-    // Assign permissions to base system role
-    for (const permCode of roleDef.permissions) {
-      const permId = permissionMap.get(permCode);
-      if (permId) {
-        await client.rolePermission.upsert({
-          where: {
-            roleId_permissionId: {
-              roleId: role.id,
-              permissionId: permId,
-            },
-          },
-          update: {},
-          create: {
-            roleId: role.id,
-            permissionId: permId,
-          },
-        });
-      }
+    const rolePermsData = roleDef.permissions
+      .map((permCode) => {
+        const permId = permissionMap.get(permCode);
+        return permId ? { roleId: role.id, permissionId: permId } : null;
+      })
+      .filter((p): p is { roleId: string; permissionId: string } => p !== null);
+
+    if (rolePermsData.length > 0) {
+      await client.rolePermission.createMany({
+        data: rolePermsData,
+        skipDuplicates: true,
+      });
     }
   }
 

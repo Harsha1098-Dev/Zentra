@@ -60,6 +60,13 @@ model Organization {
   employeeCodeSequence    EmployeeCodeSequence?
   employeeImportJobs      EmployeeImportJob[]
   employeeExportJobs      EmployeeExportJob[]
+  workflowRules           WorkflowRule[]
+  workflowExecutions      WorkflowExecution[]
+  approvalFlows           ApprovalFlow[]
+  checklists              Checklist[]
+  checklistRuns           ChecklistRun[]
+  tasks                   Task[]
+  delegations             Delegation[]
 
   @@index([slug])
   @@map("organizations")
@@ -601,4 +608,271 @@ model EmployeeExportJob {
 
   @@index([organizationId])
   @@map("employee_export_jobs")
+}
+
+// ==========================================
+// WORKFLOW & APPROVAL ENGINE MODELS
+// ==========================================
+
+model WorkflowRule {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  name               String
+  description        String?
+  module             String    @default("people")
+  entityType         String    @map("entity_type")
+  triggerEvent       String    @map("trigger_event")
+  conditions         Json      @default("[]")
+  conditionMatchType String    @default("ALL") @map("condition_match_type") // ALL, ANY
+  isActive           Boolean   @default(true) @map("is_active")
+  priority           Int       @default(0)
+  createdBy          String?   @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  actions      WorkflowAction[]
+  executions   WorkflowExecution[]
+
+  @@index([organizationId])
+  @@index([module])
+  @@index([entityType])
+  @@index([triggerEvent])
+  @@index([isActive])
+  @@map("workflow_rules")
+}
+
+model WorkflowAction {
+  id             String   @id @default(uuid())
+  workflowRuleId String   @map("workflow_rule_id")
+  actionType     String   @map("action_type")
+  actionConfig   Json     @map("action_config")
+  executionOrder Int      @default(1) @map("execution_order")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  workflowRule WorkflowRule @relation(fields: [workflowRuleId], references: [id], onDelete: Cascade)
+
+  @@index([workflowRuleId])
+  @@map("workflow_actions")
+}
+
+model WorkflowExecution {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  workflowRuleId String    @map("workflow_rule_id")
+  entityType     String    @map("entity_type")
+  entityId       String    @map("entity_id")
+  triggerEvent   String    @map("trigger_event")
+  status         String    @default("pending") // pending, running, completed, failed, cancelled
+  context        Json?     @default("{}")
+  errorMessage   String?   @map("error_message")
+  startedAt      DateTime? @map("started_at")
+  completedAt    DateTime? @map("completed_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workflowRule WorkflowRule @relation(fields: [workflowRuleId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([workflowRuleId])
+  @@index([entityType, entityId])
+  @@index([status])
+  @@map("workflow_executions")
+}
+
+model ApprovalFlow {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  requestType    String    @map("request_type") // profile_change, etc.
+  entityType     String    @map("entity_type")
+  entityId       String    @map("entity_id")
+  requestedBy    String    @map("requested_by")
+  currentStep    Int       @default(1) @map("current_step")
+  status         String    @default("pending") // draft, pending, approved, rejected, cancelled, expired, escalated
+  initiatedAt    DateTime  @default(now()) @map("initiated_at")
+  completedAt    DateTime? @map("completed_at")
+  metadata       Json?     @default("{}")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  organization Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  steps        ApprovalStep[]
+
+  @@index([organizationId])
+  @@index([requestType])
+  @@index([entityType, entityId])
+  @@index([requestedBy])
+  @@index([status])
+  @@map("approval_flows")
+}
+
+model ApprovalStep {
+  id             String    @id @default(uuid())
+  approvalFlowId String    @map("approval_flow_id")
+  stepOrder      Int       @map("step_order")
+  stepName       String    @map("step_name")
+  approverType   String    @map("approver_type") // reporting_manager, department_head, specific_user, etc.
+  approverId     String?   @map("approver_id")
+  approverRole   String?   @map("approver_role")
+  status         String    @default("waiting") // pending, approved, rejected, skipped, waiting
+  decision       String?
+  comments       String?
+  decidedBy      String?   @map("decided_by")
+  decidedAt      DateTime? @map("decided_at")
+  dueDate        DateTime? @map("due_date")
+  escalatedAt    DateTime? @map("escalated_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  approvalFlow ApprovalFlow @relation(fields: [approvalFlowId], references: [id], onDelete: Cascade)
+
+  @@index([approvalFlowId])
+  @@index([approverId])
+  @@index([status])
+  @@index([dueDate])
+  @@map("approval_steps")
+}
+
+model Checklist {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  name           String
+  description    String?
+  module         String    @default("people")
+  entityType     String    @map("entity_type")
+  triggerEvent   String?   @map("trigger_event")
+  isActive       Boolean   @default(true) @map("is_active")
+  createdBy      String?   @map("created_by")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  items        ChecklistItem[]
+  runs         ChecklistRun[]
+
+  @@index([organizationId])
+  @@index([entityType])
+  @@index([isActive])
+  @@map("checklists")
+}
+
+model ChecklistItem {
+  id             String   @id @default(uuid())
+  checklistId    String   @map("checklist_id")
+  title          String
+  description    String?
+  ownerType      String   @default("role") @map("owner_type") // role, user, manager, employee
+  ownerId        String?  @map("owner_id")
+  ownerRole      String?  @map("owner_role")
+  dueOffsetDays  Int      @default(0) @map("due_offset_days")
+  isMandatory    Boolean  @default(true) @map("is_mandatory")
+  executionOrder Int      @default(1) @map("execution_order")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  checklist Checklist          @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+  runItems  ChecklistRunItem[]
+
+  @@index([checklistId])
+  @@map("checklist_items")
+}
+
+model ChecklistRun {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  checklistId    String    @map("checklist_id")
+  entityType     String    @map("entity_type")
+  entityId       String    @map("entity_id")
+  status         String    @default("pending") // pending, in_progress, completed, overdue, cancelled
+  dueDate        DateTime? @map("due_date")
+  createdBy      String?   @map("created_by")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  checklist    Checklist          @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+  items        ChecklistRunItem[]
+
+  @@index([organizationId])
+  @@index([checklistId])
+  @@index([entityType, entityId])
+  @@index([status])
+  @@map("checklist_runs")
+}
+
+model ChecklistRunItem {
+  id              String    @id @default(uuid())
+  checklistRunId  String    @map("checklist_run_id")
+  checklistItemId String?   @map("checklist_item_id")
+  title           String
+  ownerType       String    @map("owner_type")
+  ownerId         String?   @map("owner_id")
+  dueDate         DateTime? @map("due_date")
+  status          String    @default("pending") // pending, in_progress, completed, skipped, overdue
+  completedBy     String?   @map("completed_by")
+  completedAt     DateTime? @map("completed_at")
+  comments        String?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  checklistRun  ChecklistRun   @relation(fields: [checklistRunId], references: [id], onDelete: Cascade)
+  checklistItem ChecklistItem? @relation(fields: [checklistItemId], references: [id], onDelete: SetNull)
+
+  @@index([checklistRunId])
+  @@index([ownerId])
+  @@index([status])
+  @@map("checklist_run_items")
+}
+
+model Task {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  title          String
+  description    String?
+  assignedTo     String?   @map("assigned_to")
+  assignedBy     String?   @map("assigned_by")
+  dueDate        DateTime? @map("due_date")
+  priority       String    @default("medium") // low, medium, high, urgent
+  status         String    @default("pending") // pending, in_progress, completed, cancelled, overdue
+  sourceType     String?   @map("source_type") // workflow, checklist, manual
+  sourceId       String?   @map("source_id")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([assignedTo])
+  @@index([status])
+  @@index([dueDate])
+  @@index([priority])
+  @@map("tasks")
+}
+
+model Delegation {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  delegateFromUserId String    @map("delegate_from_user_id")
+  delegateToUserId   String    @map("delegate_to_user_id")
+  module             String?
+  requestType        String?   @map("request_type")
+  startDate          DateTime  @map("start_date")
+  endDate            DateTime  @map("end_date")
+  status             String    @default("active") // active, expired, cancelled
+  createdBy          String?   @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([delegateFromUserId])
+  @@index([delegateToUserId])
+  @@index([status])
+  @@map("delegations")
 }

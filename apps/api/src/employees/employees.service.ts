@@ -1,10 +1,13 @@
 import {
   Injectable,
+  Inject,
+  forwardRef,
   NotFoundException,
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
 import { EmployeesRepository } from './employees.repository';
+import { ApprovalsService } from '../approvals/approvals.service';
 import { AuditService } from '../audit/audit.service';
 import { EmailService } from '../email/email.service';
 import { UsersService } from '../users/users.service';
@@ -36,6 +39,7 @@ import {
   EmployeeStatus,
   EmploymentEventType,
   RecordStatus,
+  ApproverType,
 } from '@zentra/shared-types';
 import * as crypto from 'crypto';
 
@@ -53,7 +57,47 @@ export class EmployeesService {
     private readonly locationsService: LocationsService,
     private readonly gradesService: GradesService,
     private readonly orgsRepository: OrganizationsRepository,
+    @Inject(forwardRef(() => ApprovalsService))
+    private readonly approvalsService: ApprovalsService,
   ) {}
+
+  async requestProfileChange(
+    userId: string,
+    organizationId: string,
+    requestedChanges: any,
+  ) {
+    const employee = await this.employeesRepo.findByUserId(userId, organizationId);
+    if (!employee) {
+      throw new NotFoundException('Employee record not found for current user');
+    }
+
+    return this.approvalsService.createApprovalFlow({
+      organizationId,
+      requestType: 'profile_change',
+      entityType: 'Employee',
+      entityId: employee.id,
+      requestedBy: userId,
+      steps: [
+        {
+          stepOrder: 1,
+          stepName: 'Reporting Manager Review',
+          approverType: ApproverType.REPORTING_MANAGER,
+        },
+        {
+          stepOrder: 2,
+          stepName: 'HR Admin Final Approval',
+          approverType: ApproverType.SPECIFIC_ROLE,
+          approverRole: 'hr_admin',
+        },
+      ],
+      metadata: {
+        requestedChanges,
+        employeeId: employee.id,
+        employeeName: `${employee.firstName} ${employee.lastName}`,
+      },
+      actorUserId: userId,
+    });
+  }
 
   async createEmployee(
     organizationId: string,

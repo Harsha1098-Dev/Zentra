@@ -245,6 +245,20 @@ export default function DashboardPage() {
             </Link>
 
             <Link
+              href="/approvals/pending"
+              className="hidden md:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
+            >
+              <span>Approvals</span>
+            </Link>
+
+            <Link
+              href="/settings/workflows"
+              className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
+            >
+              <span>Workflows</span>
+            </Link>
+
+            <Link
               href="/settings/organization"
               className="hidden md:inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#E0E7FF] text-[#1E3A8A] hover:bg-indigo-100 rounded-lg text-xs font-semibold border border-indigo-200 transition-colors"
             >

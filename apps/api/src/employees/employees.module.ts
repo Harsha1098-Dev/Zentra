@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { EmployeesController } from './employees.controller';
 import { EmployeesImportController } from './employees-import.controller';
 import { EmployeesExportController } from './employees-export.controller';
@@ -14,6 +14,7 @@ import { MembershipsModule } from '../memberships/memberships.module';
 import { RolesModule } from '../roles/roles.module';
 import { OrganizationsModule } from '../organizations/organizations.module';
 import { OrganizationSetupModule } from '../organization-setup/organization-setup.module';
+import { ApprovalsModule } from '../approvals/approvals.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { OrganizationSetupModule } from '../organization-setup/organization-setu
     RolesModule,
     OrganizationsModule,
     OrganizationSetupModule,
+    forwardRef(() => ApprovalsModule),
   ],
   controllers: [
     EmployeesController,

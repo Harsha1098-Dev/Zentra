@@ -14,6 +14,7 @@ import { DesignationsService } from '../src/organization-setup/designations/desi
 import { LocationsService } from '../src/organization-setup/locations/locations.service';
 import { GradesService } from '../src/organization-setup/grades/grades.service';
 import { OrganizationsRepository } from '../src/organizations/organizations.repository';
+import { ApprovalsService } from '../src/approvals/approvals.service';
 import {
   AuditAction,
   EmployeeStatus,
@@ -130,6 +131,7 @@ describe('Employee Management Module Test Suite', () => {
         { provide: LocationsService, useValue: mockLocationsService },
         { provide: GradesService, useValue: mockGradesService },
         { provide: OrganizationsRepository, useValue: mockOrgsRepo },
+        { provide: ApprovalsService, useValue: { createApprovalFlow: jest.fn() } },
       ],
     }).compile();
 

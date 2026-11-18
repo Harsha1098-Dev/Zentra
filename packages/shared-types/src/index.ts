@@ -186,6 +186,41 @@ export enum PermissionCode {
   EMPLOYEE_EXPORT = 'employee.export',
   EMPLOYEE_TIMELINE_READ = 'employee.timeline.read',
   EMPLOYEE_EMPLOYMENT_HISTORY_READ = 'employee.employment_history.read',
+
+  // Workflow Engine Permissions
+  WORKFLOW_READ = 'workflow.read',
+  WORKFLOW_CREATE = 'workflow.create',
+  WORKFLOW_UPDATE = 'workflow.update',
+  WORKFLOW_DELETE = 'workflow.delete',
+  WORKFLOW_EXECUTE = 'workflow.execute',
+  WORKFLOW_TEST = 'workflow.test',
+
+  // Approval Engine Permissions
+  APPROVAL_READ = 'approval.read',
+  APPROVAL_CREATE = 'approval.create',
+  APPROVAL_APPROVE = 'approval.approve',
+  APPROVAL_REJECT = 'approval.reject',
+  APPROVAL_DELEGATE = 'approval.delegate',
+  APPROVAL_REASSIGN = 'approval.reassign',
+  APPROVAL_CANCEL = 'approval.cancel',
+  APPROVAL_ESCALATE = 'approval.escalate',
+
+  // Checklist Permissions
+  CHECKLIST_READ = 'checklist.read',
+  CHECKLIST_CREATE = 'checklist.create',
+  CHECKLIST_UPDATE = 'checklist.update',
+  CHECKLIST_DELETE = 'checklist.delete',
+  CHECKLIST_EXECUTE = 'checklist.execute',
+
+  // Task Permissions
+  TASK_READ = 'task.read',
+  TASK_CREATE = 'task.create',
+  TASK_UPDATE = 'task.update',
+  TASK_COMPLETE = 'task.complete',
+  TASK_REASSIGN = 'task.reassign',
+
+  // Delegation Permissions
+  DELEGATION_MANAGE = 'delegation.manage',
 }
 
 export enum InvitationStatus {
@@ -254,6 +289,40 @@ export enum AuditAction {
   EMPLOYEE_EXPORT = 'EMPLOYEE_EXPORT',
   EMPLOYEE_DEACTIVATE = 'EMPLOYEE_DEACTIVATE',
   EMPLOYEE_DELETE = 'EMPLOYEE_DELETE',
+
+  // Workflow Engine Audit Actions
+  WORKFLOW_CREATE = 'WORKFLOW_CREATE',
+  WORKFLOW_UPDATE = 'WORKFLOW_UPDATE',
+  WORKFLOW_ACTIVATE = 'WORKFLOW_ACTIVATE',
+  WORKFLOW_DEACTIVATE = 'WORKFLOW_DEACTIVATE',
+  WORKFLOW_EXECUTE = 'WORKFLOW_EXECUTE',
+  WORKFLOW_FAIL = 'WORKFLOW_FAIL',
+  WORKFLOW_DELETE = 'WORKFLOW_DELETE',
+
+  APPROVAL_CREATE = 'APPROVAL_CREATE',
+  APPROVAL_APPROVE = 'APPROVAL_APPROVE',
+  APPROVAL_REJECT = 'APPROVAL_REJECT',
+  APPROVAL_REQUEST_CHANGES = 'APPROVAL_REQUEST_CHANGES',
+  APPROVAL_CANCEL = 'APPROVAL_CANCEL',
+  APPROVAL_DELEGATE = 'APPROVAL_DELEGATE',
+  APPROVAL_REASSIGN = 'APPROVAL_REASSIGN',
+  APPROVAL_ESCALATE = 'APPROVAL_ESCALATE',
+
+  CHECKLIST_CREATE = 'CHECKLIST_CREATE',
+  CHECKLIST_UPDATE = 'CHECKLIST_UPDATE',
+  CHECKLIST_DELETE = 'CHECKLIST_DELETE',
+  CHECKLIST_EXECUTE = 'CHECKLIST_EXECUTE',
+  CHECKLIST_ITEM_COMPLETE = 'CHECKLIST_ITEM_COMPLETE',
+
+  TASK_CREATE = 'TASK_CREATE',
+  TASK_UPDATE = 'TASK_UPDATE',
+  TASK_COMPLETE = 'TASK_COMPLETE',
+  TASK_REASSIGN = 'TASK_REASSIGN',
+  TASK_DELETE = 'TASK_DELETE',
+
+  DELEGATION_CREATE = 'DELEGATION_CREATE',
+  DELEGATION_UPDATE = 'DELEGATION_UPDATE',
+  DELEGATION_CANCEL = 'DELEGATION_CANCEL',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -309,6 +378,32 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.EMPLOYEE_EXPORT,
     PermissionCode.EMPLOYEE_TIMELINE_READ,
     PermissionCode.EMPLOYEE_EMPLOYMENT_HISTORY_READ,
+    // Workflow Permissions for HR_ADMIN
+    PermissionCode.WORKFLOW_READ,
+    PermissionCode.WORKFLOW_CREATE,
+    PermissionCode.WORKFLOW_UPDATE,
+    PermissionCode.WORKFLOW_DELETE,
+    PermissionCode.WORKFLOW_EXECUTE,
+    PermissionCode.WORKFLOW_TEST,
+    PermissionCode.APPROVAL_READ,
+    PermissionCode.APPROVAL_CREATE,
+    PermissionCode.APPROVAL_APPROVE,
+    PermissionCode.APPROVAL_REJECT,
+    PermissionCode.APPROVAL_DELEGATE,
+    PermissionCode.APPROVAL_REASSIGN,
+    PermissionCode.APPROVAL_CANCEL,
+    PermissionCode.APPROVAL_ESCALATE,
+    PermissionCode.CHECKLIST_READ,
+    PermissionCode.CHECKLIST_CREATE,
+    PermissionCode.CHECKLIST_UPDATE,
+    PermissionCode.CHECKLIST_DELETE,
+    PermissionCode.CHECKLIST_EXECUTE,
+    PermissionCode.TASK_READ,
+    PermissionCode.TASK_CREATE,
+    PermissionCode.TASK_UPDATE,
+    PermissionCode.TASK_COMPLETE,
+    PermissionCode.TASK_REASSIGN,
+    PermissionCode.DELEGATION_MANAGE,
   ],
   [RoleCode.MANAGER]: [
     PermissionCode.ORGANIZATION_READ,
@@ -318,6 +413,16 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.ORGANIZATION_CHART_READ,
     PermissionCode.EMPLOYEE_READ_BASIC,
     PermissionCode.EMPLOYEE_TIMELINE_READ,
+    PermissionCode.APPROVAL_READ,
+    PermissionCode.APPROVAL_CREATE,
+    PermissionCode.APPROVAL_APPROVE,
+    PermissionCode.APPROVAL_REJECT,
+    PermissionCode.APPROVAL_DELEGATE,
+    PermissionCode.APPROVAL_CANCEL,
+    PermissionCode.TASK_READ,
+    PermissionCode.TASK_UPDATE,
+    PermissionCode.TASK_COMPLETE,
+    PermissionCode.DELEGATION_MANAGE,
   ],
   [RoleCode.EMPLOYEE]: [
     PermissionCode.ORGANIZATION_READ,
@@ -325,6 +430,9 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.DEPARTMENT_READ,
     PermissionCode.ORGANIZATION_CHART_READ,
     PermissionCode.EMPLOYEE_READ_BASIC,
+    PermissionCode.APPROVAL_READ,
+    PermissionCode.TASK_READ,
+    PermissionCode.TASK_COMPLETE,
   ],
 };
 
@@ -1020,4 +1128,461 @@ export interface ApiResponse<T = unknown> {
     message: string;
     details?: unknown;
   };
+}
+
+// ==========================================
+// WORKFLOW & APPROVAL ENGINE TYPES & SCHEMAS
+// ==========================================
+
+export enum WorkflowTriggerEvent {
+  RECORD_CREATED = 'record_created',
+  RECORD_UPDATED = 'record_updated',
+  FIELD_CHANGED = 'field_changed',
+  RECORD_DELETED = 'record_deleted',
+  APPROVAL_REQUESTED = 'approval_requested',
+  APPROVAL_APPROVED = 'approval_approved',
+  APPROVAL_REJECTED = 'approval_rejected',
+  APPROVAL_CANCELLED = 'approval_cancelled',
+  DATE_REACHED = 'date_reached',
+  MANUAL_TRIGGER = 'manual_trigger',
+}
+
+export enum ConditionMatchType {
+  ALL = 'ALL',
+  ANY = 'ANY',
+}
+
+export enum ConditionOperator {
+  EQUALS = 'equals',
+  NOT_EQUALS = 'not_equals',
+  CONTAINS = 'contains',
+  NOT_CONTAINS = 'not_contains',
+  STARTS_WITH = 'starts_with',
+  ENDS_WITH = 'ends_with',
+  GREATER_THAN = 'greater_than',
+  LESS_THAN = 'less_than',
+  GREATER_THAN_OR_EQUAL = 'greater_than_or_equal',
+  LESS_THAN_OR_EQUAL = 'less_than_or_equal',
+  IN = 'in',
+  NOT_IN = 'not_in',
+  IS_EMPTY = 'is_empty',
+  IS_NOT_EMPTY = 'is_not_empty',
+  IS_TRUE = 'is_true',
+  IS_FALSE = 'is_false',
+}
+
+export enum WorkflowActionType {
+  SEND_NOTIFICATION = 'send_notification',
+  SEND_EMAIL = 'send_email',
+  CREATE_TASK = 'create_task',
+  CREATE_CHECKLIST_RUN = 'create_checklist_run',
+  UPDATE_FIELD = 'update_field',
+  CHANGE_STATUS = 'change_status',
+  CREATE_APPROVAL_FLOW = 'create_approval_flow',
+  ESCALATE_APPROVAL = 'escalate_approval',
+  CALL_WEBHOOK = 'call_webhook',
+  GENERATE_DOCUMENT = 'generate_document',
+  ADD_AUDIT_LOG = 'add_audit_log',
+}
+
+export enum WorkflowExecutionStatus {
+  PENDING = 'pending',
+  RUNNING = 'running',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+  CANCELLED = 'cancelled',
+}
+
+export enum ApprovalStatus {
+  DRAFT = 'draft',
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  CANCELLED = 'cancelled',
+  EXPIRED = 'expired',
+  ESCALATED = 'escalated',
+}
+
+export enum ApprovalStepStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  SKIPPED = 'skipped',
+  WAITING = 'waiting',
+}
+
+export enum ApproverType {
+  REPORTING_MANAGER = 'reporting_manager',
+  DEPARTMENT_HEAD = 'department_head',
+  LOCATION_HEAD = 'location_head',
+  SPECIFIC_USER = 'specific_user',
+  SPECIFIC_ROLE = 'specific_role',
+  EMPLOYEE_SELF = 'employee_self',
+  FORM_FIELD_USER = 'form_field_user',
+  APPROVAL_CHAIN = 'approval_chain',
+}
+
+export enum ApprovalMode {
+  SEQUENTIAL = 'sequential',
+  PARALLEL = 'parallel',
+  ANY_ONE = 'any_one',
+  ALL_APPROVERS = 'all_approvers',
+  AUTO_APPROVAL = 'auto_approval',
+  AUTO_REJECTION = 'auto_rejection',
+}
+
+export enum TaskPriority {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  URGENT = 'urgent',
+}
+
+export enum TaskStatus {
+  PENDING = 'pending',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+  OVERDUE = 'overdue',
+}
+
+export enum ChecklistRunStatus {
+  PENDING = 'pending',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
+  OVERDUE = 'overdue',
+  CANCELLED = 'cancelled',
+}
+
+export enum DelegationStatus {
+  ACTIVE = 'active',
+  EXPIRED = 'expired',
+  CANCELLED = 'cancelled',
+}
+
+// Zod Schemas for Workflows
+export const WorkflowConditionSchema = z.object({
+  field: z.string().min(1, 'Field is required'),
+  operator: z.nativeEnum(ConditionOperator),
+  value: z.any().optional(),
+  value_type: z.string().optional(),
+});
+
+export const WorkflowActionConfigSchema = z.object({
+  actionType: z.nativeEnum(WorkflowActionType),
+  actionConfig: z.record(z.any()),
+  executionOrder: z.number().int().default(1),
+  isActive: z.boolean().default(true),
+});
+
+export const CreateWorkflowRuleSchema = z.object({
+  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100),
+  description: z.string().max(500).optional().nullable(),
+  module: z.string().default('people'),
+  entityType: z.string().min(1, 'Entity type is required'),
+  triggerEvent: z.string().min(1, 'Trigger event is required'),
+  conditions: z.array(z.any()).default([]),
+  conditionMatchType: z.nativeEnum(ConditionMatchType).default(ConditionMatchType.ALL),
+  isActive: z.boolean().default(true),
+  priority: z.number().int().default(0),
+  actions: z.array(WorkflowActionConfigSchema).default([]),
+});
+
+export const UpdateWorkflowRuleSchema = CreateWorkflowRuleSchema.partial();
+
+export const WorkflowQueryFilterSchema = z.object({
+  module: z.string().optional(),
+  entityType: z.string().optional(),
+  triggerEvent: z.string().optional(),
+  isActive: z.preprocess((val) => val === 'true' || val === true, z.boolean()).optional(),
+  search: z.string().optional(),
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(20),
+});
+
+// Zod Schemas for Approvals
+export const ApprovalDecisionSchema = z.object({
+  decision: z.enum(['approve', 'reject', 'request_changes', 'delegate', 'reassign', 'cancel', 'escalate']),
+  comments: z.string().max(1000).optional(),
+  delegateToUserId: z.string().uuid().optional(),
+  reassignToUserId: z.string().uuid().optional(),
+});
+
+export const ApprovalQueryFilterSchema = z.object({
+  status: z.nativeEnum(ApprovalStatus).optional(),
+  requestType: z.string().optional(),
+  entityType: z.string().optional(),
+  scope: z.enum(['awaiting_me', 'my_requests', 'all', 'delegated']).optional(),
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(20),
+});
+
+// Zod Schemas for Checklists
+export const ChecklistItemConfigSchema = z.object({
+  title: z.string().trim().min(2).max(200),
+  description: z.string().max(500).optional().nullable(),
+  ownerType: z.string().default('role'), // role, user, manager, employee
+  ownerId: z.string().optional().nullable(),
+  ownerRole: z.string().optional().nullable(),
+  dueOffsetDays: z.number().int().default(0),
+  isMandatory: z.boolean().default(true),
+  executionOrder: z.number().int().default(1),
+});
+
+export const CreateChecklistSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  description: z.string().max(500).optional().nullable(),
+  module: z.string().default('people'),
+  entityType: z.string().min(1),
+  triggerEvent: z.string().optional().nullable(),
+  isActive: z.boolean().default(true),
+  items: z.array(ChecklistItemConfigSchema).default([]),
+});
+
+export const UpdateChecklistSchema = CreateChecklistSchema.partial();
+
+export const ExecuteChecklistSchema = z.object({
+  entityType: z.string().min(1),
+  entityId: z.string().min(1),
+  dueDate: z.string().optional(),
+});
+
+export const UpdateChecklistRunItemSchema = z.object({
+  status: z.enum(['pending', 'in_progress', 'completed', 'skipped', 'overdue']),
+  comments: z.string().max(1000).optional(),
+});
+
+// Zod Schemas for Tasks
+export const CreateTaskSchema = z.object({
+  title: z.string().trim().min(2).max(200),
+  description: z.string().max(1000).optional().nullable(),
+  assignedTo: z.string().uuid().optional().nullable(),
+  dueDate: z.string().optional().nullable(),
+  priority: z.nativeEnum(TaskPriority).default(TaskPriority.MEDIUM),
+  sourceType: z.string().optional().nullable(),
+  sourceId: z.string().optional().nullable(),
+});
+
+export const UpdateTaskSchema = CreateTaskSchema.partial();
+
+export const ReassignTaskSchema = z.object({
+  assignedTo: z.string().uuid(),
+  comments: z.string().optional(),
+});
+
+export const TaskQueryFilterSchema = z.object({
+  status: z.nativeEnum(TaskStatus).optional(),
+  priority: z.nativeEnum(TaskPriority).optional(),
+  assignedTo: z.string().optional(),
+  sourceType: z.string().optional(),
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(20),
+});
+
+// Zod Schemas for Delegations
+export const CreateDelegationSchema = z.object({
+  delegateToUserId: z.string().uuid(),
+  module: z.string().optional().nullable(),
+  requestType: z.string().optional().nullable(),
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime(),
+});
+
+export const UpdateDelegationSchema = CreateDelegationSchema.partial();
+
+// Type Interfaces
+export type WorkflowConditionInput = z.infer<typeof WorkflowConditionSchema>;
+export type WorkflowActionConfigInput = z.infer<typeof WorkflowActionConfigSchema>;
+export type CreateWorkflowRuleInput = z.infer<typeof CreateWorkflowRuleSchema>;
+export type UpdateWorkflowRuleInput = z.infer<typeof UpdateWorkflowRuleSchema>;
+export type WorkflowQueryFilterInput = z.infer<typeof WorkflowQueryFilterSchema>;
+export type ApprovalDecisionInput = z.infer<typeof ApprovalDecisionSchema>;
+export type ApprovalQueryFilterInput = z.infer<typeof ApprovalQueryFilterSchema>;
+export type CreateChecklistInput = z.infer<typeof CreateChecklistSchema>;
+export type UpdateChecklistInput = z.infer<typeof UpdateChecklistSchema>;
+export type ExecuteChecklistInput = z.infer<typeof ExecuteChecklistSchema>;
+export type UpdateChecklistRunItemInput = z.infer<typeof UpdateChecklistRunItemSchema>;
+export type CreateTaskInput = z.infer<typeof CreateTaskSchema>;
+export type UpdateTaskInput = z.infer<typeof UpdateTaskSchema>;
+export type ReassignTaskInput = z.infer<typeof ReassignTaskSchema>;
+export type TaskQueryFilterInput = z.infer<typeof TaskQueryFilterSchema>;
+export type CreateDelegationInput = z.infer<typeof CreateDelegationSchema>;
+export type UpdateDelegationInput = z.infer<typeof UpdateDelegationSchema>;
+
+// DTOs
+export interface WorkflowRuleDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  module: string;
+  entityType: string;
+  triggerEvent: string;
+  conditions: any[];
+  conditionMatchType: ConditionMatchType;
+  isActive: boolean;
+  priority: number;
+  createdBy?: string | null;
+  actions: WorkflowActionDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkflowActionDto {
+  id: string;
+  workflowRuleId: string;
+  actionType: WorkflowActionType;
+  actionConfig: Record<string, any>;
+  executionOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkflowExecutionDto {
+  id: string;
+  organizationId: string;
+  workflowRuleId: string;
+  entityType: string;
+  entityId: string;
+  triggerEvent: string;
+  status: WorkflowExecutionStatus;
+  context?: Record<string, any> | null;
+  errorMessage?: string | null;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  createdAt: string;
+}
+
+export interface ApprovalStepDto {
+  id: string;
+  approvalFlowId: string;
+  stepOrder: number;
+  stepName: string;
+  approverType: ApproverType;
+  approverId?: string | null;
+  approverRole?: string | null;
+  status: ApprovalStepStatus;
+  decision?: string | null;
+  comments?: string | null;
+  decidedBy?: string | null;
+  decidedAt?: string | null;
+  dueDate?: string | null;
+  escalatedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ApprovalFlowDto {
+  id: string;
+  organizationId: string;
+  requestType: string;
+  entityType: string;
+  entityId: string;
+  requestedBy: string;
+  requesterName?: string;
+  requesterEmail?: string;
+  currentStep: number;
+  status: ApprovalStatus;
+  initiatedAt: string;
+  completedAt?: string | null;
+  metadata?: Record<string, any> | null;
+  steps: ApprovalStepDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChecklistItemDto {
+  id: string;
+  checklistId: string;
+  title: string;
+  description?: string | null;
+  ownerType: string;
+  ownerId?: string | null;
+  ownerRole?: string | null;
+  dueOffsetDays: number;
+  isMandatory: boolean;
+  executionOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChecklistDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  module: string;
+  entityType: string;
+  triggerEvent?: string | null;
+  isActive: boolean;
+  createdBy?: string | null;
+  items: ChecklistItemDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChecklistRunItemDto {
+  id: string;
+  checklistRunId: string;
+  checklistItemId?: string | null;
+  title: string;
+  ownerType: string;
+  ownerId?: string | null;
+  dueDate?: string | null;
+  status: string;
+  completedBy?: string | null;
+  completedAt?: string | null;
+  comments?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChecklistRunDto {
+  id: string;
+  organizationId: string;
+  checklistId: string;
+  checklistName?: string;
+  entityType: string;
+  entityId: string;
+  status: ChecklistRunStatus;
+  dueDate?: string | null;
+  createdBy?: string | null;
+  items: ChecklistRunItemDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TaskDto {
+  id: string;
+  organizationId: string;
+  title: string;
+  description?: string | null;
+  assignedTo?: string | null;
+  assignedToName?: string | null;
+  assignedBy?: string | null;
+  dueDate?: string | null;
+  priority: TaskPriority;
+  status: TaskStatus;
+  sourceType?: string | null;
+  sourceId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DelegationDto {
+  id: string;
+  organizationId: string;
+  delegateFromUserId: string;
+  delegateFromName?: string;
+  delegateToUserId: string;
+  delegateToName?: string;
+  module?: string | null;
+  requestType?: string | null;
+  startDate: string;
+  endDate: string;
+  status: DelegationStatus;
+  createdBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
 }

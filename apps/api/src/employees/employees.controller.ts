@@ -115,6 +115,22 @@ export class EmployeesController {
     );
   }
 
+  @Post('me/profile-change-request')
+  @RequirePermissions(PermissionCode.EMPLOYEE_READ_BASIC)
+  async requestProfileChange(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: any,
+  ) {
+    if (!user.organizationId) {
+      throw new ForbiddenException('No active organization selected');
+    }
+    return this.employeesService.requestProfileChange(
+      user.id,
+      user.organizationId,
+      body,
+    );
+  }
+
   @Get(':id')
   @RequirePermissions(PermissionCode.EMPLOYEE_READ_BASIC)
   async getEmployeeById(
