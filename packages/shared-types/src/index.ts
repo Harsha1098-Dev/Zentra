@@ -43,6 +43,8 @@ export enum RoleCode {
   RECRUITER = 'RECRUITER',
   HIRING_MANAGER = 'HIRING_MANAGER',
   INTERVIEWER = 'INTERVIEWER',
+  HELPDESK_AGENT = 'HELPDESK_AGENT',
+  CATEGORY_ADMIN = 'CATEGORY_ADMIN',
 }
 
 export enum RecordStatus {
@@ -570,6 +572,53 @@ export enum PermissionCode {
 
   RECRUITMENT_REPORT_VIEW = 'recruitment.report.view',
   RECRUITMENT_REPORT_EXPORT = 'recruitment.report.export',
+
+  // HR Helpdesk & Employee Support Permissions
+  HELPDESK_READ = 'helpdesk.read',
+  HELPDESK_MANAGE = 'helpdesk.manage',
+  HELPDESK_CATEGORY_READ = 'helpdesk.category.read',
+  HELPDESK_CATEGORY_CREATE = 'helpdesk.category.create',
+  HELPDESK_CATEGORY_UPDATE = 'helpdesk.category.update',
+  HELPDESK_CATEGORY_DELETE = 'helpdesk.category.delete',
+  HELPDESK_AGENT_READ = 'helpdesk.agent.read',
+  HELPDESK_AGENT_MANAGE = 'helpdesk.agent.manage',
+
+  TICKET_READ = 'ticket.read',
+  TICKET_READ_OWN = 'ticket.read_own',
+  TICKET_READ_TEAM = 'ticket.read_team',
+  TICKET_READ_ALL = 'ticket.read_all',
+  TICKET_CREATE = 'ticket.create',
+  TICKET_CREATE_OWN = 'ticket.create_own',
+  TICKET_CREATE_ALL = 'ticket.create_all',
+  TICKET_UPDATE = 'ticket.update',
+  TICKET_ASSIGN = 'ticket.assign',
+  TICKET_RESOLVE = 'ticket.resolve',
+  TICKET_CLOSE = 'ticket.close',
+  TICKET_REOPEN = 'ticket.reopen',
+  TICKET_CANCEL = 'ticket.cancel',
+  TICKET_NOTE_CREATE = 'ticket.note.create',
+
+  SLA_POLICY_READ = 'sla.policy.read',
+  SLA_POLICY_MANAGE = 'sla.policy.manage',
+  SLA_ESCALATION_MANAGE = 'sla.escalation.manage',
+
+  KNOWLEDGE_BASE_READ = 'knowledge_base.read',
+  KNOWLEDGE_BASE_CREATE = 'knowledge_base.create',
+  KNOWLEDGE_BASE_UPDATE = 'knowledge_base.update',
+  KNOWLEDGE_BASE_PUBLISH = 'knowledge_base.publish',
+  KNOWLEDGE_BASE_ARCHIVE = 'knowledge_base.archive',
+  KNOWLEDGE_BASE_DELETE = 'knowledge_base.delete',
+
+  FAQ_READ = 'faq.read',
+  FAQ_CREATE = 'faq.create',
+  FAQ_UPDATE = 'faq.update',
+  FAQ_DELETE = 'faq.delete',
+
+  TICKET_FEEDBACK_SUBMIT = 'ticket.feedback.submit',
+  TICKET_FEEDBACK_READ = 'ticket.feedback.read',
+
+  HELPDESK_REPORT_VIEW = 'helpdesk.report.view',
+  HELPDESK_REPORT_EXPORT = 'helpdesk.report.export',
 }
 
 export enum InvitationStatus {
@@ -1015,6 +1064,37 @@ export enum AuditAction {
   REFERRAL_CREATE = 'REFERRAL_CREATE',
   REFERRAL_STATUS_UPDATE = 'REFERRAL_STATUS_UPDATE',
   RECRUITMENT_REPORT_EXPORT = 'RECRUITMENT_REPORT_EXPORT',
+
+  // HR Helpdesk & Employee Support Audit Actions
+  HELPDESK_CATEGORY_CREATE = 'HELPDESK_CATEGORY_CREATE',
+  HELPDESK_CATEGORY_UPDATE = 'HELPDESK_CATEGORY_UPDATE',
+  HELPDESK_CATEGORY_DEACTIVATE = 'HELPDESK_CATEGORY_DEACTIVATE',
+  HELPDESK_AGENT_ASSIGN = 'HELPDESK_AGENT_ASSIGN',
+  HELPDESK_AGENT_REMOVE = 'HELPDESK_AGENT_REMOVE',
+  TICKET_CREATE = 'TICKET_CREATE',
+  TICKET_UPDATE = 'TICKET_UPDATE',
+  TICKET_ASSIGN = 'TICKET_ASSIGN',
+  TICKET_STATUS_CHANGE = 'TICKET_STATUS_CHANGE',
+  TICKET_PRIORITY_CHANGE = 'TICKET_PRIORITY_CHANGE',
+  TICKET_RESOLVE = 'TICKET_RESOLVE',
+  TICKET_CLOSE = 'TICKET_CLOSE',
+  TICKET_REOPEN = 'TICKET_REOPEN',
+  TICKET_CANCEL = 'TICKET_CANCEL',
+  TICKET_NOTE_CREATE = 'TICKET_NOTE_CREATE',
+  TICKET_ATTACHMENT_UPLOAD = 'TICKET_ATTACHMENT_UPLOAD',
+  TICKET_ESCALATE = 'TICKET_ESCALATE',
+  SLA_POLICY_CREATE = 'SLA_POLICY_CREATE',
+  SLA_POLICY_UPDATE = 'SLA_POLICY_UPDATE',
+  SLA_ESCALATION_RULE_CREATE = 'SLA_ESCALATION_RULE_CREATE',
+  SLA_BREACH_LOG = 'SLA_BREACH_LOG',
+  KNOWLEDGE_BASE_ARTICLE_CREATE = 'KNOWLEDGE_BASE_ARTICLE_CREATE',
+  KNOWLEDGE_BASE_ARTICLE_UPDATE = 'KNOWLEDGE_BASE_ARTICLE_UPDATE',
+  KNOWLEDGE_BASE_ARTICLE_PUBLISH = 'KNOWLEDGE_BASE_ARTICLE_PUBLISH',
+  KNOWLEDGE_BASE_ARTICLE_ARCHIVE = 'KNOWLEDGE_BASE_ARTICLE_ARCHIVE',
+  FAQ_CREATE = 'FAQ_CREATE',
+  FAQ_UPDATE = 'FAQ_UPDATE',
+  TICKET_FEEDBACK_SUBMIT = 'TICKET_FEEDBACK_SUBMIT',
+  HELPDESK_REPORT_EXPORT = 'HELPDESK_REPORT_EXPORT',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -1393,6 +1473,46 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.REFERRAL_TRACK,
     PermissionCode.RECRUITMENT_REPORT_VIEW,
     PermissionCode.RECRUITMENT_REPORT_EXPORT,
+    // Helpdesk Permissions for HR_ADMIN
+    PermissionCode.HELPDESK_READ,
+    PermissionCode.HELPDESK_MANAGE,
+    PermissionCode.HELPDESK_CATEGORY_READ,
+    PermissionCode.HELPDESK_CATEGORY_CREATE,
+    PermissionCode.HELPDESK_CATEGORY_UPDATE,
+    PermissionCode.HELPDESK_CATEGORY_DELETE,
+    PermissionCode.HELPDESK_AGENT_READ,
+    PermissionCode.HELPDESK_AGENT_MANAGE,
+    PermissionCode.TICKET_READ,
+    PermissionCode.TICKET_READ_OWN,
+    PermissionCode.TICKET_READ_TEAM,
+    PermissionCode.TICKET_READ_ALL,
+    PermissionCode.TICKET_CREATE,
+    PermissionCode.TICKET_CREATE_OWN,
+    PermissionCode.TICKET_CREATE_ALL,
+    PermissionCode.TICKET_UPDATE,
+    PermissionCode.TICKET_ASSIGN,
+    PermissionCode.TICKET_RESOLVE,
+    PermissionCode.TICKET_CLOSE,
+    PermissionCode.TICKET_REOPEN,
+    PermissionCode.TICKET_CANCEL,
+    PermissionCode.TICKET_NOTE_CREATE,
+    PermissionCode.SLA_POLICY_READ,
+    PermissionCode.SLA_POLICY_MANAGE,
+    PermissionCode.SLA_ESCALATION_MANAGE,
+    PermissionCode.KNOWLEDGE_BASE_READ,
+    PermissionCode.KNOWLEDGE_BASE_CREATE,
+    PermissionCode.KNOWLEDGE_BASE_UPDATE,
+    PermissionCode.KNOWLEDGE_BASE_PUBLISH,
+    PermissionCode.KNOWLEDGE_BASE_ARCHIVE,
+    PermissionCode.KNOWLEDGE_BASE_DELETE,
+    PermissionCode.FAQ_READ,
+    PermissionCode.FAQ_CREATE,
+    PermissionCode.FAQ_UPDATE,
+    PermissionCode.FAQ_DELETE,
+    PermissionCode.TICKET_FEEDBACK_SUBMIT,
+    PermissionCode.TICKET_FEEDBACK_READ,
+    PermissionCode.HELPDESK_REPORT_VIEW,
+    PermissionCode.HELPDESK_REPORT_EXPORT,
   ],
   [RoleCode.PAYROLL_ADMIN]: Object.values(PermissionCode),
   [RoleCode.FINANCE]: [
@@ -1549,6 +1669,15 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.OFFER_APPROVE,
     PermissionCode.OFFER_REJECT,
     PermissionCode.RECRUITMENT_REPORT_VIEW,
+    // Helpdesk Permissions for MANAGER
+    PermissionCode.HELPDESK_READ,
+    PermissionCode.TICKET_READ_OWN,
+    PermissionCode.TICKET_READ_TEAM,
+    PermissionCode.TICKET_CREATE_OWN,
+    PermissionCode.TICKET_CREATE_ALL,
+    PermissionCode.KNOWLEDGE_BASE_READ,
+    PermissionCode.FAQ_READ,
+    PermissionCode.TICKET_FEEDBACK_SUBMIT,
   ],
   [RoleCode.EMPLOYEE]: [
     PermissionCode.ORGANIZATION_READ,
@@ -1614,6 +1743,13 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.REFERRAL_READ,
     PermissionCode.REFERRAL_CREATE,
     PermissionCode.REFERRAL_TRACK,
+    // Helpdesk Permissions for EMPLOYEE
+    PermissionCode.HELPDESK_READ,
+    PermissionCode.TICKET_READ_OWN,
+    PermissionCode.TICKET_CREATE_OWN,
+    PermissionCode.KNOWLEDGE_BASE_READ,
+    PermissionCode.FAQ_READ,
+    PermissionCode.TICKET_FEEDBACK_SUBMIT,
   ],
   [RoleCode.RECRUITER]: [
     PermissionCode.ORGANIZATION_READ,
@@ -1682,6 +1818,69 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.EMPLOYEE_READ_BASIC,
     PermissionCode.INTERVIEW_READ,
     PermissionCode.INTERVIEW_FEEDBACK_SUBMIT,
+  ],
+  [RoleCode.HELPDESK_AGENT]: [
+    PermissionCode.ORGANIZATION_READ,
+    PermissionCode.PRODUCT_READ,
+    PermissionCode.DEPARTMENT_READ,
+    PermissionCode.EMPLOYEE_READ_BASIC,
+    PermissionCode.HELPDESK_READ,
+    PermissionCode.HELPDESK_CATEGORY_READ,
+    PermissionCode.HELPDESK_AGENT_READ,
+    PermissionCode.TICKET_READ,
+    PermissionCode.TICKET_READ_TEAM,
+    PermissionCode.TICKET_READ_ALL,
+    PermissionCode.TICKET_CREATE_OWN,
+    PermissionCode.TICKET_UPDATE,
+    PermissionCode.TICKET_ASSIGN,
+    PermissionCode.TICKET_RESOLVE,
+    PermissionCode.TICKET_CLOSE,
+    PermissionCode.TICKET_REOPEN,
+    PermissionCode.TICKET_NOTE_CREATE,
+    PermissionCode.KNOWLEDGE_BASE_READ,
+    PermissionCode.KNOWLEDGE_BASE_CREATE,
+    PermissionCode.KNOWLEDGE_BASE_UPDATE,
+    PermissionCode.FAQ_READ,
+    PermissionCode.FAQ_CREATE,
+    PermissionCode.FAQ_UPDATE,
+    PermissionCode.TICKET_FEEDBACK_READ,
+    PermissionCode.HELPDESK_REPORT_VIEW,
+  ],
+  [RoleCode.CATEGORY_ADMIN]: [
+    PermissionCode.ORGANIZATION_READ,
+    PermissionCode.PRODUCT_READ,
+    PermissionCode.DEPARTMENT_READ,
+    PermissionCode.EMPLOYEE_READ_BASIC,
+    PermissionCode.HELPDESK_READ,
+    PermissionCode.HELPDESK_MANAGE,
+    PermissionCode.HELPDESK_CATEGORY_READ,
+    PermissionCode.HELPDESK_CATEGORY_CREATE,
+    PermissionCode.HELPDESK_CATEGORY_UPDATE,
+    PermissionCode.HELPDESK_AGENT_READ,
+    PermissionCode.HELPDESK_AGENT_MANAGE,
+    PermissionCode.TICKET_READ,
+    PermissionCode.TICKET_READ_ALL,
+    PermissionCode.TICKET_CREATE_ALL,
+    PermissionCode.TICKET_UPDATE,
+    PermissionCode.TICKET_ASSIGN,
+    PermissionCode.TICKET_RESOLVE,
+    PermissionCode.TICKET_CLOSE,
+    PermissionCode.TICKET_REOPEN,
+    PermissionCode.TICKET_CANCEL,
+    PermissionCode.TICKET_NOTE_CREATE,
+    PermissionCode.SLA_POLICY_READ,
+    PermissionCode.SLA_POLICY_MANAGE,
+    PermissionCode.SLA_ESCALATION_MANAGE,
+    PermissionCode.KNOWLEDGE_BASE_READ,
+    PermissionCode.KNOWLEDGE_BASE_CREATE,
+    PermissionCode.KNOWLEDGE_BASE_UPDATE,
+    PermissionCode.KNOWLEDGE_BASE_PUBLISH,
+    PermissionCode.FAQ_READ,
+    PermissionCode.FAQ_CREATE,
+    PermissionCode.FAQ_UPDATE,
+    PermissionCode.TICKET_FEEDBACK_READ,
+    PermissionCode.HELPDESK_REPORT_VIEW,
+    PermissionCode.HELPDESK_REPORT_EXPORT,
   ],
 };
 
@@ -6979,4 +7178,589 @@ export interface RecruitmentReportSummaryDto {
   pipelineDistribution: { stageName: string; count: number }[];
   sourcesBreakdown: { source: string; count: number }[];
 }
+
+// ==========================================
+// HR HELPDESK & EMPLOYEE SUPPORT MODULE TYPES
+// ==========================================
+
+export enum TicketPriority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  URGENT = 'URGENT',
+  CRITICAL = 'CRITICAL',
+}
+
+export enum TicketStatus {
+  OPEN = 'OPEN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  WAITING_FOR_EMPLOYEE = 'WAITING_FOR_EMPLOYEE',
+  WAITING_FOR_APPROVAL = 'WAITING_FOR_APPROVAL',
+  ESCALATED = 'ESCALATED',
+  ON_HOLD = 'ON_HOLD',
+  RESOLVED = 'RESOLVED',
+  CLOSED = 'CLOSED',
+  REOPENED = 'REOPENED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum TicketSource {
+  PORTAL = 'PORTAL',
+  EMAIL = 'EMAIL',
+  ADMIN = 'ADMIN',
+  SYSTEM = 'SYSTEM',
+}
+
+export enum DefaultAssigneeType {
+  AGENT = 'AGENT',
+  ROUND_ROBIN = 'ROUND_ROBIN',
+  TEAM_LEAD = 'TEAM_LEAD',
+}
+
+export enum AgentType {
+  PRIMARY = 'PRIMARY',
+  BACKUP = 'BACKUP',
+  SPECIALIST = 'SPECIALIST',
+}
+
+export enum AgentLevel {
+  TIER_1 = 'TIER_1',
+  TIER_2 = 'TIER_2',
+  TIER_3 = 'TIER_3',
+  LEAD = 'LEAD',
+}
+
+export enum EscalationLevel {
+  LEVEL_1 = 'LEVEL_1',
+  LEVEL_2 = 'LEVEL_2',
+  LEVEL_3 = 'LEVEL_3',
+  LEVEL_4 = 'LEVEL_4',
+}
+
+export enum EscalationStatus {
+  NOT_ESCALATED = 'NOT_ESCALATED',
+  ESCALATED = 'ESCALATED',
+  BREACHED = 'BREACHED',
+}
+
+export enum EscalationType {
+  RESPONSE_BREACH = 'RESPONSE_BREACH',
+  RESOLUTION_BREACH = 'RESOLUTION_BREACH',
+}
+
+export enum EscalateToType {
+  AGENT = 'AGENT',
+  MANAGER = 'MANAGER',
+  ROLE = 'ROLE',
+}
+
+export enum ArticleStatus {
+  DRAFT = 'DRAFT',
+  IN_REVIEW = 'IN_REVIEW',
+  PUBLISHED = 'PUBLISHED',
+  ARCHIVED = 'ARCHIVED',
+}
+
+export enum KnowledgeBaseVisibility {
+  ALL = 'ALL',
+  DEPARTMENT = 'DEPARTMENT',
+  LOCATION = 'LOCATION',
+  ROLE = 'ROLE',
+  AGENTS_ONLY = 'AGENTS_ONLY',
+}
+
+export enum TicketConversationAuthorType {
+  EMPLOYEE = 'EMPLOYEE',
+  AGENT = 'AGENT',
+  SYSTEM = 'SYSTEM',
+}
+
+export enum TicketMessageType {
+  REPLY = 'REPLY',
+  NOTE = 'NOTE',
+  STATUS_CHANGE = 'STATUS_CHANGE',
+}
+
+// Schemas
+
+export const CreateHelpdeskCategorySchema = z.object({
+  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100),
+  categoryCode: z.string().trim().min(2).max(50).toUpperCase(),
+  description: z.string().trim().optional().nullable(),
+  parentCategoryId: z.string().uuid().optional().nullable(),
+  icon: z.string().optional().nullable(),
+  color: z.string().optional().nullable(),
+  isActive: z.boolean().default(true),
+  requiresApproval: z.boolean().default(false),
+  defaultAssigneeType: z.nativeEnum(DefaultAssigneeType).default(DefaultAssigneeType.ROUND_ROBIN),
+  defaultAssigneeId: z.string().uuid().optional().nullable(),
+  defaultPriority: z.nativeEnum(TicketPriority).default(TicketPriority.MEDIUM),
+  slaPolicyId: z.string().uuid().optional().nullable(),
+});
+
+export const UpdateHelpdeskCategorySchema = CreateHelpdeskCategorySchema.partial();
+
+export const CreateHelpdeskSubCategorySchema = z.object({
+  helpdeskCategoryId: z.string().uuid(),
+  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100),
+  subCategoryCode: z.string().trim().min(2).max(50).toUpperCase(),
+  description: z.string().trim().optional().nullable(),
+  isActive: z.boolean().default(true),
+  defaultAssigneeType: z.nativeEnum(DefaultAssigneeType).default(DefaultAssigneeType.ROUND_ROBIN),
+  defaultAssigneeId: z.string().uuid().optional().nullable(),
+  defaultPriority: z.nativeEnum(TicketPriority).default(TicketPriority.MEDIUM),
+  slaPolicyId: z.string().uuid().optional().nullable(),
+});
+
+export const UpdateHelpdeskSubCategorySchema = CreateHelpdeskSubCategorySchema.partial();
+
+export const CreateHelpdeskAgentSchema = z.object({
+  userId: z.string().uuid(),
+  agentType: z.nativeEnum(AgentType).default(AgentType.PRIMARY),
+  agentLevel: z.nativeEnum(AgentLevel).default(AgentLevel.TIER_1),
+  isActive: z.boolean().default(true),
+  categoryIds: z.array(z.string().uuid()).optional().default([]),
+});
+
+export const UpdateHelpdeskAgentSchema = CreateHelpdeskAgentSchema.partial();
+
+export const CreateTicketSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  helpdeskCategoryId: z.string().uuid(),
+  helpdeskSubCategoryId: z.string().uuid().optional().nullable(),
+  subject: z.string().trim().min(3, 'Subject must be at least 3 characters').max(200),
+  description: z.string().trim().min(5, 'Description must be at least 5 characters'),
+  priority: z.nativeEnum(TicketPriority).default(TicketPriority.MEDIUM),
+  attachments: z
+    .array(
+      z.object({
+        fileName: z.string(),
+        fileUrl: z.string(),
+        fileType: z.string(),
+        fileSize: z.number(),
+      }),
+    )
+    .optional(),
+});
+
+export const UpdateTicketSchema = z.object({
+  priority: z.nativeEnum(TicketPriority).optional(),
+  assignedAgentId: z.string().uuid().optional().nullable(),
+  assignedTeamId: z.string().uuid().optional().nullable(),
+  ticketStatus: z.nativeEnum(TicketStatus).optional(),
+  escalationLevel: z.nativeEnum(EscalationLevel).optional(),
+  comment: z.string().optional(),
+});
+
+export const CreateTicketConversationSchema = z.object({
+  message: z.string().trim().min(1, 'Message is required'),
+  messageType: z.nativeEnum(TicketMessageType).default(TicketMessageType.REPLY),
+  isInternal: z.boolean().default(false),
+  attachments: z
+    .array(
+      z.object({
+        fileName: z.string(),
+        fileUrl: z.string(),
+        fileType: z.string(),
+        fileSize: z.number(),
+      }),
+    )
+    .optional(),
+});
+
+export const CreateSlaPolicySchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  description: z.string().trim().optional().nullable(),
+  applicableCategories: z.array(z.string()).default([]),
+  applicableSubCategories: z.array(z.string()).default([]),
+  applicablePriorities: z.array(z.nativeEnum(TicketPriority)).default([]),
+  applicableLocations: z.array(z.string()).default([]),
+  applicableDepartments: z.array(z.string()).default([]),
+  responseTimeMinutes: z.number().int().min(1).default(60),
+  resolutionTimeMinutes: z.number().int().min(1).default(1440),
+  businessHoursOnly: z.boolean().default(true),
+  businessHoursStart: z.string().default('09:00'),
+  businessHoursEnd: z.string().default('18:00'),
+  workingDays: z.array(z.string()).default(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY']),
+  holidayCalendarId: z.string().uuid().optional().nullable(),
+  isActive: z.boolean().default(true),
+});
+
+export const UpdateSlaPolicySchema = CreateSlaPolicySchema.partial();
+
+export const CreateSlaEscalationRuleSchema = z.object({
+  slaPolicyId: z.string().uuid(),
+  escalationType: z.nativeEnum(EscalationType).default(EscalationType.RESOLUTION_BREACH),
+  escalationLevel: z.nativeEnum(EscalationLevel).default(EscalationLevel.LEVEL_1),
+  triggerBeforeMinutes: z.number().int().optional().nullable(),
+  triggerAfterMinutes: z.number().int().optional().nullable(),
+  escalateToType: z.nativeEnum(EscalateToType).default(EscalateToType.AGENT),
+  escalateToId: z.string().uuid().optional().nullable(),
+  notifyAgent: z.boolean().default(true),
+  notifyManager: z.boolean().default(true),
+  reassignTicket: z.boolean().default(false),
+  changePriority: z.boolean().default(false),
+  newPriority: z.nativeEnum(TicketPriority).optional().nullable(),
+  isActive: z.boolean().default(true),
+});
+
+export const CreateKnowledgeBaseCategorySchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  categoryCode: z.string().trim().min(2).max(50).toUpperCase(),
+  description: z.string().trim().optional().nullable(),
+  parentCategoryId: z.string().uuid().optional().nullable(),
+  icon: z.string().optional().nullable(),
+  isActive: z.boolean().default(true),
+  visibility: z.nativeEnum(KnowledgeBaseVisibility).default(KnowledgeBaseVisibility.ALL),
+});
+
+export const CreateKnowledgeBaseArticleSchema = z.object({
+  knowledgeBaseCategoryId: z.string().uuid(),
+  title: z.string().trim().min(3).max(200),
+  slug: z.string().trim().min(2).max(250).optional(),
+  summary: z.string().trim().optional().nullable(),
+  content: z.string().min(10, 'Content must be at least 10 characters'),
+  articleStatus: z.nativeEnum(ArticleStatus).default(ArticleStatus.DRAFT),
+  visibility: z.nativeEnum(KnowledgeBaseVisibility).default(KnowledgeBaseVisibility.ALL),
+  tags: z.array(z.string()).default([]),
+});
+
+export const UpdateKnowledgeBaseArticleSchema = CreateKnowledgeBaseArticleSchema.partial();
+
+export const CreateFaqSchema = z.object({
+  question: z.string().trim().min(5).max(300),
+  answer: z.string().trim().min(5),
+  helpdeskCategoryId: z.string().uuid().optional().nullable(),
+  helpdeskSubCategoryId: z.string().uuid().optional().nullable(),
+  tags: z.array(z.string()).default([]),
+  visibility: z.nativeEnum(KnowledgeBaseVisibility).default(KnowledgeBaseVisibility.ALL),
+  status: z.enum(['ACTIVE', 'INACTIVE']).default('ACTIVE'),
+});
+
+export const UpdateFaqSchema = CreateFaqSchema.partial();
+
+export const CreateTicketFeedbackSchema = z.object({
+  rating: z.number().int().min(1).max(5),
+  comment: z.string().trim().max(1000).optional().nullable(),
+});
+
+// DTOs
+
+export interface HelpdeskCategoryDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  categoryCode: string;
+  description?: string | null;
+  parentCategoryId?: string | null;
+  parentCategory?: HelpdeskCategoryDto | null;
+  icon?: string | null;
+  color?: string | null;
+  isActive: boolean;
+  requiresApproval: boolean;
+  defaultAssigneeType: DefaultAssigneeType;
+  defaultAssigneeId?: string | null;
+  defaultPriority: TicketPriority;
+  slaPolicyId?: string | null;
+  subCategories?: HelpdeskSubCategoryDto[];
+  categoryAgents?: HelpdeskCategoryAgentDto[];
+  ticketsCount?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HelpdeskSubCategoryDto {
+  id: string;
+  organizationId: string;
+  helpdeskCategoryId: string;
+  helpdeskCategory?: HelpdeskCategoryDto;
+  name: string;
+  subCategoryCode: string;
+  description?: string | null;
+  isActive: boolean;
+  defaultAssigneeType: DefaultAssigneeType;
+  defaultAssigneeId?: string | null;
+  defaultPriority: TicketPriority;
+  slaPolicyId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HelpdeskAgentDto {
+  id: string;
+  organizationId: string;
+  userId: string;
+  user?: {
+    id: string;
+    email: string;
+    firstName?: string | null;
+    lastName?: string | null;
+  };
+  agentType: AgentType;
+  agentLevel: AgentLevel;
+  isActive: boolean;
+  categoryAgents?: HelpdeskCategoryAgentDto[];
+  activeTicketsCount?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HelpdeskCategoryAgentDto {
+  id: string;
+  organizationId: string;
+  helpdeskCategoryId: string;
+  helpdeskSubCategoryId?: string | null;
+  helpdeskAgentId: string;
+  helpdeskAgent?: HelpdeskAgentDto;
+  isPrimary: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TicketAttachmentDto {
+  id: string;
+  organizationId: string;
+  ticketId: string;
+  ticketConversationId?: string | null;
+  fileName: string;
+  fileUrl: string;
+  fileType: string;
+  fileSize: number;
+  uploadedBy: string;
+  createdAt: string;
+}
+
+export interface TicketConversationDto {
+  id: string;
+  organizationId: string;
+  ticketId: string;
+  authorId: string;
+  author?: {
+    id: string;
+    email: string;
+    firstName?: string | null;
+    lastName?: string | null;
+  };
+  authorType: TicketConversationAuthorType;
+  messageType: TicketMessageType;
+  message: string;
+  isInternal: boolean;
+  attachments?: TicketAttachmentDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TicketStatusHistoryDto {
+  id: string;
+  organizationId: string;
+  ticketId: string;
+  fromStatus?: TicketStatus | null;
+  toStatus: TicketStatus;
+  changedBy: string;
+  changedByUser?: {
+    id: string;
+    email: string;
+    firstName?: string | null;
+    lastName?: string | null;
+  };
+  changedAt: string;
+  comments?: string | null;
+}
+
+export interface TicketAssignmentHistoryDto {
+  id: string;
+  organizationId: string;
+  ticketId: string;
+  fromAgentId?: string | null;
+  toAgentId?: string | null;
+  assignedBy: string;
+  assignedAt: string;
+  comments?: string | null;
+}
+
+export interface TicketFeedbackDto {
+  id: string;
+  organizationId: string;
+  ticketId: string;
+  employeeId: string;
+  rating: number;
+  comment?: string | null;
+  submittedAt: string;
+}
+
+export interface TicketDto {
+  id: string;
+  organizationId: string;
+  ticketNumber: string;
+  employeeId: string;
+  employee?: {
+    id: string;
+    employeeCode: string;
+    firstName: string;
+    lastName: string;
+    workEmail: string;
+    department?: { id: string; name: string } | null;
+  };
+  raisedBy: string;
+  helpdeskCategoryId: string;
+  helpdeskCategory?: HelpdeskCategoryDto;
+  helpdeskSubCategoryId?: string | null;
+  helpdeskSubCategory?: HelpdeskSubCategoryDto | null;
+  subject: string;
+  description: string;
+  priority: TicketPriority;
+  ticketSource: TicketSource;
+  ticketStatus: TicketStatus;
+  assignedAgentId?: string | null;
+  assignedAgent?: HelpdeskAgentDto | null;
+  assignedTeamId?: string | null;
+  slaPolicyId?: string | null;
+  slaResponseDueAt?: string | null;
+  slaResolutionDueAt?: string | null;
+  firstResponseAt?: string | null;
+  resolvedAt?: string | null;
+  resolvedBy?: string | null;
+  closedAt?: string | null;
+  closedBy?: string | null;
+  reopenedAt?: string | null;
+  escalationLevel: EscalationLevel;
+  escalationStatus: EscalationStatus;
+  satisfactionRating?: number | null;
+  satisfactionComment?: string | null;
+  conversations?: TicketConversationDto[];
+  attachments?: TicketAttachmentDto[];
+  statusHistories?: TicketStatusHistoryDto[];
+  assignmentHistories?: TicketAssignmentHistoryDto[];
+  feedback?: TicketFeedbackDto | null;
+  isResponseBreached?: boolean;
+  isResolutionBreached?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SlaEscalationRuleDto {
+  id: string;
+  organizationId: string;
+  slaPolicyId: string;
+  escalationType: EscalationType;
+  escalationLevel: EscalationLevel;
+  triggerBeforeMinutes?: number | null;
+  triggerAfterMinutes?: number | null;
+  escalateToType: EscalateToType;
+  escalateToId?: string | null;
+  notifyAgent: boolean;
+  notifyManager: boolean;
+  reassignTicket: boolean;
+  changePriority: boolean;
+  newPriority?: TicketPriority | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SlaPolicyDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  applicableCategories: string[];
+  applicableSubCategories: string[];
+  applicablePriorities: TicketPriority[];
+  applicableLocations: string[];
+  applicableDepartments: string[];
+  responseTimeMinutes: number;
+  resolutionTimeMinutes: number;
+  businessHoursOnly: boolean;
+  businessHoursStart: string;
+  businessHoursEnd: string;
+  workingDays: string[];
+  holidayCalendarId?: string | null;
+  isActive: boolean;
+  escalationRules?: SlaEscalationRuleDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface KnowledgeBaseCategoryDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  categoryCode: string;
+  description?: string | null;
+  parentCategoryId?: string | null;
+  icon?: string | null;
+  isActive: boolean;
+  visibility: KnowledgeBaseVisibility;
+  articlesCount?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface KnowledgeBaseArticleDto {
+  id: string;
+  organizationId: string;
+  knowledgeBaseCategoryId: string;
+  knowledgeBaseCategory?: KnowledgeBaseCategoryDto;
+  title: string;
+  slug: string;
+  summary?: string | null;
+  content: string;
+  articleStatus: ArticleStatus;
+  visibility: KnowledgeBaseVisibility;
+  authorId: string;
+  author?: {
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+  };
+  publishedAt?: string | null;
+  viewCount: number;
+  helpfulCount: number;
+  notHelpfulCount: number;
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FaqDto {
+  id: string;
+  organizationId: string;
+  question: string;
+  answer: string;
+  helpdeskCategoryId?: string | null;
+  helpdeskCategory?: HelpdeskCategoryDto | null;
+  helpdeskSubCategoryId?: string | null;
+  tags: string[];
+  visibility: KnowledgeBaseVisibility;
+  status: 'ACTIVE' | 'INACTIVE';
+  viewCount: number;
+  helpfulCount: number;
+  notHelpfulCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HelpdeskReportSummaryDto {
+  totalTicketsCount: number;
+  openTicketsCount: number;
+  inProgressTicketsCount: number;
+  resolvedTicketsCount: number;
+  closedTicketsCount: number;
+  slaBreachedCount: number;
+  slaComplianceRate: number;
+  averageResolutionHours: number;
+  averageSatisfactionRating: number;
+  categoryDistribution: { categoryName: string; count: number }[];
+  priorityDistribution: { priority: string; count: number }[];
+  statusDistribution: { status: string; count: number }[];
+}
+
+export interface AgentWorkbenchSummaryDto {
+  assignedToMeCount: number;
+  unassignedCount: number;
+  urgentTicketsCount: number;
+  slaBreachWarningCount: number;
+  resolvedTodayCount: number;
+}
+
 

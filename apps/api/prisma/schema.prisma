@@ -29,6 +29,10 @@ model User {
   headedDepartments       Department[]             @relation("DepartmentHead")
   employees               Employee[]
   authoredRecruitmentNotes RecruitmentNote[]       @relation("RecruitmentNoteAuthor")
+  helpdeskAgents          HelpdeskAgent[]          @relation("HelpdeskAgentUser")
+  ticketConversations     TicketConversation[]     @relation("TicketConversationAuthor")
+  ticketStatusHistories   TicketStatusHistory[]    @relation("TicketStatusChangedBy")
+  knowledgeBaseArticles   KnowledgeBaseArticle[]   @relation("KnowledgeBaseArticleAuthor")
 
   @@index([email])
   @@map("users")
@@ -144,6 +148,21 @@ model Organization {
   candidateDocuments      CandidateDocument[]
   recruitmentNotes        RecruitmentNote[]
   employeeReferrals       EmployeeReferral[]
+  helpdeskCategories      HelpdeskCategory[]
+  helpdeskSubCategories   HelpdeskSubCategory[]
+  helpdeskAgents          HelpdeskAgent[]
+  helpdeskCategoryAgents  HelpdeskCategoryAgent[]
+  tickets                 Ticket[]
+  ticketConversations     TicketConversation[]
+  ticketAttachments       TicketAttachment[]
+  ticketStatusHistories   TicketStatusHistory[]
+  ticketAssignmentHistories TicketAssignmentHistory[]
+  slaPolicies             SlaPolicy[]
+  slaEscalationRules      SlaEscalationRule[]
+  knowledgeBaseCategories KnowledgeBaseCategory[]
+  knowledgeBaseArticles   KnowledgeBaseArticle[]
+  faqs                    Faq[]
+  ticketFeedbacks         TicketFeedback[]
 
   @@index([slug])
   @@map("organizations")
@@ -649,6 +668,8 @@ model Employee {
   givenInterviewFeedbacks InterviewFeedback[]
   approvedOffers          Offer[]             @relation("OfferApprover")
   employeeReferrals       EmployeeReferral[]  @relation("ReferringEmployee")
+  tickets                 Ticket[]            @relation("EmployeeTickets")
+  ticketFeedbacks         TicketFeedback[]    @relation("EmployeeTicketFeedbacks")
 
   @@unique([organizationId, employeeCode])
   @@unique([organizationId, workEmail])
@@ -3588,3 +3609,411 @@ model EmployeeReferral {
   @@index([candidateEmail])
   @@map("employee_referrals")
 }
+
+// ==========================================
+// HR HELPDESK & EMPLOYEE SUPPORT MODELS
+// ==========================================
+
+model HelpdeskCategory {
+  id                  String   @id @default(uuid())
+  organizationId      String   @map("organization_id")
+  name                String
+  categoryCode        String   @map("category_code")
+  description         String?
+  parentCategoryId    String?  @map("parent_category_id")
+  icon                String?
+  color               String?
+  isActive            Boolean  @default(true) @map("is_active")
+  requiresApproval    Boolean  @default(false) @map("requires_approval")
+  defaultAssigneeType String   @default("ROUND_ROBIN") @map("default_assignee_type") // AGENT, ROUND_ROBIN, TEAM_LEAD
+  defaultAssigneeId   String?  @map("default_assignee_id")
+  defaultPriority     String   @default("MEDIUM") @map("default_priority")
+  slaPolicyId         String?  @map("sla_policy_id")
+  createdBy           String?  @map("created_by")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  organization          Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  parentCategory        HelpdeskCategory?       @relation("CategoryHierarchy", fields: [parentCategoryId], references: [id], onDelete: SetNull)
+  subCategories         HelpdeskSubCategory[]
+  subHierarchyCategories HelpdeskCategory[]      @relation("CategoryHierarchy")
+  categoryAgents        HelpdeskCategoryAgent[]
+  tickets               Ticket[]
+  slaPolicy             SlaPolicy?              @relation(fields: [slaPolicyId], references: [id], onDelete: SetNull)
+  faqs                  Faq[]
+
+  @@unique([organizationId, categoryCode])
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("helpdesk_categories")
+}
+
+model HelpdeskSubCategory {
+  id                  String   @id @default(uuid())
+  organizationId      String   @map("organization_id")
+  helpdeskCategoryId  String   @map("helpdesk_category_id")
+  name                String
+  subCategoryCode     String   @map("sub_category_code")
+  description         String?
+  isActive            Boolean  @default(true) @map("is_active")
+  defaultAssigneeType String   @default("ROUND_ROBIN") @map("default_assignee_type")
+  defaultAssigneeId   String?  @map("default_assignee_id")
+  defaultPriority     String   @default("MEDIUM") @map("default_priority")
+  slaPolicyId         String?  @map("sla_policy_id")
+  createdBy           String?  @map("created_by")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  organization       Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  helpdeskCategory   HelpdeskCategory        @relation(fields: [helpdeskCategoryId], references: [id], onDelete: Cascade)
+  tickets            Ticket[]
+  slaPolicy          SlaPolicy?              @relation(fields: [slaPolicyId], references: [id], onDelete: SetNull)
+  categoryAgents     HelpdeskCategoryAgent[]
+  faqs               Faq[]
+
+  @@unique([organizationId, helpdeskCategoryId, subCategoryCode], map: "uq_helpdesk_subcat_code")
+  @@unique([organizationId, helpdeskCategoryId, name], map: "uq_helpdesk_subcat_name")
+  @@index([organizationId])
+  @@index([helpdeskCategoryId])
+  @@map("helpdesk_sub_categories")
+}
+
+model HelpdeskAgent {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  userId         String   @map("user_id")
+  agentType      String   @default("PRIMARY") @map("agent_type") // PRIMARY, BACKUP, SPECIALIST
+  agentLevel     String   @default("TIER_1") @map("agent_level") // TIER_1, TIER_2, TIER_3, LEAD
+  isActive       Boolean  @default(true) @map("is_active")
+  createdBy      String?  @map("created_by")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization    Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user            User                    @relation("HelpdeskAgentUser", fields: [userId], references: [id], onDelete: Cascade)
+  categoryAgents  HelpdeskCategoryAgent[]
+  assignedTickets Ticket[]                @relation("TicketAssignedAgent")
+
+  @@unique([organizationId, userId])
+  @@index([organizationId])
+  @@index([userId])
+  @@map("helpdesk_agents")
+}
+
+model HelpdeskCategoryAgent {
+  id                    String   @id @default(uuid())
+  organizationId        String   @map("organization_id")
+  helpdeskCategoryId    String   @map("helpdesk_category_id")
+  helpdeskSubCategoryId String?  @map("helpdesk_sub_category_id")
+  helpdeskAgentId       String   @map("helpdesk_agent_id")
+  isPrimary             Boolean  @default(false) @map("is_primary")
+  createdBy             String?  @map("created_by")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  organization        Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  helpdeskCategory    HelpdeskCategory     @relation(fields: [helpdeskCategoryId], references: [id], onDelete: Cascade)
+  helpdeskSubCategory HelpdeskSubCategory? @relation(fields: [helpdeskSubCategoryId], references: [id], onDelete: Cascade)
+  helpdeskAgent       HelpdeskAgent        @relation(fields: [helpdeskAgentId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, helpdeskCategoryId, helpdeskSubCategoryId, helpdeskAgentId], map: "uq_helpdesk_category_agent")
+  @@index([organizationId])
+  @@index([helpdeskCategoryId])
+  @@index([helpdeskAgentId])
+  @@map("helpdesk_category_agents")
+}
+
+model Ticket {
+  id                    String    @id @default(uuid())
+  organizationId        String    @map("organization_id")
+  ticketNumber          String    @map("ticket_number")
+  employeeId            String    @map("employee_id")
+  raisedBy              String    @map("raised_by")
+  helpdeskCategoryId    String    @map("helpdesk_category_id")
+  helpdeskSubCategoryId String?   @map("helpdesk_sub_category_id")
+  subject               String
+  description           String
+  priority              String    @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT, CRITICAL
+  ticketSource          String    @default("PORTAL") @map("ticket_source") // PORTAL, EMAIL, ADMIN, SYSTEM
+  ticketStatus          String    @default("OPEN") @map("ticket_status") // OPEN, IN_PROGRESS, WAITING_FOR_EMPLOYEE, WAITING_FOR_APPROVAL, ESCALATED, ON_HOLD, RESOLVED, CLOSED, REOPENED, CANCELLED
+  assignedAgentId       String?   @map("assigned_agent_id")
+  assignedTeamId        String?   @map("assigned_team_id")
+  slaPolicyId           String?   @map("sla_policy_id")
+  slaResponseDueAt      DateTime? @map("sla_response_due_at")
+  slaResolutionDueAt    DateTime? @map("sla_resolution_due_at")
+  firstResponseAt       DateTime? @map("first_response_at")
+  resolvedAt            DateTime? @map("resolved_at")
+  resolvedBy            String?   @map("resolved_by")
+  closedAt              DateTime? @map("closed_at")
+  closedBy              String?   @map("closed_by")
+  reopenedAt            DateTime? @map("reopened_at")
+  escalationLevel       String    @default("LEVEL_1") @map("escalation_level") // LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4
+  escalationStatus      String    @default("NOT_ESCALATED") @map("escalation_status") // NOT_ESCALATED, ESCALATED, BREACHED
+  satisfactionRating    Int?      @map("satisfaction_rating")
+  satisfactionComment   String?   @map("satisfaction_comment")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  organization        Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee            Employee                  @relation("EmployeeTickets", fields: [employeeId], references: [id], onDelete: Cascade)
+  helpdeskCategory    HelpdeskCategory          @relation(fields: [helpdeskCategoryId], references: [id], onDelete: Restrict)
+  helpdeskSubCategory HelpdeskSubCategory?      @relation(fields: [helpdeskSubCategoryId], references: [id], onDelete: SetNull)
+  assignedAgent       HelpdeskAgent?            @relation("TicketAssignedAgent", fields: [assignedAgentId], references: [id], onDelete: SetNull)
+  slaPolicy           SlaPolicy?                @relation(fields: [slaPolicyId], references: [id], onDelete: SetNull)
+  conversations       TicketConversation[]
+  attachments         TicketAttachment[]
+  statusHistories     TicketStatusHistory[]
+  assignmentHistories TicketAssignmentHistory[]
+  feedback            TicketFeedback?
+
+  @@unique([organizationId, ticketNumber])
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([helpdeskCategoryId])
+  @@index([assignedAgentId])
+  @@index([ticketStatus])
+  @@index([priority])
+  @@map("tickets")
+}
+
+model TicketConversation {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  ticketId       String   @map("ticket_id")
+  authorId       String   @map("author_id")
+  authorType     String   @default("EMPLOYEE") @map("author_type") // EMPLOYEE, AGENT, SYSTEM
+  messageType    String   @default("REPLY") @map("message_type") // REPLY, NOTE, STATUS_CHANGE
+  message        String
+  isInternal     Boolean  @default(false) @map("is_internal")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  ticket       Ticket             @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author       User               @relation("TicketConversationAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  attachments  TicketAttachment[]
+
+  @@index([organizationId])
+  @@index([ticketId])
+  @@index([authorId])
+  @@map("ticket_conversations")
+}
+
+model TicketAttachment {
+  id                   String   @id @default(uuid())
+  organizationId       String   @map("organization_id")
+  ticketId             String   @map("ticket_id")
+  ticketConversationId String?  @map("ticket_conversation_id")
+  fileName             String   @map("file_name")
+  fileUrl              String   @map("file_url")
+  fileType             String   @map("file_type")
+  fileSize             Int      @map("file_size")
+  uploadedBy           String   @map("uploaded_by")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  ticket       Ticket              @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  conversation TicketConversation? @relation(fields: [ticketConversationId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([ticketId])
+  @@map("ticket_attachments")
+}
+
+model TicketStatusHistory {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  ticketId       String   @map("ticket_id")
+  fromStatus     String?  @map("from_status")
+  toStatus       String   @map("to_status")
+  changedBy      String   @map("changed_by")
+  changedAt      DateTime @default(now()) @map("changed_at")
+  comments       String?
+
+  organization  Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  ticket        Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  changedByUser User         @relation("TicketStatusChangedBy", fields: [changedBy], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([ticketId])
+  @@map("ticket_status_histories")
+}
+
+model TicketAssignmentHistory {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  ticketId       String   @map("ticket_id")
+  fromAgentId    String?  @map("from_agent_id")
+  toAgentId      String?  @map("to_agent_id")
+  assignedBy     String   @map("assigned_by")
+  assignedAt     DateTime @default(now()) @map("assigned_at")
+  comments       String?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  ticket       Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([ticketId])
+  @@map("ticket_assignment_histories")
+}
+
+model SlaPolicy {
+  id                      String   @id @default(uuid())
+  organizationId          String   @map("organization_id")
+  name                    String
+  description             String?
+  applicableCategories    Json?    @map("applicable_categories")
+  applicableSubCategories Json?    @map("applicable_sub_categories")
+  applicablePriorities    Json?    @map("applicable_priorities")
+  applicableLocations     Json?    @map("applicable_locations")
+  applicableDepartments   Json?    @map("applicable_departments")
+  responseTimeMinutes     Int      @default(60) @map("response_time_minutes")
+  resolutionTimeMinutes   Int      @default(1440) @map("resolution_time_minutes")
+  businessHoursOnly       Boolean  @default(true) @map("business_hours_only")
+  businessHoursStart      String   @default("09:00") @map("business_hours_start")
+  businessHoursEnd        String   @default("18:00") @map("business_hours_end")
+  workingDays             Json?    @map("working_days")
+  holidayCalendarId       String?  @map("holiday_calendar_id")
+  isActive                Boolean  @default(true) @map("is_active")
+  createdBy               String?  @map("created_by")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  organization    Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  categories      HelpdeskCategory[]
+  subCategories   HelpdeskSubCategory[]
+  tickets         Ticket[]
+  escalationRules SlaEscalationRule[]
+
+  @@index([organizationId])
+  @@map("sla_policies")
+}
+
+model SlaEscalationRule {
+  id                   String   @id @default(uuid())
+  organizationId       String   @map("organization_id")
+  slaPolicyId          String   @map("sla_policy_id")
+  escalationType       String   @default("RESOLUTION_BREACH") @map("escalation_type") // RESPONSE_BREACH, RESOLUTION_BREACH
+  escalationLevel      String   @default("LEVEL_1") @map("escalation_level") // LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4
+  triggerBeforeMinutes Int?     @map("trigger_before_minutes")
+  triggerAfterMinutes  Int?     @map("trigger_after_minutes")
+  escalateToType       String   @default("AGENT") @map("escalate_to_type") // AGENT, MANAGER, ROLE
+  escalateToId         String?  @map("escalate_to_id")
+  notifyAgent          Boolean  @default(true) @map("notify_agent")
+  notifyManager        Boolean  @default(true) @map("notify_manager")
+  reassignTicket       Boolean  @default(false) @map("reassign_ticket")
+  changePriority       Boolean  @default(false) @map("change_priority")
+  newPriority          String?  @map("new_priority")
+  isActive             Boolean  @default(true) @map("is_active")
+  createdBy            String?  @map("created_by")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  slaPolicy    SlaPolicy    @relation(fields: [slaPolicyId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([slaPolicyId])
+  @@map("sla_escalation_rules")
+}
+
+model KnowledgeBaseCategory {
+  id               String   @id @default(uuid())
+  organizationId   String   @map("organization_id")
+  name             String
+  categoryCode     String   @map("category_code")
+  description      String?
+  parentCategoryId String?  @map("parent_category_id")
+  icon             String?
+  isActive         Boolean  @default(true) @map("is_active")
+  visibility       String   @default("ALL") // ALL, DEPARTMENT, LOCATION, ROLE, AGENTS_ONLY
+  createdBy        String?  @map("created_by")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  parentCategory KnowledgeBaseCategory?  @relation("KBCategoryHierarchy", fields: [parentCategoryId], references: [id], onDelete: SetNull)
+  subCategories  KnowledgeBaseCategory[] @relation("KBCategoryHierarchy")
+  articles       KnowledgeBaseArticle[]
+
+  @@unique([organizationId, categoryCode])
+  @@index([organizationId])
+  @@map("knowledge_base_categories")
+}
+
+model KnowledgeBaseArticle {
+  id                      String    @id @default(uuid())
+  organizationId          String    @map("organization_id")
+  knowledgeBaseCategoryId String    @map("knowledge_base_category_id")
+  title                   String
+  slug                    String
+  summary                 String?
+  content                 String
+  articleStatus           String    @default("DRAFT") @map("article_status") // DRAFT, IN_REVIEW, PUBLISHED, ARCHIVED
+  visibility              String    @default("ALL") // ALL, DEPARTMENT, LOCATION, ROLE, AGENTS_ONLY
+  authorId                String    @map("author_id")
+  publishedAt             DateTime? @map("published_at")
+  viewCount               Int       @default(0) @map("view_count")
+  helpfulCount            Int       @default(0) @map("helpful_count")
+  notHelpfulCount         Int       @default(0) @map("not_helpful_count")
+  tags                    Json?
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+
+  organization Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  category     KnowledgeBaseCategory @relation(fields: [knowledgeBaseCategoryId], references: [id], onDelete: Cascade)
+  author       User                  @relation("KnowledgeBaseArticleAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, slug])
+  @@index([organizationId])
+  @@index([knowledgeBaseCategoryId])
+  @@index([articleStatus])
+  @@map("knowledge_base_articles")
+}
+
+model Faq {
+  id                    String   @id @default(uuid())
+  organizationId        String   @map("organization_id")
+  question              String
+  answer                String
+  helpdeskCategoryId    String?  @map("helpdesk_category_id")
+  helpdeskSubCategoryId String?  @map("helpdesk_sub_category_id")
+  tags                  Json?
+  visibility            String   @default("ALL") // ALL, DEPARTMENT, LOCATION, ROLE, AGENTS_ONLY
+  status                String   @default("ACTIVE") // ACTIVE, INACTIVE
+  viewCount             Int      @default(0) @map("view_count")
+  helpfulCount          Int      @default(0) @map("helpful_count")
+  notHelpfulCount       Int      @default(0) @map("not_helpful_count")
+  createdBy             String?  @map("created_by")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  organization        Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  helpdeskCategory    HelpdeskCategory?    @relation(fields: [helpdeskCategoryId], references: [id], onDelete: SetNull)
+  helpdeskSubCategory HelpdeskSubCategory? @relation(fields: [helpdeskSubCategoryId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([helpdeskCategoryId])
+  @@map("faqs")
+}
+
+model TicketFeedback {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  ticketId       String   @unique @map("ticket_id")
+  employeeId     String   @map("employee_id")
+  rating         Int
+  comment        String?
+  submittedAt    DateTime @default(now()) @map("submitted_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  ticket       Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  employee     Employee     @relation("EmployeeTicketFeedbacks", fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, ticketId])
+  @@index([organizationId])
+  @@index([ticketId])
+  @@index([employeeId])
+  @@map("ticket_feedbacks")
+}
+
