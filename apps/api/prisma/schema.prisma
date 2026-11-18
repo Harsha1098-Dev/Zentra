@@ -28,6 +28,7 @@ model User {
   sentInvitations         Invitation[]             @relation("UserSentInvitations")
   headedDepartments       Department[]             @relation("DepartmentHead")
   employees               Employee[]
+  authoredRecruitmentNotes RecruitmentNote[]       @relation("RecruitmentNoteAuthor")
 
   @@index([email])
   @@map("users")
@@ -130,6 +131,19 @@ model Organization {
   reviewResponses         ReviewResponse[]
   calibrationSessions     CalibrationSession[]
   calibrationDecisions    CalibrationDecision[]
+  jobOpenings             JobOpening[]
+  jobOpeningStages        JobOpeningStage[]
+  hiringPipelines         HiringPipeline[]
+  hiringPipelineStages    HiringPipelineStage[]
+  candidates              Candidate[]
+  jobApplications         JobApplication[]
+  applicationStageHistories ApplicationStageHistory[]
+  interviews              Interview[]
+  interviewFeedbacks      InterviewFeedback[]
+  offers                  Offer[]
+  candidateDocuments      CandidateDocument[]
+  recruitmentNotes        RecruitmentNote[]
+  employeeReferrals       EmployeeReferral[]
 
   @@index([slug])
   @@map("organizations")
@@ -389,6 +403,8 @@ model Location {
   employees           Employee[]
   employmentHistories EmploymentHistory[]
   calibrationSessions CalibrationSession[]
+  jobOpenings         JobOpening[]
+  offers              Offer[]
 
   @@unique([organizationId, name])
   @@unique([organizationId, code])
@@ -418,6 +434,8 @@ model Department {
   employees           Employee[]
   employmentHistories EmploymentHistory[]
   calibrationSessions CalibrationSession[]
+  jobOpenings         JobOpening[]
+  offers              Offer[]
 
   @@unique([organizationId, name])
   @@unique([organizationId, code])
@@ -470,6 +488,8 @@ model Designation {
   department          Department?         @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   employees           Employee[]
   employmentHistories EmploymentHistory[]
+  jobOpenings         JobOpening[]
+  offers              Offer[]
 
   @@unique([organizationId, name])
   @@unique([organizationId, code])
@@ -621,6 +641,14 @@ model Employee {
   reviewerAppraisals        AppraisalAssignment[] @relation("ReviewerAppraisals")
   deptHeadAppraisals        AppraisalAssignment[] @relation("DeptHeadAppraisals")
   calibrationDecisions      CalibrationDecision[]
+  managedJobOpenings      JobOpening[]        @relation("HiringManager")
+  recruitedJobOpenings    JobOpening[]        @relation("Recruiter")
+  candidateReferrals      Candidate[]         @relation("CandidateReferralEmployee")
+  referredApplications    JobApplication[]    @relation("ApplicationReferralEmployee")
+  hiredApplications       JobApplication[]    @relation("HiredEmployee")
+  givenInterviewFeedbacks InterviewFeedback[]
+  approvedOffers          Offer[]             @relation("OfferApprover")
+  employeeReferrals       EmployeeReferral[]  @relation("ReferringEmployee")
 
   @@unique([organizationId, employeeCode])
   @@unique([organizationId, workEmail])
@@ -3127,4 +3155,436 @@ model CalibrationDecision {
   @@index([calibrationSessionId])
   @@index([employeeId])
   @@map("calibration_decisions")
+}
+
+// ==========================================
+// RECRUITMENT & ATS MODELS
+// ==========================================
+
+model JobOpening {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  title              String
+  jobCode            String    @map("job_code")
+  description        String
+  departmentId       String    @map("department_id")
+  designationId      String    @map("designation_id")
+  locationId         String    @map("location_id")
+  employmentType     String    @default("FULL_TIME") @map("employment_type")
+  workMode           String    @default("HYBRID") @map("work_mode")
+  experienceMinYears Int       @default(0) @map("experience_min_years")
+  experienceMaxYears Int       @default(5) @map("experience_max_years")
+  salaryMin          Float?    @map("salary_min")
+  salaryMax          Float?    @map("salary_max")
+  currency           String    @default("INR")
+  numberOfOpenings   Int       @default(1) @map("number_of_openings")
+  filledOpenings     Int       @default(0) @map("filled_openings")
+  hiringManagerId    String    @map("hiring_manager_id")
+  recruiterId        String?   @map("recruiter_id")
+  pipelineId         String?   @map("pipeline_id")
+  jobStatus          String    @default("DRAFT") @map("job_status") // DRAFT, OPEN, ON_HOLD, CLOSED, CANCELLED
+  publishedStatus    String    @default("NOT_PUBLISHED") @map("published_status") // NOT_PUBLISHED, INTERNAL, EXTERNAL, BOTH
+  externalJobUrl     String?   @map("external_job_url")
+  applicationDeadline DateTime? @map("application_deadline")
+  responsibilities   Json?     @default("[]")
+  requirements       Json?     @default("[]")
+  skills             Json?     @default("[]")
+  benefits           Json?     @default("[]")
+  createdBy          String    @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  organization      Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  department        Department        @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  designation       Designation       @relation(fields: [designationId], references: [id], onDelete: Restrict)
+  location          Location          @relation(fields: [locationId], references: [id], onDelete: Restrict)
+  hiringManager     Employee          @relation("HiringManager", fields: [hiringManagerId], references: [id], onDelete: Restrict)
+  recruiter         Employee?         @relation("Recruiter", fields: [recruiterId], references: [id], onDelete: SetNull)
+  pipeline          HiringPipeline?   @relation(fields: [pipelineId], references: [id], onDelete: SetNull)
+  stages            JobOpeningStage[]
+  applications      JobApplication[]
+  offers            Offer[]
+  referrals         EmployeeReferral[]
+
+  @@unique([organizationId, title])
+  @@unique([organizationId, jobCode])
+  @@index([organizationId])
+  @@index([departmentId])
+  @@index([designationId])
+  @@index([locationId])
+  @@index([hiringManagerId])
+  @@index([recruiterId])
+  @@index([jobStatus])
+  @@index([publishedStatus])
+  @@map("job_openings")
+}
+
+model JobOpeningStage {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  jobOpeningId       String    @map("job_opening_id")
+  stageName          String    @map("stage_name")
+  stageType          String    @map("stage_type")
+  stageOrder         Int       @map("stage_order")
+  isMandatory        Boolean   @default(true) @map("is_mandatory")
+  interviewerIds     Json?     @default("[]") @map("interviewer_ids")
+  assessmentRequired Boolean   @default(false) @map("assessment_required")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  jobOpening   JobOpening   @relation(fields: [jobOpeningId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([jobOpeningId])
+  @@index([stageOrder])
+  @@map("job_opening_stages")
+}
+
+model HiringPipeline {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  name           String
+  description    String?
+  isDefault      Boolean  @default(false) @map("is_default")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  stages       HiringPipelineStage[]
+  jobOpenings  JobOpening[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("hiring_pipelines")
+}
+
+model HiringPipelineStage {
+  id                 String   @id @default(uuid())
+  organizationId     String   @map("organization_id")
+  hiringPipelineId   String   @map("hiring_pipeline_id")
+  stageName          String   @map("stage_name")
+  stageType          String   @map("stage_type")
+  stageOrder         Int      @map("stage_order")
+  isMandatory        Boolean  @default(true) @map("is_mandatory")
+  interviewerIds     Json?    @default("[]") @map("interviewer_ids")
+  assessmentRequired Boolean  @default(false) @map("assessment_required")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  hiringPipeline HiringPipeline @relation(fields: [hiringPipelineId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([hiringPipelineId])
+  @@index([stageOrder])
+  @@map("hiring_pipeline_stages")
+}
+
+model Candidate {
+  id                      String    @id @default(uuid())
+  organizationId          String    @map("organization_id")
+  firstName               String    @map("first_name")
+  lastName                String    @map("last_name")
+  email                   String
+  phone                   String
+  dateOfBirth             DateTime? @map("date_of_birth")
+  gender                  String?
+  currentLocation         String?   @map("current_location")
+  preferredLocation       String?   @map("preferred_location")
+  currentCompany          String?   @map("current_company")
+  currentDesignation      String?   @map("current_designation")
+  totalExperienceYears    Float     @default(0) @map("total_experience_years")
+  relevantExperienceYears Float     @default(0) @map("relevant_experience_years")
+  expectedSalary          Float?    @map("expected_salary")
+  expectedSalaryCurrency  String    @default("INR") @map("expected_salary_currency")
+  noticePeriodDays        Int       @default(30) @map("notice_period_days")
+  resumeUrl               String?   @map("resume_url")
+  linkedinUrl             String?   @map("linkedin_url")
+  portfolioUrl            String?   @map("portfolio_url")
+  sourceType              String    @default("DIRECT") @map("source_type")
+  sourceName              String?   @map("source_name")
+  referralEmployeeId      String?   @map("referral_employee_id")
+  candidateStatus         String    @default("NEW") @map("candidate_status") // NEW, IN_REVIEW, ENGAGED, AVAILABLE, OFFERED, HIRED, REJECTED, BLACKLISTED
+  talentPoolStatus        String    @default("ACTIVE") @map("talent_pool_status")
+  customFields            Json?     @map("custom_fields")
+  createdBy               String    @map("created_by")
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+  deletedAt               DateTime? @map("deleted_at")
+
+  organization     Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  referralEmployee Employee?           @relation("CandidateReferralEmployee", fields: [referralEmployeeId], references: [id], onDelete: SetNull)
+  applications     JobApplication[]
+  interviews       Interview[]
+  feedbacks        InterviewFeedback[]
+  offers           Offer[]
+  documents        CandidateDocument[]
+  notes            RecruitmentNote[]
+  referrals        EmployeeReferral[]
+
+  @@unique([organizationId, email])
+  @@index([organizationId])
+  @@index([email])
+  @@index([candidateStatus])
+  @@index([talentPoolStatus])
+  @@map("candidates")
+}
+
+model JobApplication {
+  id                 String    @id @default(uuid())
+  organizationId     String    @map("organization_id")
+  jobOpeningId       String    @map("job_opening_id")
+  candidateId        String    @map("candidate_id")
+  applicationStatus  String    @default("APPLIED") @map("application_status") // APPLIED, SCREENING, INTERVIEWING, OFFERED, HIRED, REJECTED, WITHDRAWN, ON_HOLD
+  currentStageId     String    @map("current_stage_id")
+  currentStageName   String    @map("current_stage_name")
+  appliedAt          DateTime  @default(now()) @map("applied_at")
+  sourceType         String    @default("DIRECT") @map("source_type")
+  sourceName         String?   @map("source_name")
+  referralEmployeeId String?   @map("referral_employee_id")
+  resumeUrl          String?   @map("resume_url")
+  coverLetterUrl     String?   @map("cover_letter_url")
+  screeningScore     Float?    @map("screening_score")
+  screeningNotes     String?   @map("screening_notes")
+  rejectionReason    String?   @map("rejection_reason")
+  offerId            String?   @unique @map("offer_id")
+  hiredEmployeeId    String?   @map("hired_employee_id")
+  createdBy          String    @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  organization     Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  jobOpening       JobOpening                @relation(fields: [jobOpeningId], references: [id], onDelete: Cascade)
+  candidate        Candidate                 @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  referralEmployee Employee?                 @relation("ApplicationReferralEmployee", fields: [referralEmployeeId], references: [id], onDelete: SetNull)
+  hiredEmployee    Employee?                 @relation("HiredEmployee", fields: [hiredEmployeeId], references: [id], onDelete: SetNull)
+  stageHistory     ApplicationStageHistory[]
+  interviews       Interview[]
+  feedbacks        InterviewFeedback[]
+  offer            Offer?                    @relation("ApplicationOffer")
+  documents        CandidateDocument[]
+  notes            RecruitmentNote[]
+
+  @@unique([organizationId, jobOpeningId, candidateId])
+  @@index([organizationId])
+  @@index([jobOpeningId])
+  @@index([candidateId])
+  @@index([applicationStatus])
+  @@index([currentStageId])
+  @@map("job_applications")
+}
+
+model ApplicationStageHistory {
+  id               String   @id @default(uuid())
+  organizationId   String   @map("organization_id")
+  jobApplicationId String   @map("job_application_id")
+  fromStageId      String?  @map("from_stage_id")
+  toStageId        String   @map("to_stage_id")
+  fromStageName    String?  @map("from_stage_name")
+  toStageName      String   @map("to_stage_name")
+  changedBy        String   @map("changed_by")
+  changedAt        DateTime @default(now()) @map("changed_at")
+  comments         String?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  jobApplication JobApplication @relation(fields: [jobApplicationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([jobApplicationId])
+  @@map("application_stage_histories")
+}
+
+model Interview {
+  id               String   @id @default(uuid())
+  organizationId   String   @map("organization_id")
+  jobApplicationId String   @map("job_application_id")
+  candidateId      String   @map("candidate_id")
+  interviewRound   Int      @default(1) @map("interview_round")
+  interviewType    String   @default("TECHNICAL_INTERVIEW") @map("interview_type")
+  interviewMode    String   @default("VIDEO") @map("interview_mode")
+  interviewDate    DateTime @map("interview_date")
+  startTime        String   @map("start_time")
+  endTime          String   @map("end_time")
+  timezone         String   @default("Asia/Kolkata")
+  interviewerIds   Json     @default("[]") @map("interviewer_ids")
+  meetingLink      String?  @map("meeting_link")
+  location         String?
+  status           String   @default("SCHEDULED") // SCHEDULED, RESCHEDULED, COMPLETED, CANCELLED, NO_SHOW
+  feedbackStatus   String   @default("PENDING") @map("feedback_status") // PENDING, SUBMITTED
+  createdBy        String   @map("created_by")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  jobApplication JobApplication      @relation(fields: [jobApplicationId], references: [id], onDelete: Cascade)
+  candidate      Candidate           @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  feedbacks      InterviewFeedback[]
+
+  @@index([organizationId])
+  @@index([jobApplicationId])
+  @@index([candidateId])
+  @@index([interviewDate])
+  @@index([status])
+  @@map("interviews")
+}
+
+model InterviewFeedback {
+  id                  String   @id @default(uuid())
+  organizationId      String   @map("organization_id")
+  interviewId         String   @map("interview_id")
+  interviewerId       String   @map("interviewer_id")
+  candidateId         String   @map("candidate_id")
+  jobApplicationId    String   @map("job_application_id")
+  recommendation      String   // STRONG_HIRE, HIRE, MAYBE, NO_HIRE, STRONG_NO_HIRE
+  technicalRating     Int      @map("technical_rating")
+  communicationRating Int      @map("communication_rating")
+  cultureFitRating    Int      @map("culture_fit_rating")
+  overallRating       Int      @map("overall_rating")
+  strengths           String?
+  weaknesses          String?
+  comments            String
+  submittedAt         DateTime @default(now()) @map("submitted_at")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  interview      Interview      @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  interviewer    Employee       @relation(fields: [interviewerId], references: [id], onDelete: Cascade)
+  candidate      Candidate      @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  jobApplication JobApplication @relation(fields: [jobApplicationId], references: [id], onDelete: Cascade)
+
+  @@unique([interviewId, interviewerId])
+  @@index([organizationId])
+  @@index([interviewId])
+  @@index([interviewerId])
+  @@index([candidateId])
+  @@map("interview_feedbacks")
+}
+
+model Offer {
+  id                    String    @id @default(uuid())
+  organizationId        String    @map("organization_id")
+  jobApplicationId      String    @unique @map("job_application_id")
+  candidateId           String    @map("candidate_id")
+  jobOpeningId          String    @map("job_opening_id")
+  offerDate             DateTime  @default(now()) @map("offer_date")
+  joiningDate           DateTime  @map("joining_date")
+  designationId         String    @map("designation_id")
+  departmentId          String    @map("department_id")
+  locationId            String    @map("location_id")
+  employmentType        String    @default("FULL_TIME") @map("employment_type")
+  workMode              String    @default("HYBRID") @map("work_mode")
+  annualCtc             Float     @map("annual_ctc")
+  monthlyCtc            Float     @map("monthly_ctc")
+  currency              String    @default("INR")
+  salaryStructureId     String?   @map("salary_structure_id")
+  offerStatus           String    @default("DRAFT") @map("offer_status") // DRAFT, PENDING_APPROVAL, APPROVED, SENT, ACCEPTED, REJECTED, EXPIRED, WITHDRAWN, CANCELLED
+  offerLetterUrl        String?   @map("offer_letter_url")
+  offerLetterTemplateId String?   @map("offer_letter_template_id")
+  approvalFlowId        String?   @map("approval_flow_id")
+  approvedBy            String?   @map("approved_by")
+  approvedAt            DateTime? @map("approved_at")
+  sentAt                DateTime? @map("sent_at")
+  acceptedAt            DateTime? @map("accepted_at")
+  rejectedAt            DateTime? @map("rejected_at")
+  rejectionReason       String?   @map("rejection_reason")
+  expiryDate            DateTime  @map("expiry_date")
+  createdBy             String    @map("created_by")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  deletedAt             DateTime? @map("deleted_at")
+
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  jobApplication JobApplication @relation("ApplicationOffer", fields: [jobApplicationId], references: [id], onDelete: Cascade)
+  candidate      Candidate      @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  jobOpening     JobOpening     @relation(fields: [jobOpeningId], references: [id], onDelete: Cascade)
+  designation    Designation    @relation(fields: [designationId], references: [id], onDelete: Restrict)
+  department     Department     @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  location       Location       @relation(fields: [locationId], references: [id], onDelete: Restrict)
+  approver       Employee?      @relation("OfferApprover", fields: [approvedBy], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([jobApplicationId])
+  @@index([candidateId])
+  @@index([jobOpeningId])
+  @@index([offerStatus])
+  @@map("offers")
+}
+
+model CandidateDocument {
+  id               String   @id @default(uuid())
+  organizationId   String   @map("organization_id")
+  candidateId      String   @map("candidate_id")
+  jobApplicationId String?  @map("job_application_id")
+  documentType     String   @map("document_type")
+  documentName     String   @map("document_name")
+  fileUrl          String   @map("file_url")
+  fileType         String   @map("file_type")
+  fileSize         Int      @map("file_size")
+  uploadedBy       String   @map("uploaded_by")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  candidate      Candidate       @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  jobApplication JobApplication? @relation(fields: [jobApplicationId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([candidateId])
+  @@map("candidate_documents")
+}
+
+model RecruitmentNote {
+  id               String   @id @default(uuid())
+  organizationId   String   @map("organization_id")
+  jobApplicationId String?  @map("job_application_id")
+  candidateId      String   @map("candidate_id")
+  authorId         String   @map("author_id")
+  noteType         String   @default("GENERAL") @map("note_type")
+  note             String
+  isInternal       Boolean  @default(true) @map("is_internal")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  jobApplication JobApplication? @relation(fields: [jobApplicationId], references: [id], onDelete: SetNull)
+  candidate      Candidate       @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  author         User            @relation("RecruitmentNoteAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([candidateId])
+  @@index([jobApplicationId])
+  @@map("recruitment_notes")
+}
+
+model EmployeeReferral {
+  id                  String   @id @default(uuid())
+  organizationId      String   @map("organization_id")
+  referringEmployeeId String   @map("referring_employee_id")
+  jobOpeningId        String   @map("job_opening_id")
+  candidateName       String   @map("candidate_name")
+  candidateEmail      String   @map("candidate_email")
+  candidatePhone      String   @map("candidate_phone")
+  resumeUrl           String?  @map("resume_url")
+  relationship        String?
+  notes               String?
+  candidateId         String?  @map("candidate_id")
+  status              String   @default("SUBMITTED") // SUBMITTED, IN_REVIEW, INTERVIEWING, OFFERED, HIRED, REJECTED
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  referringEmployee Employee     @relation("ReferringEmployee", fields: [referringEmployeeId], references: [id], onDelete: Cascade)
+  jobOpening        JobOpening   @relation(fields: [jobOpeningId], references: [id], onDelete: Cascade)
+  candidate         Candidate?   @relation(fields: [candidateId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([referringEmployeeId])
+  @@index([jobOpeningId])
+  @@index([candidateEmail])
+  @@map("employee_referrals")
 }

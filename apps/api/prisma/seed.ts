@@ -386,6 +386,60 @@ const BASE_PERMISSIONS: { code: string; name: string; description: string }[] = 
 
   { code: 'performance.report.view', name: 'View Performance Reports', description: 'View performance analytics dashboards' },
   { code: 'performance.report.export', name: 'Export Performance Reports', description: 'Export performance data to CSV' },
+
+  // Recruitment Permissions
+  { code: 'recruitment.read', name: 'Read Recruitment', description: 'View recruitment dashboard and data' },
+  { code: 'recruitment.read_own', name: 'Read Own Recruitment', description: 'View own recruitment referrals and applications' },
+  { code: 'recruitment.read_team', name: 'Read Team Recruitment', description: 'View hiring manager team recruitment pipeline' },
+  { code: 'recruitment.read_all', name: 'Read All Recruitment', description: 'Full access to organization recruitment pipeline' },
+
+  { code: 'job_opening.read', name: 'Read Job Openings', description: 'View job openings' },
+  { code: 'job_opening.create', name: 'Create Job Opening', description: 'Create new job requisition' },
+  { code: 'job_opening.update', name: 'Update Job Opening', description: 'Update job details and requirements' },
+  { code: 'job_opening.delete', name: 'Delete Job Opening', description: 'Delete or archive job opening' },
+  { code: 'job_opening.publish', name: 'Publish Job Opening', description: 'Publish job internally or externally' },
+  { code: 'job_opening.close', name: 'Close Job Opening', description: 'Close job opening' },
+
+  { code: 'candidate.read', name: 'Read Candidates', description: 'View candidates' },
+  { code: 'candidate.create', name: 'Create Candidate', description: 'Add new candidate to database' },
+  { code: 'candidate.update', name: 'Update Candidate', description: 'Edit candidate profile and contact details' },
+  { code: 'candidate.delete', name: 'Delete Candidate', description: 'Delete candidate record' },
+  { code: 'candidate.resume.upload', name: 'Upload Resume', description: 'Upload candidate resume' },
+  { code: 'candidate.document.upload', name: 'Upload Candidate Document', description: 'Upload candidate documents' },
+  { code: 'candidate.note.create', name: 'Create Candidate Note', description: 'Add internal recruitment notes' },
+
+  { code: 'application.read', name: 'Read Applications', description: 'View job applications' },
+  { code: 'application.create', name: 'Create Application', description: 'Apply for job or create application' },
+  { code: 'application.update', name: 'Update Application', description: 'Update application details' },
+  { code: 'application.stage.change', name: 'Change Application Stage', description: 'Move candidate through hiring stages' },
+  { code: 'application.screen', name: 'Screen Application', description: 'Submit screening score and notes' },
+  { code: 'application.reject', name: 'Reject Application', description: 'Reject candidate application' },
+  { code: 'application.hire', name: 'Hire Application', description: 'Mark application as hired' },
+
+  { code: 'interview.read', name: 'Read Interviews', description: 'View scheduled interviews' },
+  { code: 'interview.schedule', name: 'Schedule Interview', description: 'Schedule interview with candidate' },
+  { code: 'interview.reschedule', name: 'Reschedule Interview', description: 'Change interview schedule' },
+  { code: 'interview.cancel', name: 'Cancel Interview', description: 'Cancel scheduled interview' },
+  { code: 'interview.feedback.submit', name: 'Submit Interview Feedback', description: 'Submit interview evaluation and score' },
+  { code: 'interview.feedback.view', name: 'View Interview Feedback', description: 'Read submitted interview feedback' },
+
+  { code: 'offer.read', name: 'Read Offers', description: 'View job offers' },
+  { code: 'offer.create', name: 'Create Offer', description: 'Generate job offer for candidate' },
+  { code: 'offer.update', name: 'Update Offer', description: 'Modify offer terms' },
+  { code: 'offer.approve', name: 'Approve Offer', description: 'Approve job offer' },
+  { code: 'offer.reject', name: 'Reject Offer', description: 'Reject job offer' },
+  { code: 'offer.send', name: 'Send Offer', description: 'Send offer letter to candidate' },
+  { code: 'offer.withdraw', name: 'Withdraw Offer', description: 'Withdraw pending offer' },
+
+  { code: 'candidate.convert', name: 'Convert Candidate to Employee', description: 'Convert hired candidate to employee record' },
+  { code: 'candidate.onboard', name: 'Trigger Onboarding', description: 'Initiate onboarding workflow for hired candidate' },
+
+  { code: 'referral.read', name: 'Read Referrals', description: 'View employee referrals' },
+  { code: 'referral.create', name: 'Create Referral', description: 'Refer candidate for job opening' },
+  { code: 'referral.track', name: 'Track Referral', description: 'Track status of referred candidate' },
+
+  { code: 'recruitment.report.view', name: 'View Recruitment Reports', description: 'View recruitment analytics' },
+  { code: 'recruitment.report.export', name: 'Export Recruitment Reports', description: 'Export recruitment reports to CSV' },
 ];
 
 const BASE_ROLES = [
@@ -424,6 +478,24 @@ const BASE_ROLES = [
     name: 'Employee',
     description: 'Standard employee with self-service and read-only org chart access',
     permissions: DEFAULT_ROLE_PERMISSIONS[RoleCode.EMPLOYEE],
+  },
+  {
+    code: RoleCode.RECRUITER,
+    name: 'Recruiter',
+    description: 'Talent acquisition specialist managing job openings, candidates, interviews, and offers',
+    permissions: DEFAULT_ROLE_PERMISSIONS[RoleCode.RECRUITER],
+  },
+  {
+    code: RoleCode.HIRING_MANAGER,
+    name: 'Hiring Manager',
+    description: 'Hiring manager screening applications, conducting interviews, and approving offers',
+    permissions: DEFAULT_ROLE_PERMISSIONS[RoleCode.HIRING_MANAGER],
+  },
+  {
+    code: RoleCode.INTERVIEWER,
+    name: 'Interviewer',
+    description: 'Assigned interviewer conducting rounds and submitting candidate evaluations',
+    permissions: DEFAULT_ROLE_PERMISSIONS[RoleCode.INTERVIEWER],
   },
 ];
 

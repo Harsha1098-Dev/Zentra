@@ -40,6 +40,9 @@ export enum RoleCode {
   FINANCE = 'FINANCE',
   MANAGER = 'MANAGER',
   EMPLOYEE = 'EMPLOYEE',
+  RECRUITER = 'RECRUITER',
+  HIRING_MANAGER = 'HIRING_MANAGER',
+  INTERVIEWER = 'INTERVIEWER',
 }
 
 export enum RecordStatus {
@@ -513,6 +516,60 @@ export enum PermissionCode {
 
   PERFORMANCE_REPORT_VIEW = 'performance.report.view',
   PERFORMANCE_REPORT_EXPORT = 'performance.report.export',
+
+  // Recruitment & ATS Permissions
+  RECRUITMENT_READ = 'recruitment.read',
+  RECRUITMENT_READ_OWN = 'recruitment.read_own',
+  RECRUITMENT_READ_TEAM = 'recruitment.read_team',
+  RECRUITMENT_READ_ALL = 'recruitment.read_all',
+
+  JOB_OPENING_READ = 'job_opening.read',
+  JOB_OPENING_CREATE = 'job_opening.create',
+  JOB_OPENING_UPDATE = 'job_opening.update',
+  JOB_OPENING_DELETE = 'job_opening.delete',
+  JOB_OPENING_PUBLISH = 'job_opening.publish',
+  JOB_OPENING_CLOSE = 'job_opening.close',
+
+  CANDIDATE_READ = 'candidate.read',
+  CANDIDATE_CREATE = 'candidate.create',
+  CANDIDATE_UPDATE = 'candidate.update',
+  CANDIDATE_DELETE = 'candidate.delete',
+  CANDIDATE_RESUME_UPLOAD = 'candidate.resume.upload',
+  CANDIDATE_DOCUMENT_UPLOAD = 'candidate.document.upload',
+  CANDIDATE_NOTE_CREATE = 'candidate.note.create',
+
+  APPLICATION_READ = 'application.read',
+  APPLICATION_CREATE = 'application.create',
+  APPLICATION_UPDATE = 'application.update',
+  APPLICATION_STAGE_CHANGE = 'application.stage.change',
+  APPLICATION_SCREEN = 'application.screen',
+  APPLICATION_REJECT = 'application.reject',
+  APPLICATION_HIRE = 'application.hire',
+
+  INTERVIEW_READ = 'interview.read',
+  INTERVIEW_SCHEDULE = 'interview.schedule',
+  INTERVIEW_RESCHEDULE = 'interview.reschedule',
+  INTERVIEW_CANCEL = 'interview.cancel',
+  INTERVIEW_FEEDBACK_SUBMIT = 'interview.feedback.submit',
+  INTERVIEW_FEEDBACK_VIEW = 'interview.feedback.view',
+
+  OFFER_READ = 'offer.read',
+  OFFER_CREATE = 'offer.create',
+  OFFER_UPDATE = 'offer.update',
+  OFFER_APPROVE = 'offer.approve',
+  OFFER_REJECT = 'offer.reject',
+  OFFER_SEND = 'offer.send',
+  OFFER_WITHDRAW = 'offer.withdraw',
+
+  CANDIDATE_CONVERT = 'candidate.convert',
+  CANDIDATE_ONBOARD = 'candidate.onboard',
+
+  REFERRAL_READ = 'referral.read',
+  REFERRAL_CREATE = 'referral.create',
+  REFERRAL_TRACK = 'referral.track',
+
+  RECRUITMENT_REPORT_VIEW = 'recruitment.report.view',
+  RECRUITMENT_REPORT_EXPORT = 'recruitment.report.export',
 }
 
 export enum InvitationStatus {
@@ -924,6 +981,40 @@ export enum AuditAction {
   CALIBRATION_DECISION_RECORD = 'CALIBRATION_DECISION_RECORD',
   CALIBRATION_PUBLISH = 'CALIBRATION_PUBLISH',
   PERFORMANCE_REPORT_EXPORT = 'PERFORMANCE_REPORT_EXPORT',
+
+  // Recruitment Audit Actions
+  JOB_OPENING_CREATE = 'JOB_OPENING_CREATE',
+  JOB_OPENING_UPDATE = 'JOB_OPENING_UPDATE',
+  JOB_OPENING_PUBLISH = 'JOB_OPENING_PUBLISH',
+  JOB_OPENING_CLOSE = 'JOB_OPENING_CLOSE',
+  JOB_OPENING_CANCEL = 'JOB_OPENING_CANCEL',
+  CANDIDATE_CREATE = 'CANDIDATE_CREATE',
+  CANDIDATE_UPDATE = 'CANDIDATE_UPDATE',
+  CANDIDATE_DELETE = 'CANDIDATE_DELETE',
+  CANDIDATE_RESUME_UPLOAD = 'CANDIDATE_RESUME_UPLOAD',
+  CANDIDATE_DOCUMENT_UPLOAD = 'CANDIDATE_DOCUMENT_UPLOAD',
+  CANDIDATE_NOTE_CREATE = 'CANDIDATE_NOTE_CREATE',
+  APPLICATION_CREATE = 'APPLICATION_CREATE',
+  APPLICATION_STAGE_CHANGE = 'APPLICATION_STAGE_CHANGE',
+  APPLICATION_SCREEN = 'APPLICATION_SCREEN',
+  APPLICATION_REJECT = 'APPLICATION_REJECT',
+  APPLICATION_HIRE = 'APPLICATION_HIRE',
+  INTERVIEW_SCHEDULE = 'INTERVIEW_SCHEDULE',
+  INTERVIEW_RESCHEDULE = 'INTERVIEW_RESCHEDULE',
+  INTERVIEW_CANCEL = 'INTERVIEW_CANCEL',
+  INTERVIEW_FEEDBACK_SUBMIT = 'INTERVIEW_FEEDBACK_SUBMIT',
+  OFFER_CREATE = 'OFFER_CREATE',
+  OFFER_SUBMIT = 'OFFER_SUBMIT',
+  OFFER_APPROVE = 'OFFER_APPROVE',
+  OFFER_REJECT = 'OFFER_REJECT',
+  OFFER_SEND = 'OFFER_SEND',
+  OFFER_ACCEPT = 'OFFER_ACCEPT',
+  OFFER_WITHDRAW = 'OFFER_WITHDRAW',
+  CANDIDATE_CONVERT_EMPLOYEE = 'CANDIDATE_CONVERT_EMPLOYEE',
+  CANDIDATE_ONBOARD_TRIGGER = 'CANDIDATE_ONBOARD_TRIGGER',
+  REFERRAL_CREATE = 'REFERRAL_CREATE',
+  REFERRAL_STATUS_UPDATE = 'REFERRAL_STATUS_UPDATE',
+  RECRUITMENT_REPORT_EXPORT = 'RECRUITMENT_REPORT_EXPORT',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -1257,6 +1348,51 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.CALIBRATION_DECIDE,
     PermissionCode.PERFORMANCE_REPORT_VIEW,
     PermissionCode.PERFORMANCE_REPORT_EXPORT,
+    // Recruitment Permissions for HR_ADMIN
+    PermissionCode.RECRUITMENT_READ,
+    PermissionCode.RECRUITMENT_READ_OWN,
+    PermissionCode.RECRUITMENT_READ_TEAM,
+    PermissionCode.RECRUITMENT_READ_ALL,
+    PermissionCode.JOB_OPENING_READ,
+    PermissionCode.JOB_OPENING_CREATE,
+    PermissionCode.JOB_OPENING_UPDATE,
+    PermissionCode.JOB_OPENING_DELETE,
+    PermissionCode.JOB_OPENING_PUBLISH,
+    PermissionCode.JOB_OPENING_CLOSE,
+    PermissionCode.CANDIDATE_READ,
+    PermissionCode.CANDIDATE_CREATE,
+    PermissionCode.CANDIDATE_UPDATE,
+    PermissionCode.CANDIDATE_DELETE,
+    PermissionCode.CANDIDATE_RESUME_UPLOAD,
+    PermissionCode.CANDIDATE_DOCUMENT_UPLOAD,
+    PermissionCode.CANDIDATE_NOTE_CREATE,
+    PermissionCode.APPLICATION_READ,
+    PermissionCode.APPLICATION_CREATE,
+    PermissionCode.APPLICATION_UPDATE,
+    PermissionCode.APPLICATION_STAGE_CHANGE,
+    PermissionCode.APPLICATION_SCREEN,
+    PermissionCode.APPLICATION_REJECT,
+    PermissionCode.APPLICATION_HIRE,
+    PermissionCode.INTERVIEW_READ,
+    PermissionCode.INTERVIEW_SCHEDULE,
+    PermissionCode.INTERVIEW_RESCHEDULE,
+    PermissionCode.INTERVIEW_CANCEL,
+    PermissionCode.INTERVIEW_FEEDBACK_SUBMIT,
+    PermissionCode.INTERVIEW_FEEDBACK_VIEW,
+    PermissionCode.OFFER_READ,
+    PermissionCode.OFFER_CREATE,
+    PermissionCode.OFFER_UPDATE,
+    PermissionCode.OFFER_APPROVE,
+    PermissionCode.OFFER_REJECT,
+    PermissionCode.OFFER_SEND,
+    PermissionCode.OFFER_WITHDRAW,
+    PermissionCode.CANDIDATE_CONVERT,
+    PermissionCode.CANDIDATE_ONBOARD,
+    PermissionCode.REFERRAL_READ,
+    PermissionCode.REFERRAL_CREATE,
+    PermissionCode.REFERRAL_TRACK,
+    PermissionCode.RECRUITMENT_REPORT_VIEW,
+    PermissionCode.RECRUITMENT_REPORT_EXPORT,
   ],
   [RoleCode.PAYROLL_ADMIN]: Object.values(PermissionCode),
   [RoleCode.FINANCE]: [
@@ -1400,6 +1536,19 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.APPRAISAL_REVIEW,
     PermissionCode.APPRAISAL_APPROVE,
     PermissionCode.PERFORMANCE_REPORT_VIEW,
+    // Recruitment Permissions for MANAGER
+    PermissionCode.RECRUITMENT_READ,
+    PermissionCode.RECRUITMENT_READ_TEAM,
+    PermissionCode.JOB_OPENING_READ,
+    PermissionCode.APPLICATION_READ,
+    PermissionCode.APPLICATION_SCREEN,
+    PermissionCode.INTERVIEW_READ,
+    PermissionCode.INTERVIEW_FEEDBACK_SUBMIT,
+    PermissionCode.INTERVIEW_FEEDBACK_VIEW,
+    PermissionCode.OFFER_READ,
+    PermissionCode.OFFER_APPROVE,
+    PermissionCode.OFFER_REJECT,
+    PermissionCode.RECRUITMENT_REPORT_VIEW,
   ],
   [RoleCode.EMPLOYEE]: [
     PermissionCode.ORGANIZATION_READ,
@@ -1458,6 +1607,81 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.IMPROVEMENT_PLAN_READ,
     PermissionCode.APPRAISAL_READ,
     PermissionCode.APPRAISAL_SUBMIT,
+    // Recruitment Permissions for EMPLOYEE
+    PermissionCode.RECRUITMENT_READ,
+    PermissionCode.JOB_OPENING_READ,
+    PermissionCode.APPLICATION_CREATE,
+    PermissionCode.REFERRAL_READ,
+    PermissionCode.REFERRAL_CREATE,
+    PermissionCode.REFERRAL_TRACK,
+  ],
+  [RoleCode.RECRUITER]: [
+    PermissionCode.ORGANIZATION_READ,
+    PermissionCode.PRODUCT_READ,
+    PermissionCode.DEPARTMENT_READ,
+    PermissionCode.EMPLOYEE_READ_BASIC,
+    PermissionCode.RECRUITMENT_READ,
+    PermissionCode.RECRUITMENT_READ_ALL,
+    PermissionCode.JOB_OPENING_READ,
+    PermissionCode.JOB_OPENING_CREATE,
+    PermissionCode.JOB_OPENING_UPDATE,
+    PermissionCode.JOB_OPENING_DELETE,
+    PermissionCode.JOB_OPENING_PUBLISH,
+    PermissionCode.JOB_OPENING_CLOSE,
+    PermissionCode.CANDIDATE_READ,
+    PermissionCode.CANDIDATE_CREATE,
+    PermissionCode.CANDIDATE_UPDATE,
+    PermissionCode.CANDIDATE_DELETE,
+    PermissionCode.CANDIDATE_RESUME_UPLOAD,
+    PermissionCode.CANDIDATE_DOCUMENT_UPLOAD,
+    PermissionCode.CANDIDATE_NOTE_CREATE,
+    PermissionCode.APPLICATION_READ,
+    PermissionCode.APPLICATION_CREATE,
+    PermissionCode.APPLICATION_UPDATE,
+    PermissionCode.APPLICATION_STAGE_CHANGE,
+    PermissionCode.APPLICATION_SCREEN,
+    PermissionCode.APPLICATION_REJECT,
+    PermissionCode.APPLICATION_HIRE,
+    PermissionCode.INTERVIEW_READ,
+    PermissionCode.INTERVIEW_SCHEDULE,
+    PermissionCode.INTERVIEW_RESCHEDULE,
+    PermissionCode.INTERVIEW_CANCEL,
+    PermissionCode.INTERVIEW_FEEDBACK_VIEW,
+    PermissionCode.OFFER_READ,
+    PermissionCode.OFFER_CREATE,
+    PermissionCode.OFFER_UPDATE,
+    PermissionCode.OFFER_SEND,
+    PermissionCode.OFFER_WITHDRAW,
+    PermissionCode.CANDIDATE_CONVERT,
+    PermissionCode.CANDIDATE_ONBOARD,
+    PermissionCode.REFERRAL_READ,
+    PermissionCode.RECRUITMENT_REPORT_VIEW,
+  ],
+  [RoleCode.HIRING_MANAGER]: [
+    PermissionCode.ORGANIZATION_READ,
+    PermissionCode.PRODUCT_READ,
+    PermissionCode.DEPARTMENT_READ,
+    PermissionCode.EMPLOYEE_READ_BASIC,
+    PermissionCode.RECRUITMENT_READ,
+    PermissionCode.RECRUITMENT_READ_TEAM,
+    PermissionCode.JOB_OPENING_READ,
+    PermissionCode.APPLICATION_READ,
+    PermissionCode.APPLICATION_SCREEN,
+    PermissionCode.INTERVIEW_READ,
+    PermissionCode.INTERVIEW_FEEDBACK_SUBMIT,
+    PermissionCode.INTERVIEW_FEEDBACK_VIEW,
+    PermissionCode.OFFER_READ,
+    PermissionCode.OFFER_APPROVE,
+    PermissionCode.OFFER_REJECT,
+    PermissionCode.RECRUITMENT_REPORT_VIEW,
+  ],
+  [RoleCode.INTERVIEWER]: [
+    PermissionCode.ORGANIZATION_READ,
+    PermissionCode.PRODUCT_READ,
+    PermissionCode.DEPARTMENT_READ,
+    PermissionCode.EMPLOYEE_READ_BASIC,
+    PermissionCode.INTERVIEW_READ,
+    PermissionCode.INTERVIEW_FEEDBACK_SUBMIT,
   ],
 };
 
@@ -6121,3 +6345,638 @@ export interface CalibrationDecisionDto {
   createdAt: string;
   updatedAt: string;
 }
+
+// ==========================================
+// RECRUITMENT & ATS ENUMS, SCHEMAS & DTOS
+// ==========================================
+
+export enum JobOpeningStatus {
+  DRAFT = 'DRAFT',
+  OPEN = 'OPEN',
+  ON_HOLD = 'ON_HOLD',
+  CLOSED = 'CLOSED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum JobPublishedStatus {
+  NOT_PUBLISHED = 'NOT_PUBLISHED',
+  INTERNAL = 'INTERNAL',
+  EXTERNAL = 'EXTERNAL',
+  BOTH = 'BOTH',
+}
+
+export enum WorkMode {
+  ON_SITE = 'ON_SITE',
+  REMOTE = 'REMOTE',
+  HYBRID = 'HYBRID',
+}
+
+export enum CandidateStatus {
+  NEW = 'NEW',
+  IN_REVIEW = 'IN_REVIEW',
+  ENGAGED = 'ENGAGED',
+  AVAILABLE = 'AVAILABLE',
+  OFFERED = 'OFFERED',
+  HIRED = 'HIRED',
+  REJECTED = 'REJECTED',
+  BLACKLISTED = 'BLACKLISTED',
+}
+
+export enum ApplicationStatus {
+  APPLIED = 'APPLIED',
+  SCREENING = 'SCREENING',
+  INTERVIEWING = 'INTERVIEWING',
+  OFFERED = 'OFFERED',
+  HIRED = 'HIRED',
+  REJECTED = 'REJECTED',
+  WITHDRAWN = 'WITHDRAWN',
+  ON_HOLD = 'ON_HOLD',
+}
+
+export enum StageType {
+  APPLIED = 'APPLIED',
+  SCREENING = 'SCREENING',
+  ASSESSMENT = 'ASSESSMENT',
+  TECHNICAL_INTERVIEW = 'TECHNICAL_INTERVIEW',
+  MANAGER_INTERVIEW = 'MANAGER_INTERVIEW',
+  HR_INTERVIEW = 'HR_INTERVIEW',
+  OFFER = 'OFFER',
+  HIRED = 'HIRED',
+  REJECTED = 'REJECTED',
+  ON_HOLD = 'ON_HOLD',
+  CUSTOM = 'CUSTOM',
+}
+
+export enum InterviewType {
+  PHONE_SCREENING = 'PHONE_SCREENING',
+  TECHNICAL_INTERVIEW = 'TECHNICAL_INTERVIEW',
+  MANAGER_INTERVIEW = 'MANAGER_INTERVIEW',
+  HR_INTERVIEW = 'HR_INTERVIEW',
+  CULTURE_FIT_INTERVIEW = 'CULTURE_FIT_INTERVIEW',
+  PANEL_INTERVIEW = 'PANEL_INTERVIEW',
+  ASSIGNMENT_REVIEW = 'ASSIGNMENT_REVIEW',
+  FINAL_INTERVIEW = 'FINAL_INTERVIEW',
+}
+
+export enum InterviewMode {
+  IN_PERSON = 'IN_PERSON',
+  PHONE = 'PHONE',
+  VIDEO = 'VIDEO',
+  ONLINE_ASSESSMENT = 'ONLINE_ASSESSMENT',
+}
+
+export enum InterviewStatus {
+  SCHEDULED = 'SCHEDULED',
+  RESCHEDULED = 'RESCHEDULED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  NO_SHOW = 'NO_SHOW',
+}
+
+export enum InterviewRecommendation {
+  STRONG_HIRE = 'STRONG_HIRE',
+  HIRE = 'HIRE',
+  MAYBE = 'MAYBE',
+  NO_HIRE = 'NO_HIRE',
+  STRONG_NO_HIRE = 'STRONG_NO_HIRE',
+}
+
+export enum OfferStatus {
+  DRAFT = 'DRAFT',
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  APPROVED = 'APPROVED',
+  SENT = 'SENT',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+  EXPIRED = 'EXPIRED',
+  WITHDRAWN = 'WITHDRAWN',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum CandidateSourceType {
+  DIRECT = 'DIRECT',
+  CAREERS_PAGE = 'CAREERS_PAGE',
+  LINKEDIN = 'LINKEDIN',
+  JOB_BOARD = 'JOB_BOARD',
+  EMPLOYEE_REFERRAL = 'EMPLOYEE_REFERRAL',
+  AGENCY = 'AGENCY',
+  CAMPUS = 'CAMPUS',
+  INTERNAL_TRANSFER = 'INTERNAL_TRANSFER',
+  OTHER = 'OTHER',
+}
+
+export enum RecruitmentNoteType {
+  GENERAL = 'GENERAL',
+  SCREENING = 'SCREENING',
+  INTERVIEW_NOTE = 'INTERVIEW_NOTE',
+  OFFER_NOTE = 'OFFER_NOTE',
+  CALL_LOG = 'CALL_LOG',
+}
+
+// Zod Schemas
+
+export const CreateJobOpeningSchema = z.object({
+  title: z.string().trim().min(2, 'Job title must be at least 2 characters').max(150),
+  jobCode: z.string().trim().min(2, 'Job code is required').max(50),
+  description: z.string().trim().min(5, 'Description is required'),
+  departmentId: z.string().uuid('Valid department ID is required'),
+  designationId: z.string().uuid('Valid designation ID is required'),
+  locationId: z.string().uuid('Valid location ID is required'),
+  employmentType: z.nativeEnum(EmploymentType).default(EmploymentType.FULL_TIME),
+  workMode: z.nativeEnum(WorkMode).default(WorkMode.HYBRID),
+  experienceMinYears: z.number().min(0, 'Experience min must be >= 0').default(0),
+  experienceMaxYears: z.number().min(0, 'Experience max must be >= 0').default(5),
+  salaryMin: z.number().min(0).optional(),
+  salaryMax: z.number().min(0).optional(),
+  currency: z.string().default('INR'),
+  numberOfOpenings: z.number().int().min(1, 'Number of openings must be at least 1').default(1),
+  hiringManagerId: z.string().uuid('Valid hiring manager ID is required'),
+  recruiterId: z.string().uuid('Valid recruiter ID is required').optional(),
+  pipelineId: z.string().uuid().optional(),
+  applicationDeadline: z.string().optional(),
+  responsibilities: z.array(z.string()).default([]),
+  requirements: z.array(z.string()).default([]),
+  skills: z.array(z.string()).default([]),
+  benefits: z.array(z.string()).default([]),
+});
+
+export const UpdateJobOpeningSchema = CreateJobOpeningSchema.partial().extend({
+  jobStatus: z.nativeEnum(JobOpeningStatus).optional(),
+  publishedStatus: z.nativeEnum(JobPublishedStatus).optional(),
+});
+
+export const PublishJobOpeningSchema = z.object({
+  publishedStatus: z.nativeEnum(JobPublishedStatus).default(JobPublishedStatus.BOTH),
+  externalJobUrl: z.string().url().optional(),
+});
+
+export const CloseJobOpeningSchema = z.object({
+  reason: z.string().optional(),
+  forceClose: z.boolean().default(false),
+});
+
+export const CreateHiringPipelineSchema = z.object({
+  name: z.string().trim().min(2, 'Pipeline name is required'),
+  description: z.string().optional(),
+  isDefault: z.boolean().default(false),
+  stages: z
+    .array(
+      z.object({
+        stageName: z.string().min(1, 'Stage name is required'),
+        stageType: z.nativeEnum(StageType),
+        stageOrder: z.number().int().min(0),
+        isMandatory: z.boolean().default(true),
+        interviewerIds: z.array(z.string().uuid()).default([]),
+        assessmentRequired: z.boolean().default(false),
+      }),
+    )
+    .min(1, 'At least one stage is required'),
+});
+
+export const CreateCandidateSchema = z.object({
+  firstName: z.string().trim().min(1, 'First name is required').max(100),
+  lastName: z.string().trim().min(1, 'Last name is required').max(100),
+  email: z.string().email('Valid email is required'),
+  phone: z.string().trim().min(5, 'Phone number is required').max(20),
+  dateOfBirth: z.string().optional(),
+  gender: z.string().optional(),
+  currentLocation: z.string().optional(),
+  preferredLocation: z.string().optional(),
+  currentCompany: z.string().optional(),
+  currentDesignation: z.string().optional(),
+  totalExperienceYears: z.number().min(0).default(0),
+  relevantExperienceYears: z.number().min(0).default(0),
+  expectedSalary: z.number().min(0).optional(),
+  expectedSalaryCurrency: z.string().default('INR'),
+  noticePeriodDays: z.number().int().min(0).default(30),
+  resumeUrl: z.string().url().optional(),
+  linkedinUrl: z.string().url().optional(),
+  portfolioUrl: z.string().url().optional(),
+  sourceType: z.nativeEnum(CandidateSourceType).default(CandidateSourceType.DIRECT),
+  sourceName: z.string().optional(),
+  referralEmployeeId: z.string().uuid().optional(),
+  talentPoolStatus: z.string().default('ACTIVE'),
+  customFields: z.record(z.any()).optional(),
+});
+
+export const UpdateCandidateSchema = CreateCandidateSchema.partial().extend({
+  candidateStatus: z.nativeEnum(CandidateStatus).optional(),
+});
+
+export const CreateCandidateNoteSchema = z.object({
+  jobApplicationId: z.string().uuid().optional(),
+  noteType: z.nativeEnum(RecruitmentNoteType).default(RecruitmentNoteType.GENERAL),
+  note: z.string().trim().min(1, 'Note content cannot be empty'),
+  isInternal: z.boolean().default(true),
+});
+
+export const CreateJobApplicationSchema = z.object({
+  jobOpeningId: z.string().uuid('Valid job opening ID is required'),
+  candidateId: z.string().uuid('Valid candidate ID is required'),
+  sourceType: z.nativeEnum(CandidateSourceType).default(CandidateSourceType.DIRECT),
+  sourceName: z.string().optional(),
+  referralEmployeeId: z.string().uuid().optional(),
+  resumeUrl: z.string().url().optional(),
+  coverLetterUrl: z.string().url().optional(),
+});
+
+export const ScreenApplicationSchema = z.object({
+  screeningScore: z.number().min(0).max(100),
+  screeningNotes: z.string().min(1, 'Screening notes required'),
+  passed: z.boolean().default(true),
+});
+
+export const MoveApplicationStageSchema = z.object({
+  toStageId: z.string().uuid('Valid destination stage ID is required'),
+  comments: z.string().optional(),
+});
+
+export const RejectApplicationSchema = z.object({
+  rejectionReason: z.string().min(1, 'Rejection reason is required'),
+  comments: z.string().optional(),
+});
+
+export const ScheduleInterviewSchema = z.object({
+  jobApplicationId: z.string().uuid('Valid job application ID is required'),
+  interviewRound: z.number().int().min(1).default(1),
+  interviewType: z.nativeEnum(InterviewType).default(InterviewType.TECHNICAL_INTERVIEW),
+  interviewMode: z.nativeEnum(InterviewMode).default(InterviewMode.VIDEO),
+  interviewDate: z.string().min(1, 'Interview date is required'),
+  startTime: z.string().min(1, 'Start time is required'),
+  endTime: z.string().min(1, 'End time is required'),
+  timezone: z.string().default('Asia/Kolkata'),
+  interviewerIds: z.array(z.string().uuid()).min(1, 'At least one interviewer is required'),
+  meetingLink: z.string().url().optional(),
+  location: z.string().optional(),
+});
+
+export const RescheduleInterviewSchema = z.object({
+  interviewDate: z.string().min(1, 'New interview date is required'),
+  startTime: z.string().min(1, 'New start time is required'),
+  endTime: z.string().min(1, 'New end time is required'),
+  reason: z.string().min(1, 'Reschedule reason is required'),
+});
+
+export const SubmitInterviewFeedbackSchema = z.object({
+  recommendation: z.nativeEnum(InterviewRecommendation),
+  technicalRating: z.number().min(1).max(5),
+  communicationRating: z.number().min(1).max(5),
+  cultureFitRating: z.number().min(1).max(5),
+  overallRating: z.number().min(1).max(5),
+  strengths: z.string().optional(),
+  weaknesses: z.string().optional(),
+  comments: z.string().min(5, 'Constructive feedback comments required'),
+});
+
+export const CreateOfferSchema = z.object({
+  jobApplicationId: z.string().uuid('Valid job application ID is required'),
+  candidateId: z.string().uuid('Valid candidate ID is required'),
+  jobOpeningId: z.string().uuid('Valid job opening ID is required'),
+  offerDate: z.string().default(() => new Date().toISOString().split('T')[0]),
+  joiningDate: z.string().min(1, 'Joining date is required'),
+  designationId: z.string().uuid('Designation is required'),
+  departmentId: z.string().uuid('Department is required'),
+  locationId: z.string().uuid('Location is required'),
+  employmentType: z.nativeEnum(EmploymentType).default(EmploymentType.FULL_TIME),
+  workMode: z.nativeEnum(WorkMode).default(WorkMode.HYBRID),
+  annualCtc: z.number().min(1, 'Annual CTC must be greater than 0'),
+  monthlyCtc: z.number().min(1).optional(),
+  currency: z.string().default('INR'),
+  salaryStructureId: z.string().uuid().optional(),
+  offerLetterTemplateId: z.string().uuid().optional(),
+  expiryDate: z.string().min(1, 'Expiry date is required'),
+});
+
+export const UpdateOfferSchema = CreateOfferSchema.partial();
+
+export const ConvertToEmployeeSchema = z.object({
+  employeeCode: z.string().optional(),
+  joiningDate: z.string().min(1, 'Joining date is required'),
+  departmentId: z.string().uuid('Department ID is required'),
+  designationId: z.string().uuid('Designation ID is required'),
+  locationId: z.string().uuid('Location ID is required'),
+  reportingManagerId: z.string().uuid('Reporting Manager ID is required'),
+  employmentType: z.nativeEnum(EmploymentType).default(EmploymentType.FULL_TIME),
+  workEmail: z.string().email().optional(),
+  triggerOnboarding: z.boolean().default(true),
+});
+
+export const CreateEmployeeReferralSchema = z.object({
+  jobOpeningId: z.string().uuid('Job opening is required'),
+  candidateName: z.string().min(2, 'Candidate name is required'),
+  candidateEmail: z.string().email('Valid email is required'),
+  candidatePhone: z.string().min(5, 'Phone number is required'),
+  resumeUrl: z.string().url().optional(),
+  relationship: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+// TypeScript DTOs
+
+export interface JobOpeningDto {
+  id: string;
+  organizationId: string;
+  title: string;
+  jobCode: string;
+  description: string;
+  departmentId: string;
+  department?: any;
+  designationId: string;
+  designation?: any;
+  locationId: string;
+  location?: any;
+  employmentType: EmploymentType;
+  workMode: WorkMode;
+  experienceMinYears: number;
+  experienceMaxYears: number;
+  salaryMin?: number | null;
+  salaryMax?: number | null;
+  currency: string;
+  numberOfOpenings: number;
+  filledOpenings: number;
+  hiringManagerId: string;
+  hiringManager?: any;
+  recruiterId?: string | null;
+  recruiter?: any;
+  jobStatus: JobOpeningStatus;
+  publishedStatus: JobPublishedStatus;
+  externalJobUrl?: string | null;
+  applicationDeadline?: string | null;
+  responsibilities: string[];
+  requirements: string[];
+  skills: string[];
+  benefits: string[];
+  stages?: JobOpeningStageDto[];
+  applicationsCount?: number;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+}
+
+export interface JobOpeningStageDto {
+  id: string;
+  organizationId: string;
+  jobOpeningId: string;
+  stageName: string;
+  stageType: StageType;
+  stageOrder: number;
+  isMandatory: boolean;
+  interviewerIds: string[];
+  assessmentRequired: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HiringPipelineDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  isDefault: boolean;
+  stages: HiringPipelineStageDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HiringPipelineStageDto {
+  id: string;
+  organizationId: string;
+  hiringPipelineId: string;
+  stageName: string;
+  stageType: StageType;
+  stageOrder: number;
+  isMandatory: boolean;
+  interviewerIds: string[];
+  assessmentRequired: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CandidateDto {
+  id: string;
+  organizationId: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  dateOfBirth?: string | null;
+  gender?: string | null;
+  currentLocation?: string | null;
+  preferredLocation?: string | null;
+  currentCompany?: string | null;
+  currentDesignation?: string | null;
+  totalExperienceYears: number;
+  relevantExperienceYears: number;
+  expectedSalary?: number | null;
+  expectedSalaryCurrency: string;
+  noticePeriodDays: number;
+  resumeUrl?: string | null;
+  linkedinUrl?: string | null;
+  portfolioUrl?: string | null;
+  sourceType: CandidateSourceType;
+  sourceName?: string | null;
+  referralEmployeeId?: string | null;
+  referralEmployee?: any;
+  candidateStatus: CandidateStatus;
+  talentPoolStatus: string;
+  customFields?: Record<string, any> | null;
+  applications?: JobApplicationDto[];
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+}
+
+export interface JobApplicationDto {
+  id: string;
+  organizationId: string;
+  jobOpeningId: string;
+  jobOpening?: JobOpeningDto;
+  candidateId: string;
+  candidate?: CandidateDto;
+  applicationStatus: ApplicationStatus;
+  currentStageId: string;
+  currentStageName: string;
+  appliedAt: string;
+  sourceType: CandidateSourceType;
+  sourceName?: string | null;
+  referralEmployeeId?: string | null;
+  resumeUrl?: string | null;
+  coverLetterUrl?: string | null;
+  screeningScore?: number | null;
+  screeningNotes?: string | null;
+  rejectionReason?: string | null;
+  offerId?: string | null;
+  offer?: OfferDto | null;
+  hiredEmployeeId?: string | null;
+  stageHistory?: ApplicationStageHistoryDto[];
+  interviews?: InterviewDto[];
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ApplicationStageHistoryDto {
+  id: string;
+  organizationId: string;
+  jobApplicationId: string;
+  fromStageId?: string | null;
+  toStageId: string;
+  fromStageName?: string | null;
+  toStageName: string;
+  changedBy: string;
+  changedAt: string;
+  comments?: string | null;
+  createdAt: string;
+}
+
+export interface InterviewDto {
+  id: string;
+  organizationId: string;
+  jobApplicationId: string;
+  jobApplication?: JobApplicationDto;
+  candidateId: string;
+  candidate?: CandidateDto;
+  interviewRound: number;
+  interviewType: InterviewType;
+  interviewMode: InterviewMode;
+  interviewDate: string;
+  startTime: string;
+  endTime: string;
+  timezone: string;
+  interviewerIds: string[];
+  interviewers?: any[];
+  meetingLink?: string | null;
+  location?: string | null;
+  status: InterviewStatus;
+  feedbackStatus: 'PENDING' | 'SUBMITTED';
+  feedback?: InterviewFeedbackDto[];
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InterviewFeedbackDto {
+  id: string;
+  organizationId: string;
+  interviewId: string;
+  interviewerId: string;
+  interviewer?: any;
+  candidateId: string;
+  jobApplicationId: string;
+  recommendation: InterviewRecommendation;
+  technicalRating: number;
+  communicationRating: number;
+  cultureFitRating: number;
+  overallRating: number;
+  strengths?: string | null;
+  weaknesses?: string | null;
+  comments: string;
+  submittedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OfferDto {
+  id: string;
+  organizationId: string;
+  jobApplicationId: string;
+  jobApplication?: JobApplicationDto;
+  candidateId: string;
+  candidate?: CandidateDto;
+  jobOpeningId: string;
+  jobOpening?: JobOpeningDto;
+  offerDate: string;
+  joiningDate: string;
+  designationId: string;
+  designation?: any;
+  departmentId: string;
+  department?: any;
+  locationId: string;
+  location?: any;
+  employmentType: EmploymentType;
+  workMode: WorkMode;
+  annualCtc: number;
+  monthlyCtc: number;
+  currency: string;
+  salaryStructureId?: string | null;
+  offerStatus: OfferStatus;
+  offerLetterUrl?: string | null;
+  offerLetterTemplateId?: string | null;
+  approvalFlowId?: string | null;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  sentAt?: string | null;
+  acceptedAt?: string | null;
+  rejectedAt?: string | null;
+  rejectionReason?: string | null;
+  expiryDate: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+}
+
+export interface CandidateDocumentDto {
+  id: string;
+  organizationId: string;
+  candidateId: string;
+  jobApplicationId?: string | null;
+  documentType: string;
+  documentName: string;
+  fileUrl: string;
+  fileType: string;
+  fileSize: number;
+  uploadedBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RecruitmentNoteDto {
+  id: string;
+  organizationId: string;
+  jobApplicationId?: string | null;
+  candidateId: string;
+  authorId: string;
+  author?: any;
+  noteType: RecruitmentNoteType;
+  note: string;
+  isInternal: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeReferralDto {
+  id: string;
+  organizationId: string;
+  referringEmployeeId: string;
+  referringEmployee?: any;
+  jobOpeningId: string;
+  jobOpening?: JobOpeningDto;
+  candidateName: string;
+  candidateEmail: string;
+  candidatePhone: string;
+  resumeUrl?: string | null;
+  relationship?: string | null;
+  notes?: string | null;
+  candidateId?: string | null;
+  status: 'SUBMITTED' | 'IN_REVIEW' | 'INTERVIEWING' | 'OFFERED' | 'HIRED' | 'REJECTED';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RecruitmentReportSummaryDto {
+  openJobsCount: number;
+  activeCandidatesCount: number;
+  interviewsScheduledToday: number;
+  pendingFeedbackCount: number;
+  offersPendingApprovalCount: number;
+  offersAcceptedCount: number;
+  timeToHireAvgDays: number;
+  offerAcceptanceRate: number;
+  pipelineDistribution: { stageName: string; count: number }[];
+  sourcesBreakdown: { source: string; count: number }[];
+}
+
