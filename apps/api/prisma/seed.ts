@@ -98,6 +98,32 @@ const BASE_PERMISSIONS: { code: string; name: string; description: string }[] = 
 
   // Delegation Permissions
   { code: 'delegation.manage', name: 'Manage Delegations', description: 'Configure approval delegations' },
+
+  // Leave Management Permissions
+  { code: 'leave.read', name: 'Read Leaves', description: 'View leave requests and balances' },
+  { code: 'leave.read_own', name: 'Read Own Leaves', description: 'View own leave requests and balances' },
+  { code: 'leave.read_team', name: 'Read Team Leaves', description: 'View reportees leave requests and balances' },
+  { code: 'leave.read_all', name: 'Read All Leaves', description: 'View organization-wide leave requests and balances' },
+  { code: 'leave.apply', name: 'Apply Leave', description: 'Submit leave request for self' },
+  { code: 'leave.apply_for_reportee', name: 'Apply Leave for Reportee', description: 'Submit leave request on behalf of a reportee' },
+  { code: 'leave.cancel', name: 'Cancel Leave', description: 'Cancel pending or approved leave request' },
+  { code: 'leave.cancel_approved', name: 'Cancel Approved Leave', description: 'Cancel approved leave requests' },
+  { code: 'leave.approve', name: 'Approve Leave', description: 'Approve leave request' },
+  { code: 'leave.reject', name: 'Reject Leave', description: 'Reject leave request' },
+  { code: 'leave.override', name: 'Override Leave Decision', description: 'HR Admin override on leave requests' },
+  { code: 'leave.adjust_balance', name: 'Adjust Leave Balance', description: 'Manually credit or debit employee leave balances' },
+  { code: 'leave.policy.read', name: 'Read Leave Policies', description: 'View leave policies' },
+  { code: 'leave.policy.create', name: 'Create Leave Policy', description: 'Create leave policy rules and entitlements' },
+  { code: 'leave.policy.update', name: 'Update Leave Policy', description: 'Update leave policy rules' },
+  { code: 'leave.policy.delete', name: 'Delete Leave Policy', description: 'Delete or deactivate leave policy' },
+  { code: 'leave.type.read', name: 'Read Leave Types', description: 'View leave types' },
+  { code: 'leave.type.create', name: 'Create Leave Type', description: 'Create new leave types' },
+  { code: 'leave.type.update', name: 'Update Leave Type', description: 'Edit leave type properties and options' },
+  { code: 'leave.type.delete', name: 'Delete Leave Type', description: 'Deactivate leave types' },
+  { code: 'leave.compoff.apply', name: 'Apply Comp-Off', description: 'Submit compensatory off request' },
+  { code: 'leave.compoff.approve', name: 'Approve Comp-Off', description: 'Approve or reject compensatory off request' },
+  { code: 'leave.report.view', name: 'View Leave Reports', description: 'Access leave reports and summaries' },
+  { code: 'leave.report.export', name: 'Export Leave Reports', description: 'Download CSV leave reports' },
 ];
 
 const BASE_ROLES = [

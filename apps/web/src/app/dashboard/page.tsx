@@ -252,6 +252,13 @@ export default function DashboardPage() {
             </Link>
 
             <Link
+              href="/leave"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
+            >
+              <span>Leave</span>
+            </Link>
+
+            <Link
               href="/settings/workflows"
               className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
             >

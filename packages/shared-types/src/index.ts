@@ -221,6 +221,32 @@ export enum PermissionCode {
 
   // Delegation Permissions
   DELEGATION_MANAGE = 'delegation.manage',
+
+  // Leave Management Permissions
+  LEAVE_READ = 'leave.read',
+  LEAVE_READ_OWN = 'leave.read_own',
+  LEAVE_READ_TEAM = 'leave.read_team',
+  LEAVE_READ_ALL = 'leave.read_all',
+  LEAVE_APPLY = 'leave.apply',
+  LEAVE_APPLY_FOR_REPORTEE = 'leave.apply_for_reportee',
+  LEAVE_CANCEL = 'leave.cancel',
+  LEAVE_CANCEL_APPROVED = 'leave.cancel_approved',
+  LEAVE_APPROVE = 'leave.approve',
+  LEAVE_REJECT = 'leave.reject',
+  LEAVE_OVERRIDE = 'leave.override',
+  LEAVE_ADJUST_BALANCE = 'leave.adjust_balance',
+  LEAVE_POLICY_READ = 'leave.policy.read',
+  LEAVE_POLICY_CREATE = 'leave.policy.create',
+  LEAVE_POLICY_UPDATE = 'leave.policy.update',
+  LEAVE_POLICY_DELETE = 'leave.policy.delete',
+  LEAVE_TYPE_READ = 'leave.type.read',
+  LEAVE_TYPE_CREATE = 'leave.type.create',
+  LEAVE_TYPE_UPDATE = 'leave.type.update',
+  LEAVE_TYPE_DELETE = 'leave.type.delete',
+  LEAVE_COMPOFF_APPLY = 'leave.compoff.apply',
+  LEAVE_COMPOFF_APPROVE = 'leave.compoff.approve',
+  LEAVE_REPORT_VIEW = 'leave.report.view',
+  LEAVE_REPORT_EXPORT = 'leave.report.export',
 }
 
 export enum InvitationStatus {
@@ -323,6 +349,31 @@ export enum AuditAction {
   DELEGATION_CREATE = 'DELEGATION_CREATE',
   DELEGATION_UPDATE = 'DELEGATION_UPDATE',
   DELEGATION_CANCEL = 'DELEGATION_CANCEL',
+
+  // Leave Management Audit Actions
+  LEAVE_TYPE_CREATE = 'LEAVE_TYPE_CREATE',
+  LEAVE_TYPE_UPDATE = 'LEAVE_TYPE_UPDATE',
+  LEAVE_TYPE_ACTIVATE = 'LEAVE_TYPE_ACTIVATE',
+  LEAVE_TYPE_DEACTIVATE = 'LEAVE_TYPE_DEACTIVATE',
+  LEAVE_TYPE_DELETE = 'LEAVE_TYPE_DELETE',
+  LEAVE_POLICY_CREATE = 'LEAVE_POLICY_CREATE',
+  LEAVE_POLICY_UPDATE = 'LEAVE_POLICY_UPDATE',
+  LEAVE_POLICY_ACTIVATE = 'LEAVE_POLICY_ACTIVATE',
+  LEAVE_POLICY_DEACTIVATE = 'LEAVE_POLICY_DEACTIVATE',
+  LEAVE_POLICY_DELETE = 'LEAVE_POLICY_DELETE',
+  LEAVE_BALANCE_ADJUST = 'LEAVE_BALANCE_ADJUST',
+  LEAVE_REQUEST_CREATE = 'LEAVE_REQUEST_CREATE',
+  LEAVE_REQUEST_UPDATE = 'LEAVE_REQUEST_UPDATE',
+  LEAVE_REQUEST_APPROVE = 'LEAVE_REQUEST_APPROVE',
+  LEAVE_REQUEST_REJECT = 'LEAVE_REQUEST_REJECT',
+  LEAVE_REQUEST_CANCEL = 'LEAVE_REQUEST_CANCEL',
+  LEAVE_CANCEL_REQUEST = 'LEAVE_CANCEL_REQUEST',
+  LEAVE_CANCEL_APPROVE = 'LEAVE_CANCEL_APPROVE',
+  LEAVE_CANCEL_REJECT = 'LEAVE_CANCEL_REJECT',
+  COMP_OFF_REQUEST_CREATE = 'COMP_OFF_REQUEST_CREATE',
+  COMP_OFF_REQUEST_APPROVE = 'COMP_OFF_REQUEST_APPROVE',
+  COMP_OFF_REQUEST_REJECT = 'COMP_OFF_REQUEST_REJECT',
+  LEAVE_REPORT_EXPORT = 'LEAVE_REPORT_EXPORT',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -404,6 +455,31 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.TASK_COMPLETE,
     PermissionCode.TASK_REASSIGN,
     PermissionCode.DELEGATION_MANAGE,
+    // Leave Management Permissions
+    PermissionCode.LEAVE_READ,
+    PermissionCode.LEAVE_READ_OWN,
+    PermissionCode.LEAVE_READ_TEAM,
+    PermissionCode.LEAVE_READ_ALL,
+    PermissionCode.LEAVE_APPLY,
+    PermissionCode.LEAVE_APPLY_FOR_REPORTEE,
+    PermissionCode.LEAVE_CANCEL,
+    PermissionCode.LEAVE_CANCEL_APPROVED,
+    PermissionCode.LEAVE_APPROVE,
+    PermissionCode.LEAVE_REJECT,
+    PermissionCode.LEAVE_OVERRIDE,
+    PermissionCode.LEAVE_ADJUST_BALANCE,
+    PermissionCode.LEAVE_POLICY_READ,
+    PermissionCode.LEAVE_POLICY_CREATE,
+    PermissionCode.LEAVE_POLICY_UPDATE,
+    PermissionCode.LEAVE_POLICY_DELETE,
+    PermissionCode.LEAVE_TYPE_READ,
+    PermissionCode.LEAVE_TYPE_CREATE,
+    PermissionCode.LEAVE_TYPE_UPDATE,
+    PermissionCode.LEAVE_TYPE_DELETE,
+    PermissionCode.LEAVE_COMPOFF_APPLY,
+    PermissionCode.LEAVE_COMPOFF_APPROVE,
+    PermissionCode.LEAVE_REPORT_VIEW,
+    PermissionCode.LEAVE_REPORT_EXPORT,
   ],
   [RoleCode.MANAGER]: [
     PermissionCode.ORGANIZATION_READ,
@@ -423,6 +499,16 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.TASK_UPDATE,
     PermissionCode.TASK_COMPLETE,
     PermissionCode.DELEGATION_MANAGE,
+    PermissionCode.LEAVE_READ,
+    PermissionCode.LEAVE_READ_OWN,
+    PermissionCode.LEAVE_READ_TEAM,
+    PermissionCode.LEAVE_APPLY,
+    PermissionCode.LEAVE_APPLY_FOR_REPORTEE,
+    PermissionCode.LEAVE_APPROVE,
+    PermissionCode.LEAVE_REJECT,
+    PermissionCode.LEAVE_CANCEL,
+    PermissionCode.LEAVE_COMPOFF_APPROVE,
+    PermissionCode.LEAVE_REPORT_VIEW,
   ],
   [RoleCode.EMPLOYEE]: [
     PermissionCode.ORGANIZATION_READ,
@@ -433,6 +519,10 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.APPROVAL_READ,
     PermissionCode.TASK_READ,
     PermissionCode.TASK_COMPLETE,
+    PermissionCode.LEAVE_READ_OWN,
+    PermissionCode.LEAVE_APPLY,
+    PermissionCode.LEAVE_CANCEL,
+    PermissionCode.LEAVE_COMPOFF_APPLY,
   ],
 };
 
@@ -1586,3 +1676,409 @@ export interface DelegationDto {
   createdAt: string;
   updatedAt: string;
 }
+
+// ==========================================
+// LEAVE MANAGEMENT ENUMS & SCHEMAS
+// ==========================================
+
+export enum LeaveCategory {
+  EARNED_LEAVE = 'earned_leave',
+  SICK_LEAVE = 'sick_leave',
+  CASUAL_LEAVE = 'casual_leave',
+  MATERNITY_LEAVE = 'maternity_leave',
+  PATERNITY_LEAVE = 'paternity_leave',
+  MARRIAGE_LEAVE = 'marriage_leave',
+  BEREAVEMENT_LEAVE = 'bereavement_leave',
+  COMPENSATORY_OFF = 'compensatory_off',
+  LOSS_OF_PAY = 'loss_of_pay',
+  SABBATICAL_LEAVE = 'sabbatical_leave',
+  CHILDCARE_LEAVE = 'childcare_leave',
+  RESTRICTED_HOLIDAY = 'restricted_holiday',
+  CUSTOM = 'custom',
+}
+
+export enum LeaveDurationType {
+  FULL_DAY = 'full_day',
+  HALF_DAY = 'half_day',
+  QUARTER_DAY = 'quarter_day',
+  HOURLY = 'hourly',
+}
+
+export enum LeaveRequestStatus {
+  DRAFT = 'DRAFT',
+  SUBMITTED = 'SUBMITTED',
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  CANCELLED = 'CANCELLED',
+  WITHDRAWN = 'WITHDRAWN',
+  CANCEL_REQUESTED = 'CANCEL_REQUESTED',
+  CANCELLED_AFTER_APPROVAL = 'CANCELLED_AFTER_APPROVAL',
+}
+
+export enum CompOffStatus {
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  EXPIRED = 'EXPIRED',
+}
+
+export const CreateLeaveTypeSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
+  code: z.string().min(1, 'Code is required').max(20).toUpperCase(),
+  description: z.string().max(500).optional().nullable(),
+  category: z.nativeEnum(LeaveCategory).default(LeaveCategory.EARNED_LEAVE),
+  isPaid: z.boolean().default(true),
+  isActive: z.boolean().default(true),
+  color: z.string().optional().default('#1E3A8A'),
+  icon: z.string().optional().default('calendar'),
+  requiresAttachment: z.boolean().default(false),
+  attachmentRequiredDays: z.number().int().min(0).default(0),
+  allowsHalfDay: z.boolean().default(true),
+  allowsQuarterDay: z.boolean().default(false),
+  allowsHourly: z.boolean().default(false),
+  allowsNegativeBalance: z.boolean().default(false),
+  requiresApproval: z.boolean().default(true),
+  isCompOff: z.boolean().default(false),
+  isLossOfPay: z.boolean().default(false),
+  isRestrictedHoliday: z.boolean().default(false),
+  applicableProbation: z.boolean().default(true),
+  applicableContract: z.boolean().default(true),
+  applicableIntern: z.boolean().default(true),
+  customFields: z.record(z.any()).optional().default({}),
+});
+
+export const UpdateLeaveTypeSchema = CreateLeaveTypeSchema.partial();
+
+export const LeaveTypeQueryFilterSchema = z.object({
+  category: z.nativeEnum(LeaveCategory).optional(),
+  isActive: z
+    .string()
+    .optional()
+    .transform((val) => (val === undefined ? undefined : val === 'true')),
+  search: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+export const CreateLeavePolicySchema = z.object({
+  name: z.string().min(2, 'Policy name is required').max(100),
+  description: z.string().max(500).optional().nullable(),
+  leaveTypeId: z.string().uuid('Valid leaveTypeId is required'),
+  applicableLocations: z.array(z.string()).default(['ALL']),
+  applicableDepartments: z.array(z.string()).default(['ALL']),
+  applicableDesignations: z.array(z.string()).default(['ALL']),
+  applicableGrades: z.array(z.string()).default(['ALL']),
+  applicableEmploymentTypes: z.array(z.string()).default(['ALL']),
+  applicableEmployeeStatuses: z.array(z.string()).default(['ALL']),
+  entitlementType: z.enum(['fixed', 'experience_based', 'grant_based', 'attendance_based']).default('fixed'),
+  annualEntitlement: z.coerce.number().min(0).default(0),
+  monthlyEntitlement: z.coerce.number().min(0).optional().nullable(),
+  accrualFrequency: z.enum(['monthly', 'quarterly', 'half_yearly', 'yearly']).default('yearly'),
+  accrualStartDate: z.string().optional().nullable(),
+  prorateNewJoiners: z.boolean().default(true),
+  probationEligibility: z.boolean().default(true),
+  minimumServicePeriodDays: z.coerce.number().int().min(0).default(0),
+  maxDaysPerRequest: z.coerce.number().min(0).optional().nullable(),
+  maxConsecutiveDays: z.coerce.number().min(0).optional().nullable(),
+  minimumNoticeDays: z.coerce.number().int().min(0).default(0),
+  allowPastDates: z.boolean().default(true),
+  allowFutureDates: z.boolean().default(true),
+  maxFutureDays: z.coerce.number().int().min(0).optional().nullable(),
+  allowHalfDay: z.boolean().default(true),
+  allowQuarterDay: z.boolean().default(false),
+  allowHourly: z.boolean().default(false),
+  allowNegativeBalance: z.boolean().default(false),
+  allowCarryForward: z.boolean().default(false),
+  carryForwardLimit: z.coerce.number().min(0).optional().nullable(),
+  carryForwardExpiryDays: z.coerce.number().int().min(0).optional().nullable(),
+  allowEncashment: z.boolean().default(false),
+  encashmentLimit: z.coerce.number().min(0).optional().nullable(),
+  minBalanceForEncashment: z.coerce.number().min(0).optional().nullable(),
+  allowWeekendLeave: z.boolean().default(false),
+  allowHolidayLeave: z.boolean().default(false),
+  allowOverlappingRequests: z.boolean().default(false),
+  requiresApproval: z.boolean().default(true),
+  approvalWorkflowId: z.string().optional().nullable(),
+  requiresAttachment: z.boolean().default(false),
+  attachmentRequiredDays: z.coerce.number().int().min(0).default(0),
+  effectiveFrom: z.string().or(z.date()).optional(),
+  effectiveTo: z.string().or(z.date()).optional().nullable(),
+  status: z.enum(['active', 'inactive']).default('active'),
+});
+
+export const UpdateLeavePolicySchema = CreateLeavePolicySchema.partial();
+
+export const LeavePolicyQueryFilterSchema = z.object({
+  leaveTypeId: z.string().uuid().optional(),
+  status: z.string().optional(),
+  search: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+export const AdjustLeaveBalanceSchema = z.object({
+  leaveTypeId: z.string().uuid('Valid leaveTypeId is required'),
+  year: z.coerce.number().int().min(2020).max(2100).default(new Date().getFullYear()),
+  adjustmentAmount: z.coerce.number(), // positive or negative
+  reason: z.string().min(3, 'Adjustment reason is required'),
+});
+
+export const CreateLeaveRequestSchema = z.object({
+  employeeId: z.string().uuid().optional(), // optional if applying for self
+  leaveTypeId: z.string().uuid('Valid leaveTypeId is required'),
+  fromDate: z.string().min(1, 'From date is required'),
+  toDate: z.string().min(1, 'To date is required'),
+  durationType: z.nativeEnum(LeaveDurationType).default(LeaveDurationType.FULL_DAY),
+  halfDayType: z.enum(['first_half', 'second_half']).optional().nullable(),
+  quarterDayType: z.enum(['q1', 'q2', 'q3', 'q4']).optional().nullable(),
+  startTime: z.string().optional().nullable(),
+  endTime: z.string().optional().nullable(),
+  reason: z.string().min(3, 'Reason is required').max(1000),
+  attachmentUrl: z.string().url().optional().nullable().or(z.literal('')),
+  coveringEmployeeId: z.string().uuid().optional().nullable().or(z.literal('')),
+  contactNumber: z.string().max(25).optional().nullable().or(z.literal('')),
+  idempotencyKey: z.string().optional().nullable(),
+});
+
+export const CancelLeaveRequestSchema = z.object({
+  cancellationReason: z.string().min(3, 'Cancellation reason is required'),
+});
+
+export const CreateCompOffRequestSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  workedDate: z.string().min(1, 'Worked date is required'),
+  workedHours: z.coerce.number().min(0.5).max(24).optional().nullable(),
+  reason: z.string().min(3, 'Reason is required'),
+  attachmentUrl: z.string().url().optional().nullable().or(z.literal('')),
+  creditedDays: z.coerce.number().min(0.5).max(2.0).default(1.0),
+});
+
+export const LeaveRequestQueryFilterSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  leaveTypeId: z.string().uuid().optional(),
+  status: z.string().optional(),
+  fromDate: z.string().optional(),
+  toDate: z.string().optional(),
+  search: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+});
+
+// TypeScript Types & DTOs
+export type CreateLeaveTypeInput = z.infer<typeof CreateLeaveTypeSchema>;
+export type UpdateLeaveTypeInput = z.infer<typeof UpdateLeaveTypeSchema>;
+export type LeaveTypeQueryFilterInput = z.infer<typeof LeaveTypeQueryFilterSchema>;
+
+export type CreateLeavePolicyInput = z.infer<typeof CreateLeavePolicySchema>;
+export type UpdateLeavePolicyInput = z.infer<typeof UpdateLeavePolicySchema>;
+export type LeavePolicyQueryFilterInput = z.infer<typeof LeavePolicyQueryFilterSchema>;
+
+export type AdjustLeaveBalanceInput = z.infer<typeof AdjustLeaveBalanceSchema>;
+export type CreateLeaveRequestInput = z.infer<typeof CreateLeaveRequestSchema>;
+export type CancelLeaveRequestInput = z.infer<typeof CancelLeaveRequestSchema>;
+export type CreateCompOffRequestInput = z.infer<typeof CreateCompOffRequestSchema>;
+export type LeaveRequestQueryFilterInput = z.infer<typeof LeaveRequestQueryFilterSchema>;
+
+export interface LeaveTypeDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  code: string;
+  description?: string | null;
+  category: LeaveCategory;
+  isPaid: boolean;
+  isActive: boolean;
+  color?: string | null;
+  icon?: string | null;
+  requiresAttachment: boolean;
+  attachmentRequiredDays?: number | null;
+  allowsHalfDay: boolean;
+  allowsQuarterDay: boolean;
+  allowsHourly: boolean;
+  allowsNegativeBalance: boolean;
+  requiresApproval: boolean;
+  isCompOff: boolean;
+  isLossOfPay: boolean;
+  isRestrictedHoliday: boolean;
+  applicableProbation: boolean;
+  applicableContract: boolean;
+  applicableIntern: boolean;
+  customFields?: Record<string, any>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeavePolicyDto {
+  id: string;
+  organizationId: string;
+  leaveTypeId: string;
+  leaveTypeName?: string;
+  leaveTypeCode?: string;
+  name: string;
+  description?: string | null;
+  applicableLocations: string[];
+  applicableDepartments: string[];
+  applicableDesignations: string[];
+  applicableGrades: string[];
+  applicableEmploymentTypes: string[];
+  applicableEmployeeStatuses: string[];
+  entitlementType: string;
+  annualEntitlement: number;
+  monthlyEntitlement?: number | null;
+  accrualFrequency: string;
+  accrualStartDate?: string | null;
+  prorateNewJoiners: boolean;
+  probationEligibility: boolean;
+  minimumServicePeriodDays: number;
+  maxDaysPerRequest?: number | null;
+  maxConsecutiveDays?: number | null;
+  minimumNoticeDays: number;
+  allowPastDates: boolean;
+  allowFutureDates: boolean;
+  maxFutureDays?: number | null;
+  allowHalfDay: boolean;
+  allowQuarterDay: boolean;
+  allowHourly: boolean;
+  allowNegativeBalance: boolean;
+  allowCarryForward: boolean;
+  carryForwardLimit?: number | null;
+  carryForwardExpiryDays?: number | null;
+  allowEncashment: boolean;
+  encashmentLimit?: number | null;
+  minBalanceForEncashment?: number | null;
+  allowWeekendLeave: boolean;
+  allowHolidayLeave: boolean;
+  allowOverlappingRequests: boolean;
+  requiresApproval: boolean;
+  approvalWorkflowId?: string | null;
+  requiresAttachment: boolean;
+  attachmentRequiredDays: number;
+  effectiveFrom: string;
+  effectiveTo?: string | null;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeaveBalanceDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  leaveTypeId: string;
+  leaveTypeName?: string;
+  leaveTypeCode?: string;
+  leaveTypeColor?: string;
+  leavePolicyId?: string | null;
+  year: number;
+  openingBalance: number;
+  accrued: number;
+  granted: number;
+  used: number;
+  pending: number;
+  carryForward: number;
+  encashed: number;
+  adjustment: number;
+  closingBalance: number;
+  availableBalance: number; // calculated: (openingBalance + accrued + granted + carryForward + adjustment) - (used + pending + encashed)
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeaveBalanceHistoryDto {
+  id: string;
+  organizationId: string;
+  leaveBalanceId: string;
+  employeeId: string;
+  leaveTypeId: string;
+  leaveTypeName?: string;
+  action: string;
+  amount: number;
+  previousBalance: number;
+  newBalance: number;
+  reason?: string | null;
+  referenceId?: string | null;
+  actorUserId?: string | null;
+  createdAt: string;
+}
+
+export interface LeaveRequestDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  departmentName?: string;
+  leaveTypeId: string;
+  leaveTypeName?: string;
+  leaveTypeCode?: string;
+  leaveTypeColor?: string;
+  leavePolicyId?: string | null;
+  fromDate: string;
+  toDate: string;
+  numberOfDays: number;
+  durationType: LeaveDurationType;
+  halfDayType?: string | null;
+  quarterDayType?: string | null;
+  startTime?: string | null;
+  endTime?: string | null;
+  reason: string;
+  attachmentUrl?: string | null;
+  coveringEmployeeId?: string | null;
+  coveringEmployeeName?: string | null;
+  contactNumber?: string | null;
+  status: LeaveRequestStatus;
+  approvalFlowId?: string | null;
+  appliedOn: string;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  rejectedBy?: string | null;
+  rejectedAt?: string | null;
+  rejectionReason?: string | null;
+  cancelledBy?: string | null;
+  cancelledAt?: string | null;
+  cancellationReason?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CompOffRequestDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  workedDate: string;
+  workedHours?: number | null;
+  reason: string;
+  attachmentUrl?: string | null;
+  status: CompOffStatus;
+  approvalFlowId?: string | null;
+  creditedDays: number;
+  expiryDate?: string | null;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  rejectedBy?: string | null;
+  rejectedAt?: string | null;
+  rejectionReason?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeaveCalendarItemDto {
+  id: string;
+  type: 'leave' | 'holiday' | 'weekend';
+  title: string;
+  date: string;
+  endDate?: string;
+  employeeId?: string;
+  employeeName?: string;
+  leaveTypeName?: string;
+  leaveTypeColor?: string;
+  status?: string;
+  isHalfDay?: boolean;
+}
+

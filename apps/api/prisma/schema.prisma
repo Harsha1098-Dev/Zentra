@@ -67,6 +67,11 @@ model Organization {
   checklistRuns           ChecklistRun[]
   tasks                   Task[]
   delegations             Delegation[]
+  leaveTypes              LeaveType[]
+  leavePolicies           LeavePolicy[]
+  leaveBalances           LeaveBalance[]
+  leaveRequests           LeaveRequest[]
+  compOffRequests         CompOffRequest[]
 
   @@index([slug])
   @@map("organizations")
@@ -511,7 +516,11 @@ model Employee {
   grade             Grade?              @relation(fields: [gradeId], references: [id], onDelete: SetNull)
   reportingManager  Employee?           @relation("ManagerReportees", fields: [reportingManagerId], references: [id], onDelete: SetNull)
   reportees         Employee[]          @relation("ManagerReportees")
-  employmentHistory EmploymentHistory[]
+  employmentHistory     EmploymentHistory[]
+  leaveBalances         LeaveBalance[]
+  leaveRequests         LeaveRequest[]           @relation("EmployeeLeaveRequests")
+  coveringLeaveRequests LeaveRequest[]           @relation("CoveringEmployeeRequests")
+  compOffRequests       CompOffRequest[]
 
   @@unique([organizationId, employeeCode])
   @@unique([organizationId, workEmail])
@@ -875,4 +884,251 @@ model Delegation {
   @@index([delegateToUserId])
   @@index([status])
   @@map("delegations")
+}
+
+model LeaveType {
+  id                     String         @id @default(uuid())
+  organizationId         String         @map("organization_id")
+  name                   String
+  code                   String
+  description            String?
+  category               String         @default("earned_leave") // earned_leave, sick_leave, casual_leave, etc.
+  isPaid                 Boolean        @default(true) @map("is_paid")
+  isActive               Boolean        @default(true) @map("is_active")
+  color                  String?        @default("#1E3A8A")
+  icon                   String?        @default("calendar")
+  requiresAttachment     Boolean        @default(false) @map("requires_attachment")
+  attachmentRequiredDays Int?           @default(0) @map("attachment_required_days")
+  allowsHalfDay          Boolean        @default(true) @map("allows_half_day")
+  allowsQuarterDay       Boolean        @default(false) @map("allows_quarter_day")
+  allowsHourly           Boolean        @default(false) @map("allows_hourly")
+  allowsNegativeBalance  Boolean        @default(false) @map("allows_negative_balance")
+  requiresApproval       Boolean        @default(true) @map("requires_approval")
+  isCompOff              Boolean        @default(false) @map("is_comp_off")
+  isLossOfPay            Boolean        @default(false) @map("is_loss_of_pay")
+  isRestrictedHoliday    Boolean        @default(false) @map("is_restricted_holiday")
+  applicableProbation    Boolean        @default(true) @map("applicable_probation")
+  applicableContract     Boolean        @default(true) @map("applicable_contract")
+  applicableIntern       Boolean        @default(true) @map("applicable_intern")
+  customFields           Json?          @default("{}") @map("custom_fields")
+  createdAt              DateTime       @default(now()) @map("created_at")
+  updatedAt              DateTime       @updatedAt @map("updated_at")
+  deletedAt              DateTime?      @map("deleted_at")
+
+  organization           Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  policies               LeavePolicy[]
+  balances               LeaveBalance[]
+  requests               LeaveRequest[]
+
+  @@unique([organizationId, code])
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@index([category])
+  @@index([isActive])
+  @@map("leave_types")
+}
+
+model LeavePolicy {
+  id                         String         @id @default(uuid())
+  organizationId             String         @map("organization_id")
+  leaveTypeId                String         @map("leave_type_id")
+  name                       String
+  description                String?
+  applicableLocations        Json           @default("[\"ALL\"]") @map("applicable_locations")
+  applicableDepartments      Json           @default("[\"ALL\"]") @map("applicable_departments")
+  applicableDesignations     Json           @default("[\"ALL\"]") @map("applicable_designations")
+  applicableGrades           Json           @default("[\"ALL\"]") @map("applicable_grades")
+  applicableEmploymentTypes  Json           @default("[\"ALL\"]") @map("applicable_employment_types")
+  applicableEmployeeStatuses Json           @default("[\"ALL\"]") @map("applicable_employee_statuses")
+  entitlementType            String         @default("fixed") @map("entitlement_type") // fixed, experience_based, grant_based, attendance_based
+  annualEntitlement          Decimal        @default(0) @map("annual_entitlement") @db.Decimal(5, 2)
+  monthlyEntitlement         Decimal?       @map("monthly_entitlement") @db.Decimal(5, 2)
+  accrualFrequency           String         @default("yearly") @map("accrual_frequency") // monthly, quarterly, half_yearly, yearly
+  accrualStartDate           String?        @map("accrual_start_date")
+  prorateNewJoiners          Boolean        @default(true) @map("prorate_new_joiners")
+  probationEligibility       Boolean        @default(true) @map("probation_eligibility")
+  minimumServicePeriodDays   Int            @default(0) @map("minimum_service_period_days")
+  maxDaysPerRequest          Decimal?       @map("max_days_per_request") @db.Decimal(5, 2)
+  maxConsecutiveDays         Decimal?       @map("max_consecutive_days") @db.Decimal(5, 2)
+  minimumNoticeDays          Int            @default(0) @map("minimum_notice_days")
+  allowPastDates             Boolean        @default(true) @map("allow_past_dates")
+  allowFutureDates           Boolean        @default(true) @map("allow_future_dates")
+  maxFutureDays              Int?           @map("max_future_days")
+  allowHalfDay               Boolean        @default(true) @map("allow_half_day")
+  allowQuarterDay            Boolean        @default(false) @map("allow_quarter_day")
+  allowHourly                Boolean        @default(false) @map("allow_hourly")
+  allowNegativeBalance       Boolean        @default(false) @map("allow_negative_balance")
+  allowCarryForward          Boolean        @default(false) @map("allow_carry_forward")
+  carryForwardLimit          Decimal?       @map("carry_forward_limit") @db.Decimal(5, 2)
+  carryForwardExpiryDays     Int?           @map("carry_forward_expiry_days")
+  allowEncashment            Boolean        @default(false) @map("allow_encashment")
+  encashmentLimit            Decimal?       @map("encashment_limit") @db.Decimal(5, 2)
+  minBalanceForEncashment    Decimal?       @map("min_balance_for_encashment") @db.Decimal(5, 2)
+  allowWeekendLeave          Boolean        @default(false) @map("allow_weekend_leave")
+  allowHolidayLeave          Boolean        @default(false) @map("allow_holiday_leave")
+  allowOverlappingRequests   Boolean        @default(false) @map("allow_overlapping_requests")
+  requiresApproval           Boolean        @default(true) @map("requires_approval")
+  approvalWorkflowId         String?        @map("approval_workflow_id")
+  requiresAttachment         Boolean        @default(false) @map("requires_attachment")
+  attachmentRequiredDays     Int            @default(0) @map("attachment_required_days")
+  effectiveFrom              DateTime       @default(now()) @map("effective_from")
+  effectiveTo                DateTime?      @map("effective_to")
+  status                     String         @default("active") // active, inactive
+  createdAt                  DateTime       @default(now()) @map("created_at")
+  updatedAt                  DateTime       @updatedAt @map("updated_at")
+  deletedAt                  DateTime?      @map("deleted_at")
+
+  organization               Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  leaveType                  LeaveType      @relation(fields: [leaveTypeId], references: [id], onDelete: Cascade)
+  balances                   LeaveBalance[]
+  requests                   LeaveRequest[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@index([leaveTypeId])
+  @@index([status])
+  @@map("leave_policies")
+}
+
+model LeaveBalance {
+  id              String                @id @default(uuid())
+  organizationId  String                @map("organization_id")
+  employeeId      String                @map("employee_id")
+  leaveTypeId     String                @map("leave_type_id")
+  leavePolicyId   String?               @map("leave_policy_id")
+  year            Int
+  openingBalance  Decimal               @default(0) @map("opening_balance") @db.Decimal(5, 2)
+  accrued         Decimal               @default(0) @db.Decimal(5, 2)
+  granted         Decimal               @default(0) @db.Decimal(5, 2)
+  used            Decimal               @default(0) @db.Decimal(5, 2)
+  pending         Decimal               @default(0) @db.Decimal(5, 2)
+  carryForward    Decimal               @default(0) @map("carry_forward") @db.Decimal(5, 2)
+  encashed        Decimal               @default(0) @db.Decimal(5, 2)
+  adjustment      Decimal               @default(0) @db.Decimal(5, 2)
+  closingBalance  Decimal               @default(0) @map("closing_balance") @db.Decimal(5, 2)
+  effectiveFrom   DateTime              @default(now()) @map("effective_from")
+  effectiveTo     DateTime?             @map("effective_to")
+  status          String                @default("active")
+  createdAt       DateTime              @default(now()) @map("created_at")
+  updatedAt       DateTime              @updatedAt @map("updated_at")
+
+  organization    Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee        Employee              @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  leaveType       LeaveType             @relation(fields: [leaveTypeId], references: [id], onDelete: Cascade)
+  leavePolicy     LeavePolicy?          @relation(fields: [leavePolicyId], references: [id], onDelete: SetNull)
+  history         LeaveBalanceHistory[]
+
+  @@unique([organizationId, employeeId, leaveTypeId, year])
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([leaveTypeId])
+  @@index([year])
+  @@map("leave_balances")
+}
+
+model LeaveBalanceHistory {
+  id              String       @id @default(uuid())
+  organizationId  String       @map("organization_id")
+  leaveBalanceId  String       @map("leave_balance_id")
+  employeeId      String       @map("employee_id")
+  leaveTypeId     String       @map("leave_type_id")
+  action          String       // accrual, grant, leave_applied, leave_approved, leave_rejected, leave_cancelled, carry_forward, encashment, manual_adjustment
+  amount          Decimal      @db.Decimal(5, 2)
+  previousBalance Decimal      @map("previous_balance") @db.Decimal(5, 2)
+  newBalance      Decimal      @map("new_balance") @db.Decimal(5, 2)
+  reason          String?
+  referenceId     String?      @map("reference_id")
+  actorUserId     String?      @map("actor_user_id")
+  createdAt       DateTime     @default(now()) @map("created_at")
+
+  leaveBalance    LeaveBalance @relation(fields: [leaveBalanceId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([leaveBalanceId])
+  @@index([leaveTypeId])
+  @@map("leave_balance_histories")
+}
+
+model LeaveRequest {
+  id                   String       @id @default(uuid())
+  organizationId       String       @map("organization_id")
+  employeeId           String       @map("employee_id")
+  leaveTypeId          String       @map("leave_type_id")
+  leavePolicyId        String?      @map("leave_policy_id")
+  fromDate             DateTime     @map("from_date")
+  toDate               DateTime     @map("to_date")
+  numberOfDays         Decimal      @map("number_of_days") @db.Decimal(5, 2)
+  durationType         String       @default("full_day") @map("duration_type") // full_day, half_day, quarter_day, hourly
+  halfDayType          String?      @map("half_day_type") // first_half, second_half
+  quarterDayType       String?      @map("quarter_day_type") // q1, q2, q3, q4
+  startTime            String?      @map("start_time")
+  endTime              String?      @map("end_time")
+  reason               String
+  attachmentUrl        String?      @map("attachment_url")
+  coveringEmployeeId   String?      @map("covering_employee_id")
+  contactNumber        String?      @map("contact_number")
+  status               String       @default("PENDING_APPROVAL") // DRAFT, SUBMITTED, PENDING_APPROVAL, APPROVED, REJECTED, CANCELLED, WITHDRAWN, CANCEL_REQUESTED, CANCELLED_AFTER_APPROVAL
+  approvalFlowId       String?      @map("approval_flow_id")
+  appliedOn            DateTime     @default(now()) @map("applied_on")
+  approvedBy           String?      @map("approved_by")
+  approvedAt           DateTime?    @map("approved_at")
+  rejectedBy           String?      @map("rejected_by")
+  rejectedAt           DateTime?    @map("rejected_at")
+  rejectionReason      String?      @map("rejection_reason")
+  cancelledBy          String?      @map("cancelled_by")
+  cancelledAt          DateTime?    @map("cancelled_at")
+  cancellationReason   String?      @map("cancellation_reason")
+  cancelApprovalFlowId String?      @map("cancel_approval_flow_id")
+  idempotencyKey       String?      @unique @map("idempotency_key")
+  createdAt            DateTime     @default(now()) @map("created_at")
+  updatedAt            DateTime     @updatedAt @map("updated_at")
+
+  organization         Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee             Employee     @relation("EmployeeLeaveRequests", fields: [employeeId], references: [id], onDelete: Cascade)
+  coveringEmployee     Employee?    @relation("CoveringEmployeeRequests", fields: [coveringEmployeeId], references: [id], onDelete: SetNull)
+  leaveType            LeaveType    @relation(fields: [leaveTypeId], references: [id], onDelete: Cascade)
+  leavePolicy          LeavePolicy? @relation(fields: [leavePolicyId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([leaveTypeId])
+  @@index([leavePolicyId])
+  @@index([status])
+  @@index([fromDate])
+  @@index([toDate])
+  @@index([approvalFlowId])
+  @@map("leave_requests")
+}
+
+model CompOffRequest {
+  id              String       @id @default(uuid())
+  organizationId  String       @map("organization_id")
+  employeeId      String       @map("employee_id")
+  workedDate      DateTime     @map("worked_date")
+  workedHours     Decimal?     @map("worked_hours") @db.Decimal(4, 2)
+  reason          String
+  attachmentUrl   String?      @map("attachment_url")
+  status          String       @default("PENDING_APPROVAL") // PENDING_APPROVAL, APPROVED, REJECTED, EXPIRED
+  approvalFlowId  String?      @map("approval_flow_id")
+  creditedDays    Decimal      @default(1.0) @map("credited_days") @db.Decimal(4, 2)
+  expiryDate      DateTime?    @map("expiry_date")
+  approvedBy      String?      @map("approved_by")
+  approvedAt      DateTime?    @map("approved_at")
+  rejectedBy      String?      @map("rejected_by")
+  rejectedAt      DateTime?    @map("rejected_at")
+  rejectionReason String?      @map("rejection_reason")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employee        Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, employeeId, workedDate])
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([status])
+  @@index([workedDate])
+  @@index([approvalFlowId])
+  @@map("comp_off_requests")
 }
