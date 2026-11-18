@@ -261,6 +261,70 @@ const BASE_PERMISSIONS: { code: string; name: string; description: string }[] = 
   { code: 'payroll.form16.prepare', name: 'Prepare Form 16', description: 'Compile annual income and TDS computation data for Form 16' },
   { code: 'payroll.form16.publish', name: 'Publish Form 16', description: 'Release signed Form 16 certificates to employees' },
   { code: 'payroll.form16.download', name: 'Download Form 16', description: 'Download employee Form 16 certificate' },
+
+  // Employee Lifecycle Permissions
+  { code: 'onboarding.read', name: 'Read Onboarding', description: 'View onboarding flows and employee runs' },
+  { code: 'onboarding.create', name: 'Create Onboarding Flow', description: 'Create new employee onboarding flow' },
+  { code: 'onboarding.update', name: 'Update Onboarding Flow', description: 'Modify onboarding flows and tasks' },
+  { code: 'onboarding.delete', name: 'Delete Onboarding Flow', description: 'Deactivate or delete onboarding flows' },
+  { code: 'onboarding.execute', name: 'Execute Onboarding', description: 'Initiate onboarding runs for employees' },
+  { code: 'onboarding.task.complete', name: 'Complete Onboarding Task', description: 'Mark assigned onboarding tasks complete' },
+  { code: 'onboarding.task.reassign', name: 'Reassign Onboarding Task', description: 'Reassign onboarding tasks to other owners' },
+
+  { code: 'probation.read', name: 'Read Probation', description: 'View employee probation details and tracking' },
+  { code: 'probation.create', name: 'Create Probation Review', description: 'Initiate probation review workflow' },
+  { code: 'probation.review', name: 'Review Probation', description: 'Submit manager probation ratings and remarks' },
+  { code: 'probation.approve', name: 'Approve Probation Confirmation', description: 'Confirm or extend employee probation' },
+  { code: 'probation.reject', name: 'Reject Probation Confirmation', description: 'Terminate or reject probation confirmation' },
+
+  { code: 'transfer.read', name: 'Read Transfers', description: 'View employee transfer requests' },
+  { code: 'transfer.create', name: 'Create Transfer Request', description: 'Initiate employee department/location transfer' },
+  { code: 'transfer.update', name: 'Update Transfer Request', description: 'Modify transfer request parameters' },
+  { code: 'transfer.approve', name: 'Approve Transfer', description: 'Approve employee transfer request' },
+  { code: 'transfer.reject', name: 'Reject Transfer', description: 'Reject employee transfer request' },
+  { code: 'transfer.cancel', name: 'Cancel Transfer', description: 'Cancel pending transfer request' },
+
+  { code: 'promotion.read', name: 'Read Promotions', description: 'View employee promotion requests' },
+  { code: 'promotion.create', name: 'Create Promotion Request', description: 'Initiate employee promotion' },
+  { code: 'promotion.update', name: 'Update Promotion Request', description: 'Modify promotion request parameters' },
+  { code: 'promotion.approve', name: 'Approve Promotion', description: 'Approve employee promotion' },
+  { code: 'promotion.reject', name: 'Reject Promotion', description: 'Reject employee promotion' },
+  { code: 'promotion.cancel', name: 'Cancel Promotion', description: 'Cancel pending promotion request' },
+
+  { code: 'salary_revision.read', name: 'Read Salary Revisions', description: 'View salary revision requests' },
+  { code: 'salary_revision.create', name: 'Create Salary Revision', description: 'Initiate employee compensation revision' },
+  { code: 'salary_revision.update', name: 'Update Salary Revision', description: 'Modify revision request details' },
+  { code: 'salary_revision.approve', name: 'Approve Salary Revision', description: 'Approve salary revision' },
+  { code: 'salary_revision.reject', name: 'Reject Salary Revision', description: 'Reject salary revision' },
+  { code: 'salary_revision.cancel', name: 'Cancel Salary Revision', description: 'Cancel pending salary revision' },
+
+  { code: 'resignation.read', name: 'Read Resignations', description: 'View resignation requests' },
+  { code: 'resignation.create', name: 'Submit Resignation', description: 'Submit employee resignation request' },
+  { code: 'resignation.update', name: 'Update Resignation', description: 'Modify resignation details' },
+  { code: 'resignation.approve', name: 'Approve Resignation', description: 'Approve employee resignation' },
+  { code: 'resignation.reject', name: 'Reject Resignation', description: 'Reject resignation request' },
+  { code: 'resignation.withdraw', name: 'Withdraw Resignation', description: 'Withdraw pending resignation request' },
+  { code: 'resignation.cancel', name: 'Cancel Resignation', description: 'Cancel resignation request' },
+
+  { code: 'exit_clearance.read', name: 'Read Exit Clearances', description: 'View exit clearance checklist' },
+  { code: 'exit_clearance.create', name: 'Create Exit Clearance', description: 'Add clearance item for offboarding' },
+  { code: 'exit_clearance.update', name: 'Update Exit Clearance', description: 'Edit exit clearance item' },
+  { code: 'exit_clearance.complete', name: 'Complete Exit Clearance', description: 'Sign off on exit clearance item' },
+  { code: 'exit_clearance.reassign', name: 'Reassign Exit Clearance', description: 'Reassign clearance task to department owner' },
+
+  { code: 'offboarding.read', name: 'Read Offboarding', description: 'View employee offboarding requests' },
+  { code: 'offboarding.create', name: 'Create Offboarding Request', description: 'Initiate employee exit process' },
+  { code: 'offboarding.update', name: 'Update Offboarding Request', description: 'Modify offboarding parameters' },
+  { code: 'offboarding.complete', name: 'Complete Offboarding', description: 'Finalize employee exit and mark exited' },
+  { code: 'offboarding.cancel', name: 'Cancel Offboarding', description: 'Cancel employee offboarding' },
+
+  { code: 'asset.read', name: 'Read Assets', description: 'View company asset inventory' },
+  { code: 'asset.assign', name: 'Assign Asset', description: 'Assign asset to employee' },
+  { code: 'asset.return', name: 'Return Asset', description: 'Record asset return and condition' },
+  { code: 'asset.update', name: 'Update Asset', description: 'Edit asset details' },
+
+  { code: 'letter.generate', name: 'Generate Lifecycle Letter', description: 'Generate official HR lifecycle letter' },
+  { code: 'letter.download', name: 'Download Lifecycle Letter', description: 'Download generated lifecycle letter PDF' },
 ];
 
 const BASE_ROLES = [

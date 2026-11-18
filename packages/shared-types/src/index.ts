@@ -386,6 +386,72 @@ export enum PermissionCode {
   PAYROLL_FORM16_PREPARE = 'payroll.form16.prepare',
   PAYROLL_FORM16_PUBLISH = 'payroll.form16.publish',
   PAYROLL_FORM16_DOWNLOAD = 'payroll.form16.download',
+
+  // Employee Lifecycle Permissions
+  ONBOARDING_READ = 'onboarding.read',
+  ONBOARDING_CREATE = 'onboarding.create',
+  ONBOARDING_UPDATE = 'onboarding.update',
+  ONBOARDING_DELETE = 'onboarding.delete',
+  ONBOARDING_EXECUTE = 'onboarding.execute',
+  ONBOARDING_TASK_COMPLETE = 'onboarding.task.complete',
+  ONBOARDING_TASK_REASSIGN = 'onboarding.task.reassign',
+
+  PROBATION_READ = 'probation.read',
+  PROBATION_CREATE = 'probation.create',
+  PROBATION_REVIEW = 'probation.review',
+  PROBATION_APPROVE = 'probation.approve',
+  PROBATION_REJECT = 'probation.reject',
+
+  TRANSFER_READ = 'transfer.read',
+  TRANSFER_CREATE = 'transfer.create',
+  TRANSFER_UPDATE = 'transfer.update',
+  TRANSFER_APPROVE = 'transfer.approve',
+  TRANSFER_REJECT = 'transfer.reject',
+  TRANSFER_CANCEL = 'transfer.cancel',
+
+  PROMOTION_READ = 'promotion.read',
+  PROMOTION_CREATE = 'promotion.create',
+  PROMOTION_UPDATE = 'promotion.update',
+  PROMOTION_APPROVE = 'promotion.approve',
+  PROMOTION_REJECT = 'promotion.reject',
+  PROMOTION_CANCEL = 'promotion.cancel',
+
+  SALARY_REVISION_READ = 'salary_revision.read',
+  SALARY_REVISION_CREATE = 'salary_revision.create',
+  SALARY_REVISION_UPDATE = 'salary_revision.update',
+  SALARY_REVISION_APPROVE = 'salary_revision.approve',
+  SALARY_REVISION_REJECT = 'salary_revision.reject',
+  SALARY_REVISION_CANCEL = 'salary_revision.cancel',
+
+  RESIGNATION_READ = 'resignation.read',
+  RESIGNATION_CREATE = 'resignation.create',
+  RESIGNATION_UPDATE = 'resignation.update',
+  RESIGNATION_APPROVE = 'resignation.approve',
+  RESIGNATION_REJECT = 'resignation.reject',
+  RESIGNATION_WITHDRAW = 'resignation.withdraw',
+  RESIGNATION_CANCEL = 'resignation.cancel',
+
+  EXIT_CLEARANCE_READ = 'exit_clearance.read',
+  EXIT_CLEARANCE_CREATE = 'exit_clearance.create',
+  EXIT_CLEARANCE_UPDATE = 'exit_clearance.update',
+  EXIT_CLEARANCE_COMPLETE = 'exit_clearance.complete',
+  EXIT_CLEARANCE_REASSIGN = 'exit_clearance.reassign',
+
+  OFFBOARDING_READ = 'offboarding.read',
+  OFFBOARDING_CREATE = 'offboarding.create',
+  OFFBOARDING_UPDATE = 'offboarding.update',
+  OFFBOARDING_COMPLETE = 'offboarding.complete',
+  OFFBOARDING_CANCEL = 'offboarding.cancel',
+
+  ASSET_READ = 'asset.read',
+  ASSET_CREATE = 'asset.create',
+  ASSET_ASSIGN = 'asset.assign',
+  ASSET_RETURN = 'asset.return',
+  ASSET_UPDATE = 'asset.update',
+  ASSET_DELETE = 'asset.delete',
+
+  LETTER_GENERATE = 'letter.generate',
+  LETTER_DOWNLOAD = 'letter.download',
 }
 
 export enum InvitationStatus {
@@ -703,6 +769,50 @@ export enum AuditAction {
   FORM16_PREPARE = 'FORM16_PREPARE',
   FORM16_PUBLISH = 'FORM16_PUBLISH',
   FORM16_DOWNLOAD = 'FORM16_DOWNLOAD',
+
+  // Employee Lifecycle Audit Actions
+  ONBOARDING_FLOW_CREATE = 'ONBOARDING_FLOW_CREATE',
+  ONBOARDING_FLOW_UPDATE = 'ONBOARDING_FLOW_UPDATE',
+  ONBOARDING_FLOW_DELETE = 'ONBOARDING_FLOW_DELETE',
+  ONBOARDING_RUN_CREATE = 'ONBOARDING_RUN_CREATE',
+  ONBOARDING_RUN_COMPLETE = 'ONBOARDING_RUN_COMPLETE',
+  ONBOARDING_TASK_COMPLETE = 'ONBOARDING_TASK_COMPLETE',
+  ONBOARDING_TASK_REASSIGN = 'ONBOARDING_TASK_REASSIGN',
+  PROBATION_REVIEW_CREATE = 'PROBATION_REVIEW_CREATE',
+  PROBATION_REVIEW_SUBMIT = 'PROBATION_REVIEW_SUBMIT',
+  PROBATION_APPROVE = 'PROBATION_APPROVE',
+  PROBATION_EXTEND = 'PROBATION_EXTEND',
+  PROBATION_REJECT = 'PROBATION_REJECT',
+  TRANSFER_CREATE = 'TRANSFER_CREATE',
+  TRANSFER_APPROVE = 'TRANSFER_APPROVE',
+  TRANSFER_REJECT = 'TRANSFER_REJECT',
+  TRANSFER_CANCEL = 'TRANSFER_CANCEL',
+  PROMOTION_CREATE = 'PROMOTION_CREATE',
+  PROMOTION_APPROVE = 'PROMOTION_APPROVE',
+  PROMOTION_REJECT = 'PROMOTION_REJECT',
+  PROMOTION_CANCEL = 'PROMOTION_CANCEL',
+  SALARY_REVISION_SUBMIT = 'SALARY_REVISION_SUBMIT',
+  SALARY_REVISION_CANCEL = 'SALARY_REVISION_CANCEL',
+  RESIGNATION_CREATE = 'RESIGNATION_CREATE',
+  RESIGNATION_SUBMIT = 'RESIGNATION_SUBMIT',
+  RESIGNATION_APPROVE = 'RESIGNATION_APPROVE',
+  RESIGNATION_REJECT = 'RESIGNATION_REJECT',
+  RESIGNATION_WITHDRAW = 'RESIGNATION_WITHDRAW',
+  RESIGNATION_CANCEL = 'RESIGNATION_CANCEL',
+  EXIT_CLEARANCE_CREATE = 'EXIT_CLEARANCE_CREATE',
+  EXIT_CLEARANCE_COMPLETE = 'EXIT_CLEARANCE_COMPLETE',
+  EXIT_CLEARANCE_REASSIGN = 'EXIT_CLEARANCE_REASSIGN',
+  EXIT_INTERVIEW_SUBMIT = 'EXIT_INTERVIEW_SUBMIT',
+  OFFBOARDING_CREATE = 'OFFBOARDING_CREATE',
+  OFFBOARDING_COMPLETE = 'OFFBOARDING_COMPLETE',
+  OFFBOARDING_CANCEL = 'OFFBOARDING_CANCEL',
+  ASSET_CREATE = 'ASSET_CREATE',
+  ASSET_ASSIGN = 'ASSET_ASSIGN',
+  ASSET_RETURN = 'ASSET_RETURN',
+  ASSET_UPDATE = 'ASSET_UPDATE',
+  ASSET_DELETE = 'ASSET_DELETE',
+  LETTER_GENERATE = 'LETTER_GENERATE',
+  LETTER_DOWNLOAD = 'LETTER_DOWNLOAD',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -930,6 +1040,62 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.PAYROLL_FORM16_READ,
     PermissionCode.PAYROLL_FORM16_PREPARE,
     PermissionCode.PAYROLL_FORM16_PUBLISH,
+    // Lifecycle Permissions for HR_ADMIN
+    PermissionCode.ONBOARDING_READ,
+    PermissionCode.ONBOARDING_CREATE,
+    PermissionCode.ONBOARDING_UPDATE,
+    PermissionCode.ONBOARDING_DELETE,
+    PermissionCode.ONBOARDING_EXECUTE,
+    PermissionCode.ONBOARDING_TASK_COMPLETE,
+    PermissionCode.ONBOARDING_TASK_REASSIGN,
+    PermissionCode.PROBATION_READ,
+    PermissionCode.PROBATION_CREATE,
+    PermissionCode.PROBATION_REVIEW,
+    PermissionCode.PROBATION_APPROVE,
+    PermissionCode.PROBATION_REJECT,
+    PermissionCode.TRANSFER_READ,
+    PermissionCode.TRANSFER_CREATE,
+    PermissionCode.TRANSFER_UPDATE,
+    PermissionCode.TRANSFER_APPROVE,
+    PermissionCode.TRANSFER_REJECT,
+    PermissionCode.TRANSFER_CANCEL,
+    PermissionCode.PROMOTION_READ,
+    PermissionCode.PROMOTION_CREATE,
+    PermissionCode.PROMOTION_UPDATE,
+    PermissionCode.PROMOTION_APPROVE,
+    PermissionCode.PROMOTION_REJECT,
+    PermissionCode.PROMOTION_CANCEL,
+    PermissionCode.SALARY_REVISION_READ,
+    PermissionCode.SALARY_REVISION_CREATE,
+    PermissionCode.SALARY_REVISION_UPDATE,
+    PermissionCode.SALARY_REVISION_APPROVE,
+    PermissionCode.SALARY_REVISION_REJECT,
+    PermissionCode.SALARY_REVISION_CANCEL,
+    PermissionCode.RESIGNATION_READ,
+    PermissionCode.RESIGNATION_CREATE,
+    PermissionCode.RESIGNATION_UPDATE,
+    PermissionCode.RESIGNATION_APPROVE,
+    PermissionCode.RESIGNATION_REJECT,
+    PermissionCode.RESIGNATION_WITHDRAW,
+    PermissionCode.RESIGNATION_CANCEL,
+    PermissionCode.EXIT_CLEARANCE_READ,
+    PermissionCode.EXIT_CLEARANCE_CREATE,
+    PermissionCode.EXIT_CLEARANCE_UPDATE,
+    PermissionCode.EXIT_CLEARANCE_COMPLETE,
+    PermissionCode.EXIT_CLEARANCE_REASSIGN,
+    PermissionCode.OFFBOARDING_READ,
+    PermissionCode.OFFBOARDING_CREATE,
+    PermissionCode.OFFBOARDING_UPDATE,
+    PermissionCode.OFFBOARDING_COMPLETE,
+    PermissionCode.OFFBOARDING_CANCEL,
+    PermissionCode.ASSET_READ,
+    PermissionCode.ASSET_CREATE,
+    PermissionCode.ASSET_ASSIGN,
+    PermissionCode.ASSET_RETURN,
+    PermissionCode.ASSET_UPDATE,
+    PermissionCode.ASSET_DELETE,
+    PermissionCode.LETTER_GENERATE,
+    PermissionCode.LETTER_DOWNLOAD,
   ],
   [RoleCode.PAYROLL_ADMIN]: Object.values(PermissionCode),
   [RoleCode.FINANCE]: [
@@ -969,6 +1135,12 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.PAYROLL_TDS_REPORT_VIEW,
     PermissionCode.PAYROLL_TDS_REPORT_EXPORT,
     PermissionCode.PAYROLL_FORM16_READ,
+    // Lifecycle Permissions for FINANCE
+    PermissionCode.SALARY_REVISION_READ,
+    PermissionCode.SALARY_REVISION_APPROVE,
+    PermissionCode.SALARY_REVISION_REJECT,
+    PermissionCode.EXIT_CLEARANCE_READ,
+    PermissionCode.EXIT_CLEARANCE_COMPLETE,
   ],
   [RoleCode.MANAGER]: [
     PermissionCode.ORGANIZATION_READ,
@@ -1015,6 +1187,29 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.ATTENDANCE_SHIFT_READ,
     PermissionCode.ATTENDANCE_ROSTER_READ,
     PermissionCode.ATTENDANCE_REPORT_VIEW,
+    // Lifecycle Permissions for MANAGER
+    PermissionCode.ONBOARDING_TASK_COMPLETE,
+    PermissionCode.PROBATION_READ,
+    PermissionCode.PROBATION_REVIEW,
+    PermissionCode.PROBATION_APPROVE,
+    PermissionCode.PROBATION_REJECT,
+    PermissionCode.TRANSFER_READ,
+    PermissionCode.TRANSFER_CREATE,
+    PermissionCode.TRANSFER_APPROVE,
+    PermissionCode.TRANSFER_REJECT,
+    PermissionCode.PROMOTION_READ,
+    PermissionCode.PROMOTION_CREATE,
+    PermissionCode.PROMOTION_APPROVE,
+    PermissionCode.PROMOTION_REJECT,
+    PermissionCode.SALARY_REVISION_READ,
+    PermissionCode.SALARY_REVISION_APPROVE,
+    PermissionCode.SALARY_REVISION_REJECT,
+    PermissionCode.RESIGNATION_READ,
+    PermissionCode.RESIGNATION_APPROVE,
+    PermissionCode.RESIGNATION_REJECT,
+    PermissionCode.EXIT_CLEARANCE_READ,
+    PermissionCode.EXIT_CLEARANCE_COMPLETE,
+    PermissionCode.LETTER_DOWNLOAD,
   ],
   [RoleCode.EMPLOYEE]: [
     PermissionCode.ORGANIZATION_READ,
@@ -1050,6 +1245,13 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.PAYROLL_INVESTMENT_PROOF_DOWNLOAD,
     PermissionCode.PAYROLL_FORM16_READ,
     PermissionCode.PAYROLL_FORM16_DOWNLOAD,
+    // Lifecycle Self-Service Permissions for EMPLOYEE
+    PermissionCode.ONBOARDING_TASK_COMPLETE,
+    PermissionCode.RESIGNATION_CREATE,
+    PermissionCode.RESIGNATION_WITHDRAW,
+    PermissionCode.EXIT_CLEARANCE_READ,
+    PermissionCode.ASSET_READ,
+    PermissionCode.LETTER_DOWNLOAD,
   ],
 };
 
@@ -4349,3 +4551,581 @@ export interface Tds24QReportRowDto {
   remarksReason?: string;
 }
 
+
+// ==========================================
+// EMPLOYEE LIFECYCLE ENUMS & TYPES
+// ==========================================
+
+export enum OnboardingOwnerType {
+  EMPLOYEE = 'EMPLOYEE',
+  MANAGER = 'MANAGER',
+  HR = 'HR',
+  IT = 'IT',
+  FINANCE = 'FINANCE',
+  BUDDY = 'BUDDY',
+  SPECIFIC_USER = 'SPECIFIC_USER',
+}
+
+export enum OnboardingRunStatus {
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum OnboardingTaskStatus {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  SKIPPED = 'SKIPPED',
+}
+
+export enum ProbationRecommendation {
+  CONFIRM = 'CONFIRM',
+  EXTEND = 'EXTEND',
+  TERMINATE = 'TERMINATE',
+  ADDITIONAL_REVIEW = 'ADDITIONAL_REVIEW',
+}
+
+export enum ProbationStatus {
+  PENDING_REVIEW = 'PENDING_REVIEW',
+  SUBMITTED = 'SUBMITTED',
+  CONFIRMED = 'CONFIRMED',
+  EXTENDED = 'EXTENDED',
+  TERMINATED = 'TERMINATED',
+  REJECTED = 'REJECTED',
+}
+
+export enum TransitionType {
+  TRANSFER = 'TRANSFER',
+  PROMOTION = 'PROMOTION',
+  DESIGNATION_CHANGE = 'DESIGNATION_CHANGE',
+  GRADE_CHANGE = 'GRADE_CHANGE',
+  REPORTING_CHANGE = 'REPORTING_CHANGE',
+}
+
+export enum TransitionStatus {
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum SalaryRevisionType {
+  ANNUAL_INCREMENT = 'ANNUAL_INCREMENT',
+  PROMOTION_INCREMENT = 'PROMOTION_INCREMENT',
+  CORRECTION = 'CORRECTION',
+  MARKET_ADJUSTMENT = 'MARKET_ADJUSTMENT',
+  RETENTION_REVISION = 'RETENTION_REVISION',
+  DEMOTION = 'DEMOTION',
+  OTHER = 'OTHER',
+}
+
+export enum SalaryRevisionStatus {
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum ResignationStatus {
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  WITHDRAWN = 'WITHDRAWN',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum ClearanceType {
+  ASSET_RETURN = 'ASSET_RETURN',
+  LAPTOP_RETURN = 'LAPTOP_RETURN',
+  ACCESS_CARD_RETURN = 'ACCESS_CARD_RETURN',
+  ID_CARD_RETURN = 'ID_CARD_RETURN',
+  KNOWLEDGE_TRANSFER = 'KNOWLEDGE_TRANSFER',
+  PENDING_WORK_HANDOVER = 'PENDING_WORK_HANDOVER',
+  FINANCE_CLEARANCE = 'FINANCE_CLEARANCE',
+  IT_ACCESS_REVOCATION = 'IT_ACCESS_REVOCATION',
+  LIBRARY_CLEARANCE = 'LIBRARY_CLEARANCE',
+  ADMIN_CLEARANCE = 'ADMIN_CLEARANCE',
+  HR_CLEARANCE = 'HR_CLEARANCE',
+  MANAGER_CLEARANCE = 'MANAGER_CLEARANCE',
+  OTHER = 'OTHER',
+}
+
+export enum ClearanceStatus {
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  WAIVED = 'WAIVED',
+  REJECTED = 'REJECTED',
+}
+
+export enum ExitType {
+  RESIGNATION = 'RESIGNATION',
+  TERMINATION = 'TERMINATION',
+  RETIREMENT = 'RETIREMENT',
+  ABSCONDING = 'ABSCONDING',
+  DEATH = 'DEATH',
+  CONTRACT_END = 'CONTRACT_END',
+}
+
+export enum OffboardingStatus {
+  PENDING_CLEARANCE = 'PENDING_CLEARANCE',
+  CLEARANCE_COMPLETED = 'CLEARANCE_COMPLETED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum AssetType {
+  LAPTOP = 'LAPTOP',
+  MOBILE = 'MOBILE',
+  ACCESS_CARD = 'ACCESS_CARD',
+  ID_CARD = 'ID_CARD',
+  MONITOR = 'MONITOR',
+  ACCESSORY = 'ACCESSORY',
+  OTHER = 'OTHER',
+}
+
+export enum AssetCondition {
+  NEW = 'NEW',
+  GOOD = 'GOOD',
+  DAMAGED = 'DAMAGED',
+  LOST = 'LOST',
+}
+
+export enum AssetReturnStatus {
+  UNASSIGNED = 'UNASSIGNED',
+  ASSIGNED = 'ASSIGNED',
+  RETURNED = 'RETURNED',
+  DAMAGED = 'DAMAGED',
+  LOST = 'LOST',
+}
+
+export enum LifecycleLetterType {
+  OFFER = 'OFFER',
+  APPOINTMENT = 'APPOINTMENT',
+  CONFIRMATION = 'CONFIRMATION',
+  TRANSFER = 'TRANSFER',
+  PROMOTION = 'PROMOTION',
+  INCREMENT = 'INCREMENT',
+  RESIGNATION_ACKNOWLEDGEMENT = 'RESIGNATION_ACKNOWLEDGEMENT',
+  RELIEVING = 'RELIEVING',
+  EXPERIENCE = 'EXPERIENCE',
+  EXIT = 'EXIT',
+}
+
+// ==========================================
+// EMPLOYEE LIFECYCLE ZOD SCHEMAS
+// ==========================================
+
+export const OnboardingFlowItemSchema = z.object({
+  id: z.string().uuid().optional(),
+  title: z.string().trim().min(2).max(200),
+  description: z.string().trim().max(1000).optional().nullable(),
+  ownerType: z.nativeEnum(OnboardingOwnerType).default(OnboardingOwnerType.EMPLOYEE),
+  ownerId: z.string().optional().nullable(),
+  ownerRole: z.string().optional().nullable(),
+  dueOffsetDays: z.number().int().default(0),
+  isMandatory: z.boolean().default(true),
+  requiresAttachment: z.boolean().default(false),
+  requiresAcknowledgement: z.boolean().default(false),
+  executionOrder: z.number().int().default(1),
+});
+
+export const CreateOnboardingFlowSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  description: z.string().trim().max(500).optional().nullable(),
+  applicableLocations: z.array(z.string()).default([]),
+  applicableDepartments: z.array(z.string()).default([]),
+  applicableDesignations: z.array(z.string()).default([]),
+  applicableEmploymentTypes: z.array(z.string()).default([]),
+  triggerEvent: z.string().default('EMPLOYEE_CREATED'),
+  isActive: z.boolean().default(true),
+  items: z.array(OnboardingFlowItemSchema).optional().default([]),
+});
+
+export const UpdateOnboardingFlowSchema = CreateOnboardingFlowSchema.partial();
+
+export const CreateOnboardingRunSchema = z.object({
+  onboardingFlowId: z.string().uuid(),
+  employeeId: z.string().uuid(),
+  startDate: z.string().optional(),
+  expectedCompletionDate: z.string().optional().nullable(),
+});
+
+export const CompleteOnboardingTaskSchema = z.object({
+  attachmentUrl: z.string().optional().nullable(),
+  comments: z.string().optional().nullable(),
+});
+
+export const ReassignOnboardingTaskSchema = z.object({
+  ownerType: z.nativeEnum(OnboardingOwnerType),
+  ownerId: z.string().optional().nullable(),
+});
+
+export const CreateProbationReviewSchema = z.object({
+  employeeId: z.string().uuid(),
+  probationStartDate: z.string(),
+  probationEndDate: z.string(),
+  reviewDate: z.string().optional().nullable(),
+  managerId: z.string().uuid().optional().nullable(),
+  managerRating: z.number().int().min(1).max(5).optional().nullable(),
+  managerComments: z.string().optional().nullable(),
+  employeeComments: z.string().optional().nullable(),
+  recommendation: z.nativeEnum(ProbationRecommendation).default(ProbationRecommendation.CONFIRM),
+});
+
+export const SubmitProbationReviewSchema = z.object({
+  managerRating: z.number().int().min(1).max(5),
+  managerComments: z.string().trim().min(3).max(2000),
+  employeeComments: z.string().trim().max(2000).optional().nullable(),
+  recommendation: z.nativeEnum(ProbationRecommendation),
+});
+
+export const ApproveProbationReviewSchema = z.object({
+  action: z.enum(['CONFIRM', 'EXTEND', 'TERMINATE']),
+  extensionDate: z.string().optional().nullable(),
+  comments: z.string().trim().max(1000).optional().nullable(),
+});
+
+export const CreateEmployeeTransferSchema = z.object({
+  employeeId: z.string().uuid(),
+  effectiveFrom: z.string(),
+  newDepartmentId: z.string().uuid().optional().nullable(),
+  newDesignationId: z.string().uuid().optional().nullable(),
+  newLocationId: z.string().uuid().optional().nullable(),
+  newGradeId: z.string().uuid().optional().nullable(),
+  newReportingManagerId: z.string().uuid().optional().nullable(),
+  newEmploymentType: z.string().optional().nullable(),
+  reason: z.string().trim().min(3).max(1000),
+  remarks: z.string().trim().max(1000).optional().nullable(),
+});
+
+export const CreateEmployeePromotionSchema = z.object({
+  employeeId: z.string().uuid(),
+  effectiveFrom: z.string(),
+  newDesignationId: z.string().uuid().optional().nullable(),
+  newGradeId: z.string().uuid().optional().nullable(),
+  newSalaryStructureId: z.string().uuid().optional().nullable(),
+  newAnnualCtc: z.number().min(0).optional().nullable(),
+  reason: z.string().trim().min(3).max(1000),
+  remarks: z.string().trim().max(1000).optional().nullable(),
+});
+
+export const CreateLifecycleSalaryRevisionSchema = z.object({
+  employeeId: z.string().uuid(),
+  effectiveFrom: z.string(),
+  newSalaryStructureId: z.string().uuid().optional().nullable(),
+  newAnnualCtc: z.number().min(0),
+  revisionType: z.nativeEnum(SalaryRevisionType).default(SalaryRevisionType.ANNUAL_INCREMENT),
+  reason: z.string().trim().min(3).max(1000),
+  remarks: z.string().trim().max(1000).optional().nullable(),
+});
+export const LifecycleSalaryRevisionSchema = CreateLifecycleSalaryRevisionSchema;
+
+export const CreateResignationRequestSchema = z.object({
+  employeeId: z.string().uuid().optional(),
+  resignationDate: z.string().optional(),
+  lastWorkingDate: z.string(),
+  noticePeriodDays: z.number().int().min(0),
+  reason: z.string().trim().min(3).max(1000),
+  comments: z.string().trim().max(2000).optional().nullable(),
+});
+
+export const ReviewResignationSchema = z.object({
+  action: z.enum(['APPROVE', 'REJECT']),
+  lastWorkingDate: z.string().optional().nullable(),
+  comments: z.string().trim().max(1000).optional().nullable(),
+});
+
+export const CreateExitClearanceSchema = z.object({
+  employeeId: z.string().uuid(),
+  resignationRequestId: z.string().uuid().optional().nullable(),
+  clearanceType: z.nativeEnum(ClearanceType),
+  assignedTo: z.string().optional().nullable(),
+  dueDate: z.string().optional().nullable(),
+  comments: z.string().optional().nullable(),
+  isMandatory: z.boolean().default(true),
+});
+
+export const CompleteExitClearanceSchema = z.object({
+  comments: z.string().trim().max(1000).optional().nullable(),
+  attachmentUrl: z.string().optional().nullable(),
+  status: z.enum(['COMPLETED', 'WAIVED', 'REJECTED']).default('COMPLETED'),
+});
+
+export const ReassignExitClearanceSchema = z.object({
+  assignedTo: z.string(),
+});
+
+export const CreateOffboardingRequestSchema = z.object({
+  employeeId: z.string().uuid(),
+  resignationRequestId: z.string().uuid().optional().nullable(),
+  exitType: z.nativeEnum(ExitType).default(ExitType.RESIGNATION),
+  lastWorkingDate: z.string(),
+});
+
+export const CompleteOffboardingSchema = z.object({
+  reassignedReportingManagerId: z.string().uuid().optional().nullable(),
+  exitReason: z.string().trim().max(1000).optional().nullable(),
+  generateRelievingLetter: z.boolean().default(true),
+  generateExperienceLetter: z.boolean().default(true),
+});
+
+export const CreateAssetSchema = z.object({
+  assetName: z.string().trim().min(2).max(100),
+  assetType: z.nativeEnum(AssetType),
+  assetSerialNumber: z.string().trim().min(2).max(100),
+  assignedEmployeeId: z.string().uuid().optional().nullable(),
+  assignedDate: z.string().optional().nullable(),
+  assetCondition: z.nativeEnum(AssetCondition).default(AssetCondition.NEW),
+  comments: z.string().trim().max(500).optional().nullable(),
+});
+
+export const AssignAssetSchema = z.object({
+  employeeId: z.string().uuid(),
+  assignedDate: z.string().optional(),
+  comments: z.string().trim().max(500).optional().nullable(),
+});
+
+export const ReturnAssetSchema = z.object({
+  returnDate: z.string().optional(),
+  assetCondition: z.nativeEnum(AssetCondition).default(AssetCondition.GOOD),
+  returnedTo: z.string().optional().nullable(),
+  comments: z.string().trim().max(500).optional().nullable(),
+});
+
+export const GenerateLetterSchema = z.object({
+  employeeId: z.string().uuid(),
+  letterType: z.nativeEnum(LifecycleLetterType),
+  customFields: z.record(z.any()).optional().default({}),
+  referenceId: z.string().optional().nullable(),
+  isSharedWithEmployee: z.boolean().default(true),
+});
+
+// ==========================================
+// EMPLOYEE LIFECYCLE DTO INTERFACES
+// ==========================================
+
+export interface OnboardingFlowDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  applicableLocations: string[];
+  applicableDepartments: string[];
+  applicableDesignations: string[];
+  applicableEmploymentTypes: string[];
+  triggerEvent: string;
+  isActive: boolean;
+  createdBy: string;
+  items?: OnboardingFlowItemDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OnboardingFlowItemDto {
+  id: string;
+  onboardingFlowId: string;
+  title: string;
+  description?: string | null;
+  ownerType: OnboardingOwnerType;
+  ownerId?: string | null;
+  ownerRole?: string | null;
+  dueOffsetDays: number;
+  isMandatory: boolean;
+  requiresAttachment: boolean;
+  requiresAcknowledgement: boolean;
+  executionOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OnboardingRunDto {
+  id: string;
+  organizationId: string;
+  onboardingFlowId: string;
+  employeeId: string;
+  employee?: any;
+  status: OnboardingRunStatus;
+  startDate: string;
+  expectedCompletionDate?: string | null;
+  completedAt?: string | null;
+  progressPercentage: number;
+  createdBy: string;
+  items?: OnboardingRunItemDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OnboardingRunItemDto {
+  id: string;
+  onboardingRunId: string;
+  onboardingFlowItemId?: string | null;
+  title: string;
+  ownerType: OnboardingOwnerType;
+  ownerId?: string | null;
+  dueDate?: string | null;
+  status: OnboardingTaskStatus;
+  completedBy?: string | null;
+  completedAt?: string | null;
+  attachmentUrl?: string | null;
+  comments?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProbationReviewDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  probationStartDate: string;
+  probationEndDate: string;
+  reviewDate?: string | null;
+  managerId?: string | null;
+  managerRating?: number | null;
+  managerComments?: string | null;
+  employeeComments?: string | null;
+  recommendation: ProbationRecommendation;
+  status: ProbationStatus;
+  approvalFlowId?: string | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeTransitionDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  transitionType: TransitionType;
+  effectiveFrom: string;
+  effectiveTo?: string | null;
+  currentDepartmentId?: string | null;
+  newDepartmentId?: string | null;
+  currentDesignationId?: string | null;
+  newDesignationId?: string | null;
+  currentLocationId?: string | null;
+  newLocationId?: string | null;
+  currentGradeId?: string | null;
+  newGradeId?: string | null;
+  currentReportingManagerId?: string | null;
+  newReportingManagerId?: string | null;
+  currentEmploymentType?: string | null;
+  newEmploymentType?: string | null;
+  reason: string;
+  remarks?: string | null;
+  status: TransitionStatus;
+  approvalFlowId?: string | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SalaryRevisionDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  currentSalaryStructureId?: string | null;
+  newSalaryStructureId?: string | null;
+  currentAnnualCtc: number;
+  newAnnualCtc: number;
+  revisionType: SalaryRevisionType;
+  effectiveFrom: string;
+  reason: string;
+  remarks?: string | null;
+  status: SalaryRevisionStatus;
+  approvalFlowId?: string | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ResignationRequestDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  resignationDate: string;
+  lastWorkingDate: string;
+  noticePeriodDays: number;
+  reason: string;
+  comments?: string | null;
+  status: ResignationStatus;
+  approvalFlowId?: string | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ExitClearanceDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  resignationRequestId?: string | null;
+  clearanceType: ClearanceType;
+  assignedTo?: string | null;
+  dueDate?: string | null;
+  status: ClearanceStatus;
+  completedBy?: string | null;
+  completedAt?: string | null;
+  comments?: string | null;
+  attachmentUrl?: string | null;
+  isMandatory: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OffboardingRequestDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  resignationRequestId?: string | null;
+  exitType: ExitType;
+  lastWorkingDate: string;
+  status: OffboardingStatus;
+  completedAt?: string | null;
+  completedBy?: string | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AssetDto {
+  id: string;
+  organizationId: string;
+  assetName: string;
+  assetType: AssetType;
+  assetSerialNumber: string;
+  assignedEmployeeId?: string | null;
+  assignedTo?: any;
+  assignedDate?: string | null;
+  returnDate?: string | null;
+  assetCondition?: AssetCondition | null;
+  returnStatus: AssetReturnStatus;
+  assignedBy?: string | null;
+  returnedTo?: string | null;
+  comments?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LifecycleLetterDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employee?: any;
+  letterType: LifecycleLetterType;
+  title: string;
+  content: string;
+  pdfUrl?: string | null;
+  issuedDate: string;
+  isSharedWithEmployee: boolean;
+  generatedBy: string;
+  referenceId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}

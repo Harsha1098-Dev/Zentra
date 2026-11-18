@@ -276,6 +276,13 @@ export default function DashboardPage() {
             </Link>
 
             <Link
+              href="/lifecycle"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-blue-50 text-[#1E3A8A] border border-blue-200 hover:bg-blue-100 rounded-lg text-xs font-semibold transition-colors shadow-sm"
+            >
+              <span>Lifecycle</span>
+            </Link>
+
+            <Link
               href="/settings/workflows"
               className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
             >
