@@ -22,6 +22,7 @@ import {
   ArrowRight,
   AlertCircle,
   Sliders,
+  DollarSign,
 } from 'lucide-react';
 import { PermissionCode, RoleCode } from '@zentra/shared-types';
 
@@ -267,6 +268,14 @@ export default function DashboardPage() {
             </Link>
 
             <Link
+              href="/payroll"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#0F172A] text-white hover:bg-slate-800 rounded-lg text-xs font-semibold transition-colors shadow-sm"
+            >
+              <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Payroll</span>
+            </Link>
+
+            <Link
               href="/settings/workflows"
               className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-[#E2E8F0] text-[#0F172A] hover:bg-slate-50 rounded-lg text-xs font-semibold transition-colors"
             >
@@ -480,25 +489,53 @@ export default function DashboardPage() {
               </div>
 
               {/* Product 2: Zentra Payroll */}
-              <div className="bg-white border border-[#E2E8F0] rounded-xl p-6 shadow-sm opacity-80">
+              <div className="bg-white border border-[#E2E8F0] rounded-xl p-6 shadow-sm">
                 <div className="flex items-start justify-between">
                   <div>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-[#64748B] border border-slate-200">
-                      NEXT PRODUCT (Coming Soon)
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      LIVE PRODUCT
                     </span>
                     <h3 className="text-lg font-bold text-[#0F172A] mt-2">Zentra Payroll</h3>
                     <p className="text-xs text-[#475569] mt-1">
-                      Automated payroll cycles, statutory compliance, tax deductions, and employee payslips.
+                      Automated monthly salary calculation, formulas, cutoffs, bank payment processing, and payslips.
                     </p>
                   </div>
-                  <div className="w-10 h-10 rounded-lg bg-slate-100 text-[#64748B] flex items-center justify-center font-bold">
-                    <FileText className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                    <DollarSign className="w-5 h-5" />
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[#E2E8F0] flex items-center justify-between text-xs text-[#64748B]">
-                  <span>Identity rule: <strong>Shared User Identity (No duplicate accounts)</strong></span>
-                  <span className="text-slate-500 font-medium">Entitlement Required</span>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Link
+                    href="/payroll/payroll-runs"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 bg-slate-900 text-white hover:bg-slate-800 rounded text-xs font-semibold"
+                  >
+                    <span>Payroll Runs</span>
+                  </Link>
+                  <Link
+                    href="/payroll/salary-structures"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 border border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A] rounded text-xs font-semibold"
+                  >
+                    <span>Structures</span>
+                  </Link>
+                  <Link
+                    href="/my-payslips"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 border border-emerald-200 text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded text-xs font-semibold"
+                  >
+                    <FileText className="w-3 h-3 text-emerald-600" />
+                    <span>My Payslips</span>
+                  </Link>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-[#E2E8F0] flex items-center justify-between text-xs text-[#64748B]">
+                  <span>Identity rule: <strong>Shared Global Identity</strong></span>
+                  <Link
+                    href="/payroll"
+                    className="text-[#1E3A8A] font-semibold hover:underline inline-flex items-center space-x-1"
+                  >
+                    <span>Manage Payroll</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
                 </div>
               </div>
             </div>

@@ -61,6 +61,41 @@ export class ApiClient {
     return data as T;
   }
 
+  static async get<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    return this.request<T>(endpoint, { ...options, method: 'GET' });
+  }
+
+  static async post<T = any>(endpoint: string, body?: any, options: RequestInit = {}): Promise<T> {
+    const isFormData = body instanceof FormData;
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'POST',
+      body: isFormData ? body : body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  }
+
+  static async put<T = any>(endpoint: string, body?: any, options: RequestInit = {}): Promise<T> {
+    const isFormData = body instanceof FormData;
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PUT',
+      body: isFormData ? body : body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  }
+
+  static async patch<T = any>(endpoint: string, body?: any, options: RequestInit = {}): Promise<T> {
+    const isFormData = body instanceof FormData;
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PATCH',
+      body: isFormData ? body : body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  }
+
+  static async delete<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    return this.request<T>(endpoint, { ...options, method: 'DELETE' });
+  }
+
   static async downloadFile(endpoint: string, defaultFileName: string): Promise<void> {
     const token = this.getAccessToken();
     const headers: Record<string, string> = {

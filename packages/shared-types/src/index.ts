@@ -36,6 +36,8 @@ export enum ProductStatus {
 export enum RoleCode {
   SUPER_ADMIN = 'SUPER_ADMIN',
   HR_ADMIN = 'HR_ADMIN',
+  PAYROLL_ADMIN = 'PAYROLL_ADMIN',
+  FINANCE = 'FINANCE',
   MANAGER = 'MANAGER',
   EMPLOYEE = 'EMPLOYEE',
 }
@@ -281,6 +283,53 @@ export enum PermissionCode {
   ATTENDANCE_LOCK = 'attendance.lock',
   ATTENDANCE_REPORT_VIEW = 'attendance.report.view',
   ATTENDANCE_REPORT_EXPORT = 'attendance.report.export',
+
+  // Payroll Permissions
+  PAYROLL_READ = 'payroll.read',
+  PAYROLL_READ_OWN = 'payroll.read_own',
+  PAYROLL_READ_ALL = 'payroll.read_all',
+  PAYROLL_SALARY_COMPONENT_READ = 'payroll.salary_component.read',
+  PAYROLL_SALARY_COMPONENT_CREATE = 'payroll.salary_component.create',
+  PAYROLL_SALARY_COMPONENT_UPDATE = 'payroll.salary_component.update',
+  PAYROLL_SALARY_COMPONENT_DELETE = 'payroll.salary_component.delete',
+  PAYROLL_SALARY_STRUCTURE_READ = 'payroll.salary_structure.read',
+  PAYROLL_SALARY_STRUCTURE_CREATE = 'payroll.salary_structure.create',
+  PAYROLL_SALARY_STRUCTURE_UPDATE = 'payroll.salary_structure.update',
+  PAYROLL_SALARY_STRUCTURE_DELETE = 'payroll.salary_structure.delete',
+  PAYROLL_SALARY_STRUCTURE_ASSIGN = 'payroll.salary_structure.assign',
+  PAYROLL_SALARY_REVISION_CREATE = 'payroll.salary_revision.create',
+  PAYROLL_SALARY_REVISION_APPROVE = 'payroll.salary_revision.approve',
+  PAYROLL_PERIOD_READ = 'payroll.period.read',
+  PAYROLL_PERIOD_CREATE = 'payroll.period.create',
+  PAYROLL_PERIOD_UPDATE = 'payroll.period.update',
+  PAYROLL_PERIOD_LOCK = 'payroll.period.lock',
+  PAYROLL_RUN_READ = 'payroll.run.read',
+  PAYROLL_RUN_CREATE = 'payroll.run.create',
+  PAYROLL_RUN_CALCULATE = 'payroll.run.calculate',
+  PAYROLL_RUN_SUBMIT = 'payroll.run.submit',
+  PAYROLL_RUN_APPROVE = 'payroll.run.approve',
+  PAYROLL_RUN_REJECT = 'payroll.run.reject',
+  PAYROLL_RUN_CANCEL = 'payroll.run.cancel',
+  PAYROLL_RUN_LOCK = 'payroll.run.lock',
+  PAYROLL_INPUT_READ = 'payroll.input.read',
+  PAYROLL_INPUT_CREATE = 'payroll.input.create',
+  PAYROLL_INPUT_UPDATE = 'payroll.input.update',
+  PAYROLL_INPUT_DELETE = 'payroll.input.delete',
+  PAYROLL_EXCEPTION_READ = 'payroll.exception.read',
+  PAYROLL_EXCEPTION_RESOLVE = 'payroll.exception.resolve',
+  PAYROLL_PAYMENT_READ = 'payroll.payment.read',
+  PAYROLL_PAYMENT_MARK_PAID = 'payroll.payment.mark_paid',
+  PAYROLL_PAYMENT_UPLOAD_PROOF = 'payroll.payment.upload_proof',
+  PAYROLL_PAYSLIP_READ = 'payroll.payslip.read',
+  PAYROLL_PAYSLIP_GENERATE = 'payroll.payslip.generate',
+  PAYROLL_PAYSLIP_PUBLISH = 'payroll.payslip.publish',
+  PAYROLL_PAYSLIP_DOWNLOAD = 'payroll.payslip.download',
+  PAYROLL_TEMPLATE_READ = 'payroll.template.read',
+  PAYROLL_TEMPLATE_CREATE = 'payroll.template.create',
+  PAYROLL_TEMPLATE_UPDATE = 'payroll.template.update',
+  PAYROLL_TEMPLATE_DELETE = 'payroll.template.delete',
+  PAYROLL_REPORT_VIEW = 'payroll.report.view',
+  PAYROLL_REPORT_EXPORT = 'payroll.report.export',
 }
 
 export enum InvitationStatus {
@@ -470,6 +519,90 @@ export enum AuditAction {
   ATTENDANCE_UNLOCK = 'ATTENDANCE_UNLOCK',
   ATTENDANCE_REPORT_EXPORT = 'ATTENDANCE_REPORT_EXPORT',
   ATTENDANCE_REPORT_EXPORTED = 'ATTENDANCE_REPORT_EXPORT',
+
+  // Payroll Foundation Audit Actions
+  SALARY_COMPONENT_CREATE = 'SALARY_COMPONENT_CREATE',
+  SALARY_COMPONENT_CREATED = 'SALARY_COMPONENT_CREATE',
+  SALARY_COMPONENT_UPDATE = 'SALARY_COMPONENT_UPDATE',
+  SALARY_COMPONENT_UPDATED = 'SALARY_COMPONENT_UPDATE',
+  SALARY_COMPONENT_ACTIVATE = 'SALARY_COMPONENT_ACTIVATE',
+  SALARY_COMPONENT_ACTIVATED = 'SALARY_COMPONENT_ACTIVATE',
+  SALARY_COMPONENT_DEACTIVATE = 'SALARY_COMPONENT_DEACTIVATE',
+  SALARY_COMPONENT_DEACTIVATED = 'SALARY_COMPONENT_DEACTIVATE',
+  SALARY_COMPONENT_DELETE = 'SALARY_COMPONENT_DELETE',
+  SALARY_COMPONENT_DELETED = 'SALARY_COMPONENT_DELETE',
+
+  SALARY_STRUCTURE_CREATE = 'SALARY_STRUCTURE_CREATE',
+  SALARY_STRUCTURE_CREATED = 'SALARY_STRUCTURE_CREATE',
+  SALARY_STRUCTURE_UPDATE = 'SALARY_STRUCTURE_UPDATE',
+  SALARY_STRUCTURE_UPDATED = 'SALARY_STRUCTURE_UPDATE',
+  SALARY_STRUCTURE_DELETE = 'SALARY_STRUCTURE_DELETE',
+  SALARY_STRUCTURE_DELETED = 'SALARY_STRUCTURE_DELETE',
+  SALARY_STRUCTURE_ASSIGN = 'SALARY_STRUCTURE_ASSIGN',
+  SALARY_STRUCTURE_ASSIGNED = 'SALARY_STRUCTURE_ASSIGN',
+
+  SALARY_REVISION_CREATE = 'SALARY_REVISION_CREATE',
+  SALARY_REVISION_CREATED = 'SALARY_REVISION_CREATE',
+  SALARY_REVISION_APPROVE = 'SALARY_REVISION_APPROVE',
+  SALARY_REVISION_APPROVED = 'SALARY_REVISION_APPROVE',
+  SALARY_REVISION_REJECT = 'SALARY_REVISION_REJECT',
+  SALARY_REVISION_REJECTED = 'SALARY_REVISION_REJECT',
+
+  PAYROLL_PERIOD_CREATE = 'PAYROLL_PERIOD_CREATE',
+  PAYROLL_PERIOD_CREATED = 'PAYROLL_PERIOD_CREATE',
+  PAYROLL_PERIOD_OPEN = 'PAYROLL_PERIOD_OPEN',
+  PAYROLL_PERIOD_OPENED = 'PAYROLL_PERIOD_OPEN',
+  PAYROLL_PERIOD_LOCK = 'PAYROLL_PERIOD_LOCK',
+  PAYROLL_PERIOD_LOCKED = 'PAYROLL_PERIOD_LOCK',
+  PAYROLL_PERIOD_UPDATE = 'PAYROLL_PERIOD_UPDATE',
+  PAYROLL_PERIOD_UPDATED = 'PAYROLL_PERIOD_UPDATE',
+
+  PAYROLL_RUN_CREATE = 'PAYROLL_RUN_CREATE',
+  PAYROLL_RUN_CREATED = 'PAYROLL_RUN_CREATE',
+  PAYROLL_RUN_CALCULATE = 'PAYROLL_RUN_CALCULATE',
+  PAYROLL_RUN_CALCULATED = 'PAYROLL_RUN_CALCULATE',
+  PAYROLL_RUN_SUBMIT = 'PAYROLL_RUN_SUBMIT',
+  PAYROLL_RUN_SUBMITTED = 'PAYROLL_RUN_SUBMIT',
+  PAYROLL_RUN_APPROVE = 'PAYROLL_RUN_APPROVE',
+  PAYROLL_RUN_APPROVED = 'PAYROLL_RUN_APPROVE',
+  PAYROLL_RUN_REJECT = 'PAYROLL_RUN_REJECT',
+  PAYROLL_RUN_REJECTED = 'PAYROLL_RUN_REJECT',
+  PAYROLL_RUN_CANCEL = 'PAYROLL_RUN_CANCEL',
+  PAYROLL_RUN_CANCELLED = 'PAYROLL_RUN_CANCEL',
+  PAYROLL_RUN_LOCK = 'PAYROLL_RUN_LOCK',
+  PAYROLL_RUN_LOCKED = 'PAYROLL_RUN_LOCK',
+
+  PAYROLL_INPUT_CREATE = 'PAYROLL_INPUT_CREATE',
+  PAYROLL_INPUT_CREATED = 'PAYROLL_INPUT_CREATE',
+  PAYROLL_INPUT_UPDATE = 'PAYROLL_INPUT_UPDATE',
+  PAYROLL_INPUT_UPDATED = 'PAYROLL_INPUT_UPDATE',
+  PAYROLL_INPUT_DELETE = 'PAYROLL_INPUT_DELETE',
+  PAYROLL_INPUT_DELETED = 'PAYROLL_INPUT_DELETE',
+
+  PAYROLL_EXCEPTION_RESOLVE = 'PAYROLL_EXCEPTION_RESOLVE',
+  PAYROLL_EXCEPTION_RESOLVED = 'PAYROLL_EXCEPTION_RESOLVE',
+  PAYROLL_EXCEPTION_OVERRIDE = 'PAYROLL_EXCEPTION_OVERRIDE',
+  PAYROLL_EXCEPTION_OVERRIDDEN = 'PAYROLL_EXCEPTION_OVERRIDE',
+
+  PAYROLL_PAYMENT_MARK_PAID = 'PAYROLL_PAYMENT_MARK_PAID',
+  PAYROLL_PAYMENT_PROOF_UPLOAD = 'PAYROLL_PAYMENT_PROOF_UPLOAD',
+  PAYROLL_PAYMENT_PROOF_UPLOADED = 'PAYROLL_PAYMENT_PROOF_UPLOAD',
+
+  PAYSLIP_TEMPLATE_CREATE = 'PAYSLIP_TEMPLATE_CREATE',
+  PAYSLIP_TEMPLATE_CREATED = 'PAYSLIP_TEMPLATE_CREATE',
+  PAYSLIP_TEMPLATE_UPDATE = 'PAYSLIP_TEMPLATE_UPDATE',
+  PAYSLIP_TEMPLATE_UPDATED = 'PAYSLIP_TEMPLATE_UPDATE',
+  PAYSLIP_TEMPLATE_DELETE = 'PAYSLIP_TEMPLATE_DELETE',
+  PAYSLIP_TEMPLATE_DELETED = 'PAYSLIP_TEMPLATE_DELETE',
+
+  PAYSLIP_GENERATE = 'PAYSLIP_GENERATE',
+  PAYSLIP_GENERATED = 'PAYSLIP_GENERATE',
+  PAYSLIP_PUBLISH = 'PAYSLIP_PUBLISH',
+  PAYSLIP_PUBLISHED = 'PAYSLIP_PUBLISH',
+  PAYSLIP_VIEW = 'PAYSLIP_VIEW',
+  PAYSLIP_VIEWED = 'PAYSLIP_VIEW',
+  PAYSLIP_DOWNLOAD = 'PAYSLIP_DOWNLOAD',
+  PAYSLIP_DOWNLOADED = 'PAYSLIP_DOWNLOAD',
 }
 
 // Role-to-Permissions Mapping for Default Seed
@@ -609,6 +742,69 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.ATTENDANCE_LOCK,
     PermissionCode.ATTENDANCE_REPORT_VIEW,
     PermissionCode.ATTENDANCE_REPORT_EXPORT,
+    // Payroll Permissions for HR_ADMIN
+    PermissionCode.PAYROLL_READ,
+    PermissionCode.PAYROLL_READ_ALL,
+    PermissionCode.PAYROLL_SALARY_COMPONENT_READ,
+    PermissionCode.PAYROLL_SALARY_COMPONENT_CREATE,
+    PermissionCode.PAYROLL_SALARY_COMPONENT_UPDATE,
+    PermissionCode.PAYROLL_SALARY_COMPONENT_DELETE,
+    PermissionCode.PAYROLL_SALARY_STRUCTURE_READ,
+    PermissionCode.PAYROLL_SALARY_STRUCTURE_CREATE,
+    PermissionCode.PAYROLL_SALARY_STRUCTURE_UPDATE,
+    PermissionCode.PAYROLL_SALARY_STRUCTURE_DELETE,
+    PermissionCode.PAYROLL_SALARY_STRUCTURE_ASSIGN,
+    PermissionCode.PAYROLL_SALARY_REVISION_CREATE,
+    PermissionCode.PAYROLL_SALARY_REVISION_APPROVE,
+    PermissionCode.PAYROLL_PERIOD_READ,
+    PermissionCode.PAYROLL_PERIOD_CREATE,
+    PermissionCode.PAYROLL_PERIOD_UPDATE,
+    PermissionCode.PAYROLL_PERIOD_LOCK,
+    PermissionCode.PAYROLL_RUN_READ,
+    PermissionCode.PAYROLL_RUN_CREATE,
+    PermissionCode.PAYROLL_RUN_CALCULATE,
+    PermissionCode.PAYROLL_RUN_SUBMIT,
+    PermissionCode.PAYROLL_RUN_APPROVE,
+    PermissionCode.PAYROLL_RUN_REJECT,
+    PermissionCode.PAYROLL_RUN_CANCEL,
+    PermissionCode.PAYROLL_RUN_LOCK,
+    PermissionCode.PAYROLL_INPUT_READ,
+    PermissionCode.PAYROLL_INPUT_CREATE,
+    PermissionCode.PAYROLL_INPUT_UPDATE,
+    PermissionCode.PAYROLL_INPUT_DELETE,
+    PermissionCode.PAYROLL_EXCEPTION_READ,
+    PermissionCode.PAYROLL_EXCEPTION_RESOLVE,
+    PermissionCode.PAYROLL_PAYMENT_READ,
+    PermissionCode.PAYROLL_PAYMENT_MARK_PAID,
+    PermissionCode.PAYROLL_PAYMENT_UPLOAD_PROOF,
+    PermissionCode.PAYROLL_PAYSLIP_READ,
+    PermissionCode.PAYROLL_PAYSLIP_GENERATE,
+    PermissionCode.PAYROLL_PAYSLIP_PUBLISH,
+    PermissionCode.PAYROLL_PAYSLIP_DOWNLOAD,
+    PermissionCode.PAYROLL_TEMPLATE_READ,
+    PermissionCode.PAYROLL_TEMPLATE_CREATE,
+    PermissionCode.PAYROLL_TEMPLATE_UPDATE,
+    PermissionCode.PAYROLL_TEMPLATE_DELETE,
+    PermissionCode.PAYROLL_REPORT_VIEW,
+    PermissionCode.PAYROLL_REPORT_EXPORT,
+  ],
+  [RoleCode.PAYROLL_ADMIN]: Object.values(PermissionCode),
+  [RoleCode.FINANCE]: [
+    PermissionCode.ORGANIZATION_READ,
+    PermissionCode.USER_READ,
+    PermissionCode.PRODUCT_READ,
+    PermissionCode.DEPARTMENT_READ,
+    PermissionCode.EMPLOYEE_READ_BASIC,
+    PermissionCode.PAYROLL_READ,
+    PermissionCode.PAYROLL_RUN_READ,
+    PermissionCode.PAYROLL_RUN_APPROVE,
+    PermissionCode.PAYROLL_RUN_REJECT,
+    PermissionCode.PAYROLL_PAYMENT_READ,
+    PermissionCode.PAYROLL_PAYMENT_MARK_PAID,
+    PermissionCode.PAYROLL_PAYMENT_UPLOAD_PROOF,
+    PermissionCode.PAYROLL_PAYSLIP_READ,
+    PermissionCode.PAYROLL_REPORT_VIEW,
+    PermissionCode.PAYROLL_REPORT_EXPORT,
   ],
   [RoleCode.MANAGER]: [
     PermissionCode.ORGANIZATION_READ,
@@ -677,6 +873,10 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<RoleCode, PermissionCode[]> = {
     PermissionCode.ATTENDANCE_ONDUTY_APPLY,
     PermissionCode.ATTENDANCE_WFH_APPLY,
     PermissionCode.ATTENDANCE_SHIFT_READ,
+    // Payroll Permissions for EMPLOYEE
+    PermissionCode.PAYROLL_READ_OWN,
+    PermissionCode.PAYROLL_PAYSLIP_READ,
+    PermissionCode.PAYROLL_PAYSLIP_DOWNLOAD,
   ],
 };
 
@@ -2836,3 +3036,548 @@ export interface AttendanceSummaryDto {
   pendingRegularisations: number;
   pendingOvertime: number;
 }
+
+// ==========================================
+// PAYROLL FOUNDATION ENUMS, SCHEMAS & DTOS
+// ==========================================
+
+export enum SalaryComponentType {
+  EARNING = 'EARNING',
+  DEDUCTION = 'DEDUCTION',
+  EMPLOYER_CONTRIBUTION = 'EMPLOYER_CONTRIBUTION',
+  REIMBURSEMENT = 'REIMBURSEMENT',
+  BENEFIT = 'BENEFIT',
+  VARIABLE_PAY = 'VARIABLE_PAY',
+  ARREAR = 'ARREAR',
+  ADJUSTMENT = 'ADJUSTMENT',
+}
+
+export enum CalculationType {
+  FIXED_AMOUNT = 'FIXED_AMOUNT',
+  PERCENTAGE_OF_BASIC = 'PERCENTAGE_OF_BASIC',
+  PERCENTAGE_OF_GROSS = 'PERCENTAGE_OF_GROSS',
+  PERCENTAGE_OF_CTC = 'PERCENTAGE_OF_CTC',
+  FORMULA_BASED = 'FORMULA_BASED',
+  ATTENDANCE_BASED = 'ATTENDANCE_BASED',
+  MANUAL_INPUT = 'MANUAL_INPUT',
+}
+
+export enum PayrollPeriodStatus {
+  UPCOMING = 'UPCOMING',
+  OPEN = 'OPEN',
+  INPUT_COLLECTION = 'INPUT_COLLECTION',
+  CALCULATED = 'CALCULATED',
+  UNDER_REVIEW = 'UNDER_REVIEW',
+  APPROVED = 'APPROVED',
+  PAYMENT_IN_PROGRESS = 'PAYMENT_IN_PROGRESS',
+  PAID = 'PAID',
+  PAYSLIP_GENERATED = 'PAYSLIP_GENERATED',
+  PUBLISHED = 'PUBLISHED',
+  LOCKED = 'LOCKED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum PayrollRunType {
+  REGULAR = 'REGULAR',
+  OFF_CYCLE = 'OFF_CYCLE',
+  BONUS = 'BONUS',
+  ARREARS = 'ARREARS',
+  FINAL_SETTLEMENT = 'FINAL_SETTLEMENT',
+}
+
+export enum PayrollRunStatus {
+  DRAFT = 'DRAFT',
+  PENDING_INPUTS = 'PENDING_INPUTS',
+  CALCULATED = 'CALCULATED',
+  UNDER_REVIEW = 'UNDER_REVIEW',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  PAYMENT_IN_PROGRESS = 'PAYMENT_IN_PROGRESS',
+  PAID = 'PAID',
+  PAYSLIP_GENERATED = 'PAYSLIP_GENERATED',
+  PUBLISHED = 'PUBLISHED',
+  LOCKED = 'LOCKED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum PayrollPaymentStatus {
+  PENDING = 'PENDING',
+  PROCESSED = 'PROCESSED',
+  PAID = 'PAID',
+  FAILED = 'FAILED',
+  REVERSED = 'REVERSED',
+  ON_HOLD = 'ON_HOLD',
+}
+
+export enum PayslipStatus {
+  DRAFT = 'DRAFT',
+  GENERATED = 'GENERATED',
+  PUBLISHED = 'PUBLISHED',
+  ON_HOLD = 'ON_HOLD',
+}
+
+export enum PayrollInputType {
+  ATTENDANCE = 'ATTENDANCE',
+  LEAVE = 'LEAVE',
+  LOP = 'LOP',
+  OVERTIME = 'OVERTIME',
+  BONUS = 'BONUS',
+  INCENTIVE = 'INCENTIVE',
+  ARREARS = 'ARREARS',
+  REIMBURSEMENT = 'REIMBURSEMENT',
+  LOAN_EMI = 'LOAN_EMI',
+  ADVANCE_DEDUCTION = 'ADVANCE_DEDUCTION',
+  OTHER_EARNING = 'OTHER_EARNING',
+  OTHER_DEDUCTION = 'OTHER_DEDUCTION',
+}
+
+export enum PayrollExceptionSeverity {
+  CRITICAL = 'CRITICAL',
+  WARNING = 'WARNING',
+  INFO = 'INFO',
+}
+
+// Zod Schemas
+export const CreateSalaryComponentSchema = z.object({
+  name: z.string().trim().min(2, 'Component name must be at least 2 characters').max(100),
+  componentCode: z
+    .string()
+    .trim()
+    .min(2, 'Code must be at least 2 characters')
+    .max(50)
+    .regex(/^[A-Z0-9_]+$/, 'Code must be uppercase letters, numbers, and underscores'),
+  componentType: z.nativeEnum(SalaryComponentType),
+  calculationType: z.nativeEnum(CalculationType),
+  amount: z.number().min(0).optional().default(0),
+  percentage: z.number().min(0).max(100).optional().default(0),
+  formula: z.string().optional().nullable(),
+  taxable: z.boolean().default(true),
+  includeInCtc: z.boolean().default(true),
+  includeInGross: z.boolean().default(true),
+  includeInNetPay: z.boolean().default(true),
+  includeInStatutoryWages: z.boolean().default(false),
+  payslipLabel: z.string().trim().min(1, 'Payslip label is required').max(100),
+  payslipDisplayOrder: z.number().int().default(0),
+  isActive: z.boolean().default(true),
+  isSystemDefined: z.boolean().default(false),
+  effectiveFrom: z.string().optional().nullable(),
+  effectiveTo: z.string().optional().nullable(),
+});
+
+export const UpdateSalaryComponentSchema = CreateSalaryComponentSchema.partial();
+
+export const SalaryStructureComponentInputSchema = z.object({
+  salaryComponentId: z.string().uuid(),
+  calculationType: z.nativeEnum(CalculationType),
+  amount: z.number().min(0).default(0),
+  percentage: z.number().min(0).max(100).default(0),
+  formula: z.string().optional().nullable(),
+  payslipDisplayOrder: z.number().int().default(0),
+  isMandatory: z.boolean().default(true),
+  isEditable: z.boolean().default(true),
+});
+
+export const CreateSalaryStructureSchema = z.object({
+  name: z.string().trim().min(2, 'Structure name must be at least 2 characters').max(100),
+  description: z.string().optional().nullable(),
+  annualCtc: z.number().min(0, 'Annual CTC must be >= 0'),
+  currency: z.string().default('INR'),
+  effectiveFrom: z.string().optional().nullable(),
+  effectiveTo: z.string().optional().nullable(),
+  status: z.string().default('ACTIVE'),
+  isDefault: z.boolean().default(false),
+  components: z.array(SalaryStructureComponentInputSchema).min(1, 'At least one salary component is required'),
+});
+
+export const UpdateSalaryStructureSchema = CreateSalaryStructureSchema.partial();
+
+export const AssignSalaryStructureSchema = z.object({
+  employeeId: z.string().uuid(),
+  salaryStructureId: z.string().uuid(),
+  annualCtc: z.number().positive('Annual CTC must be greater than zero'),
+  effectiveFrom: z.string().min(1, 'Effective from date is required'),
+  effectiveTo: z.string().optional().nullable(),
+  componentOverrides: z.record(z.any()).optional().nullable(),
+  revisionReason: z.string().optional().nullable(),
+});
+
+export const CreateSalaryRevisionSchema = z.object({
+  salaryStructureId: z.string().uuid(),
+  annualCtc: z.number().positive('Annual CTC must be greater than zero'),
+  effectiveFrom: z.string().min(1, 'Effective from date is required'),
+  effectiveTo: z.string().optional().nullable(),
+  componentOverrides: z.record(z.any()).optional().nullable(),
+  revisionReason: z.string().min(2, 'Revision reason is required'),
+});
+
+export const CreatePayrollPeriodSchema = z.object({
+  payrollYear: z.number().int().min(2000).max(2100),
+  payrollMonth: z.number().int().min(1).max(12),
+  periodStartDate: z.string().min(1, 'Period start date is required'),
+  periodEndDate: z.string().min(1, 'Period end date is required'),
+  payDate: z.string().min(1, 'Pay date is required'),
+  attendanceCutoffDate: z.string().min(1, 'Attendance cutoff date is required'),
+  leaveCutoffDate: z.string().min(1, 'Leave cutoff date is required'),
+  payrollCutoffDate: z.string().min(1, 'Payroll cutoff date is required'),
+});
+
+export const UpdatePayrollPeriodSchema = CreatePayrollPeriodSchema.partial();
+
+export const CreatePayrollRunSchema = z.object({
+  payrollPeriodId: z.string().uuid(),
+  runName: z.string().trim().min(2, 'Run name is required').max(100),
+  runType: z.nativeEnum(PayrollRunType).default(PayrollRunType.REGULAR),
+});
+
+export const UpdatePayrollRunSchema = z.object({
+  runName: z.string().trim().min(2).max(100).optional(),
+});
+
+export const CreatePayrollInputSchema = z.object({
+  employeeId: z.string().uuid(),
+  inputType: z.nativeEnum(PayrollInputType),
+  componentId: z.string().uuid().optional().nullable(),
+  amount: z.number(),
+  units: z.number().optional().nullable(),
+  description: z.string().optional().nullable(),
+  reason: z.string().min(2, 'Reason is required'),
+});
+
+export const UpdatePayrollInputSchema = CreatePayrollInputSchema.partial();
+
+export const ResolveExceptionSchema = z.object({
+  resolutionNotes: z.string().min(2, 'Resolution notes are required'),
+});
+
+export const OverrideExceptionSchema = z.object({
+  overrideReason: z.string().min(2, 'Override reason is required'),
+});
+
+export const MarkPaidSchema = z.object({
+  paymentDate: z.string().optional(),
+  paymentReference: z.string().min(2, 'Payment reference is required'),
+  paymentNotes: z.string().optional().nullable(),
+});
+
+export const PaymentProofSchema = z.object({
+  paymentProofUrl: z.string().min(1, 'Proof URL or path is required'),
+  paymentReference: z.string().optional(),
+  paymentNotes: z.string().optional(),
+});
+
+export const CreatePayslipTemplateSchema = z.object({
+  name: z.string().trim().min(2, 'Template name is required').max(100),
+  isDefault: z.boolean().default(false),
+  pageSize: z.string().default('A4'),
+  orientation: z.string().default('PORTRAIT'),
+  margins: z.record(z.any()).optional().nullable(),
+  fontFamily: z.string().default('Inter, sans-serif'),
+  fontSize: z.number().default(12),
+  primaryColor: z.string().default('#1E3A8A'),
+  secondaryColor: z.string().default('#64748B'),
+  headerSettings: z.record(z.any()).optional().nullable(),
+  footerSettings: z.record(z.any()).optional().nullable(),
+  watermarkSettings: z.record(z.any()).optional().nullable(),
+  stampSettings: z.record(z.any()).optional().nullable(),
+  signatureSettings: z.record(z.any()).optional().nullable(),
+  showEmployerContributions: z.boolean().default(true),
+  showReimbursements: z.boolean().default(true),
+  showBankAccount: z.boolean().default(true),
+  bankAccountMasking: z.string().default('LAST_4'),
+  currencyFormat: z.string().default('INR'),
+  numberFormat: z.string().default('en-IN'),
+  dateFormat: z.string().default('DD/MM/YYYY'),
+  htmlTemplate: z.string().optional().nullable(),
+});
+
+export const UpdatePayslipTemplateSchema = CreatePayslipTemplateSchema.partial();
+
+// TypeScript DTOs
+export interface SalaryComponentDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  componentCode: string;
+  componentType: SalaryComponentType;
+  calculationType: CalculationType;
+  amount: number;
+  percentage: number;
+  formula?: string | null;
+  taxable: boolean;
+  includeInCtc: boolean;
+  includeInGross: boolean;
+  includeInNetPay: boolean;
+  includeInStatutoryWages: boolean;
+  payslipLabel: string;
+  payslipDisplayOrder: number;
+  isActive: boolean;
+  isSystemDefined: boolean;
+  effectiveFrom?: string | null;
+  effectiveTo?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SalaryStructureComponentDto {
+  id: string;
+  salaryStructureId: string;
+  salaryComponentId: string;
+  salaryComponent?: SalaryComponentDto;
+  calculationType: CalculationType;
+  amount: number;
+  percentage: number;
+  formula?: string | null;
+  payslipDisplayOrder: number;
+  isMandatory: boolean;
+  isEditable: boolean;
+}
+
+export interface SalaryStructureDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  annualCtc: number;
+  monthlyCtc: number;
+  currency: string;
+  effectiveFrom?: string | null;
+  effectiveTo?: string | null;
+  status: string;
+  isDefault: boolean;
+  createdBy?: string | null;
+  components: SalaryStructureComponentDto[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeSalaryAssignmentDto {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  departmentName?: string;
+  designationName?: string;
+  salaryStructureId: string;
+  salaryStructureName?: string;
+  annualCtc: number;
+  monthlyCtc: number;
+  monthlyGross: number;
+  effectiveFrom: string;
+  effectiveTo?: string | null;
+  status: string;
+  revisionReason?: string | null;
+  componentOverrides?: Record<string, any>;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  rejectedBy?: string | null;
+  rejectedAt?: string | null;
+  rejectionReason?: string | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PayrollPeriodDto {
+  id: string;
+  organizationId: string;
+  payrollYear: number;
+  payrollMonth: number;
+  periodStartDate: string;
+  periodEndDate: string;
+  payDate: string;
+  attendanceCutoffDate: string;
+  leaveCutoffDate: string;
+  payrollCutoffDate: string;
+  status: PayrollPeriodStatus;
+  createdBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PayrollRunDto {
+  id: string;
+  organizationId: string;
+  payrollPeriodId: string;
+  payrollPeriod?: PayrollPeriodDto;
+  runName: string;
+  runType: PayrollRunType;
+  status: PayrollRunStatus;
+  totalEmployeeCount: number;
+  totalGrossEarnings: number;
+  totalDeductions: number;
+  totalEmployerContributions: number;
+  totalNetPay: number;
+  totalCtcCost: number;
+  calculatedBy?: string | null;
+  calculatedAt?: string | null;
+  submittedBy?: string | null;
+  submittedAt?: string | null;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  rejectedBy?: string | null;
+  rejectedAt?: string | null;
+  rejectionReason?: string | null;
+  paymentDate?: string | null;
+  paymentReference?: string | null;
+  paymentProofUrl?: string | null;
+  paymentNotes?: string | null;
+  idempotencyKey?: string | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PayrollEmployeeRecordDto {
+  id: string;
+  organizationId: string;
+  payrollRunId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  departmentName?: string;
+  designationName?: string;
+  salaryStructureId?: string | null;
+  salaryAssignmentId?: string | null;
+  payableDays: number;
+  lopDays: number;
+  paidLeaveDays: number;
+  unpaidLeaveDays: number;
+  holidayDays: number;
+  weekendDays: number;
+  presentDays: number;
+  overtimeMinutes: number;
+  overtimeAmount: number;
+  bonusAmount: number;
+  incentiveAmount: number;
+  arrearsAmount: number;
+  reimbursementAmount: number;
+  adjustmentAmount: number;
+  grossEarnings: number;
+  totalDeductions: number;
+  totalEmployerContributions: number;
+  netPay: number;
+  paymentStatus: PayrollPaymentStatus;
+  paymentDate?: string | null;
+  paymentReference?: string | null;
+  payslipStatus: PayslipStatus;
+  payslipUrl?: string | null;
+  snapshotData?: Record<string, any>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PayrollInputDto {
+  id: string;
+  organizationId: string;
+  payrollRunId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  inputType: PayrollInputType;
+  componentId?: string | null;
+  componentName?: string;
+  amount: number;
+  units?: number | null;
+  description?: string | null;
+  reason?: string | null;
+  isApproved: boolean;
+  approvedBy?: string | null;
+  isLocked: boolean;
+  source: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PayrollExceptionDto {
+  id: string;
+  organizationId: string;
+  payrollRunId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  exceptionCode: string;
+  severity: PayrollExceptionSeverity;
+  message: string;
+  details?: Record<string, any>;
+  isResolved: boolean;
+  resolvedBy?: string | null;
+  resolvedAt?: string | null;
+  resolutionNotes?: string | null;
+  isOverridden: boolean;
+  overrideReason?: string | null;
+  overriddenBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PayslipTemplateDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  isDefault: boolean;
+  pageSize: string;
+  orientation: string;
+  margins?: Record<string, any>;
+  fontFamily: string;
+  fontSize: number;
+  primaryColor: string;
+  secondaryColor: string;
+  headerSettings?: Record<string, any>;
+  footerSettings?: Record<string, any>;
+  watermarkSettings?: Record<string, any>;
+  stampSettings?: Record<string, any>;
+  signatureSettings?: Record<string, any>;
+  showEmployerContributions: boolean;
+  showReimbursements: boolean;
+  showBankAccount: boolean;
+  bankAccountMasking: string;
+  currencyFormat: string;
+  numberFormat: string;
+  dateFormat: string;
+  htmlTemplate?: string | null;
+  version: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PayslipDto {
+  id: string;
+  organizationId: string;
+  payrollRunId: string;
+  payrollPeriodId: string;
+  payrollEmployeeRecordId: string;
+  employeeId: string;
+  employeeName?: string;
+  employeeCode?: string;
+  departmentName?: string;
+  designationName?: string;
+  templateId?: string | null;
+  templateVersion: number;
+  payslipNumber: string;
+  periodName: string;
+  payDate: string;
+  grossEarnings: number;
+  totalDeductions: number;
+  netPay: number;
+  netPayWords: string;
+  earningsBreakdown: Array<{ name: string; code: string; amount: number; type: string }>;
+  deductionsBreakdown: Array<{ name: string; code: string; amount: number; type: string }>;
+  contributionsBreakdown: Array<{ name: string; code: string; amount: number }>;
+  ytdEarnings: number;
+  ytdDeductions: number;
+  ytdNetPay: number;
+  status: PayslipStatus;
+  pdfUrl?: string | null;
+  pdfGeneratedAt?: string | null;
+  publishedAt?: string | null;
+  publishedBy?: string | null;
+  viewCount: number;
+  lastViewedAt?: string | null;
+  downloadCount: number;
+  lastDownloadedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
