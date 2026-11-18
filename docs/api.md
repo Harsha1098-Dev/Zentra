@@ -312,7 +312,7 @@ All endpoints below require authentication with an active organization membershi
 
 ---
 
-## 5. Employee Management Endpoints
+## 6. Employee Management Endpoints
 
 All employee operations are strictly scoped to the active organization (`organization_id` derived from the session membership). Role-based field masking automatically removes sensitive personal details (personal email, birth date, residential addresses, emergency contacts) when accessed by non-administrative team members.
 
